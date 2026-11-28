@@ -26,6 +26,8 @@ import { seedlingCompositeMapStats } from '../../flashPanel/seedlingCompositeMap
 import { worldToScreen } from '../../procgenCore/mapCamera.js';
 import { squareAt } from '../../regionMap/regionMapOverlay.js';
 import { linkShape } from '../../regionMap/regionMapLinkGeometry.js';
+import { exitTileOf } from '../../regionMap/regionMapModel.js';
+import { exitDirections } from '../../regionGraph/directionLayout.js';
 import mobileLayoutManager from '../../../app/core/mobileLayoutManager.js';
 import { completeModuleInfo } from '../../../app/initialization/completeModuleInfo.js';
 import { lookupModuleInfo } from '../../quickLaunch/quickLaunchCatalog.js';
@@ -640,6 +642,41 @@ export async function testRegionMapClicksGenerated(testController) {
 }
 
 /**
+ * ⛓ region-map-maze-hooks: the maze levels' cells (procgen_topdown AP_1, sized by level). Each maze cell has the
+ * level's own extent (its payload's width × height) and is framed at that size; its location squares are the
+ * substrate's (`compositeMap.locationTiles`: the items' tiles), one per rules location of its members, none "not on
+ * map"; and every maze exit has a direction off the panel's own model (`directionLayout.exitDirections`, the read the
+ * Region Graph's Direction-aware layout makes). Every count derived from the loaded rules.
+ */
+async function mazeCellsLeg(testController, ctx) {
+  await ctx.setSetting('moduleSettings.regionMap.cellSize', 'level');
+  await testController.pollForCondition(() => dbg()?.settings?.cellSize === 'level', 'cells sized by level', 3000, 25);
+  const { rules, playerId } = rawRules();
+  const sc = rules.preset_sidecars?.[playerId] ?? {};
+  const m = panel().model;
+  const d = dbg();
+  const cells = [...m.cells.values()].filter((c) => c.members.some((n) => sc[n]?.substrate === 'maze'));
+  const bad = [];
+  let squares = 0;
+  for (const c of cells) {
+    const rep = c.members.find((n) => sc[n]?.playable_payload);
+    const pl = rep ? sc[rep].playable_payload : null;
+    const f = d.frames[c.key];
+    const want = c.members.flatMap((n) => (rules.regions[playerId][n]?.locations ?? []).map((l) => l.name));
+    if (!pl || c.extent?.w !== pl.width || c.extent?.h !== pl.height) bad.push(`${c.key}: extent ${JSON.stringify(c.extent)}`);
+    else if (!f || f.w !== pl.width * f.tilePx || f.h !== pl.height * f.tilePx) bad.push(`${c.key}: frame ${f?.w}×${f?.h}`);
+    if (c.tileSource !== 'substrate' || c.tiles.length !== want.length) bad.push(`${c.key}: ${c.tileSource} ${c.tiles.length}/${want.length} squares`);
+    squares += c.tiles.length;
+  }
+  testController.log(`MAZE CELLS: ${cells.length} cells, ${squares} substrate squares, ${d.unplaced.length} not on map${bad.length ? `; ${bad.slice(0, 4).join('; ')}` : ''}`);
+  testController.reportCondition(`every maze cell has its level's extent and frame, and a substrate square per location (${cells.length} cells, ${squares} squares)`,
+    cells.length > 0 && squares > 0 && bad.length === 0 && d.unplaced.length === 0);
+  const { counts } = exitDirections({ sidecars: sc, model: m, tileOf: exitTileOf });
+  testController.reportCondition(`every maze exit has a direction off the panel's model (${counts.withDirection}/${counts.exits})`,
+    counts.exits > 0 && counts.withDirection === counts.exits);
+}
+
+/**
  * zoom-links: the toolbar's + / −, a two-finger pinch and the neighbour lines, on procgen_topdown AP_1 (fast). The
  * + press multiplies the zoom by ZOOM_BUTTON_FACTOR and − divides it back; a pinch of two synthetic pointers (distinct
  * pointerIds) zooms by the finger-distance ratio and fires NO click; the links painted are the model's, cross-group
@@ -657,6 +694,7 @@ export async function testRegionMapZoomPinchLinks(testController) {
     p.controls.follow.checked = true;
     const ok = await fitAllAndSettle(testController, 'fit all paints every cell');
     testController.reportCondition('fit all paints every cell', ok);
+    await mazeCellsLeg(testController, s.ctx);
     p.follow = true;
     p.controls.follow.checked = true;
 
@@ -1374,7 +1412,7 @@ registerTest({
   category: 'Region Map',
   testFunction: testRegionMapZoomPinchLinks,
   enabled: false,
-  description: 'zoom-links: + and − zoom by ZOOM_BUTTON_FACTOR and untick Follow; a two-pointer pinch zooms by the distance ratio and fires no click; the neighbour lines drawn are the model\'s, counted apart from the cross-group links, under the Links box; link-ends: gap marks / border-clipped lines / arrowheads as linkShape says',
+  description: 'zoom-links: + and − zoom by ZOOM_BUTTON_FACTOR and untick Follow; a two-pointer pinch zooms by the distance ratio and fires no click; the neighbour lines drawn are the model\'s, counted apart from the cross-group links, under the Links box; link-ends: gap marks / border-clipped lines / arrowheads as linkShape says; maze-hooks: every maze cell has its level\'s extent and frame (sized by level), a substrate square per location, and every maze exit a direction',
 });
 registerTest({
   id: 'region-map-mobile-tab',

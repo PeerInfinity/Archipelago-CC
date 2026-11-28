@@ -106,6 +106,12 @@
             "_comment": "AN-TIME-4: the committed timed preset The Same Monday: the pool is loop.mana (3 h, not 100), the Time line at 09:00 and after one visit, the start gate refuses a visit whose paper is not held."
         },
         {
+            "id": "an-mystery-bridge-papers-loop",
+            "enabled": true,
+            "category": "ActionNodes",
+            "_comment": "AN-MYST-1: The Same Monday framed in the Mystery Game panel (the real page): the page asks with the world's version, every state carries loop, a visit's paper arrives by slot_data.mystery.items, a loop reset sends loop 2."
+        },
+        {
             "id": "tasw-location-check-direct-dispatch",
             "enabled": true,
             "category": "textAdventureSubstrateWrapper"
@@ -2013,6 +2019,12 @@
             "_comment": "CONTENT THEME MAZE LOOK (the user 2026-11-15: 'Can we set up a Feature Check in the Tutorials panel to load the scenario for me to see what this maze example currently looks like?'). The walk row of feature check content-theme-maze-look: meta_trial then the plain control concept_trial, each loaded, its first room's location and exit taken in the Text Adventure panel (read off its links), the Maze Room on the region that exit names (fog unticked), then the APWorld Editor's Map tab holding that document. Manual batch feature-checks."
         },
         {
+            "id": "feature-check-mystery-local-play",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "MYSTERY LOCAL PLAY (the user 2026-11-27: 'a tutorial, or maybe just a feature check, that plays through a mystery game preset locally, without an Archipelago server'). The walk row of feature check mystery-local-play: the committed mystery_custom_house_fire world loaded as a preset, Mystery Game opened (the real page, the submodule modules/mystery-clue-game, which starts on the app's offline state), then the page's own careful reader asked for by mystery:autoSolve and waited for until it says done; every question it solved is a check in the app and Victory is held. No server. Manual batch feature-checks."
+        },
+        {
             "id": "tutorial-walk-guided-tour",
             "enabled": true,
             "category": "Tutorial walks",
@@ -2202,7 +2214,7 @@
             "id": "region-map-zoom-pinch-links",
             "enabled": true,
             "category": "Region Map",
-            "_comment": "region-map zoom-links (2026-11-22): the toolbar's + / − (ZOOM_BUTTON_FACTOR around the centre, Follow unticks), a two-pointer synthetic pinch (distinct pointerIds: zoom x the distance ratio, no click) and the neighbour lines (lastPaint.neighbourLinks = the model's, apart from the cross-group links; off under Links), on procgen_topdown AP_1. Fast batch. Reloads the world loaded before."
+            "_comment": "region-map zoom-links (2026-11-22): the toolbar's + / − (ZOOM_BUTTON_FACTOR around the centre, Follow unticks), a two-pointer synthetic pinch (distinct pointerIds: zoom x the distance ratio, no click) and the neighbour lines (lastPaint.neighbourLinks = the model's, apart from the cross-group links; off under Links), on procgen_topdown AP_1. Fast batch. Reloads the world loaded before. region-map-maze-hooks (2026-11-27): + every maze cell has its level's extent and frame (sized by level), a substrate square per rules location, and every maze exit a direction off the panel's model."
         },
         {
             "id": "region-map-mobile-tab",
@@ -2490,7 +2502,7 @@
             "id": "playback-bot-tile-kinds-demo",
             "enabled": true,
             "category": "Playback Bot",
-            "_comment": "Content sets GEN-2: the committed tile_kinds_demo preset (the \"Randomly placed tiles\" maze biome: the furniture pack's rugs and pillars in a scattered 2 : classic 1 mix over Adventure) played to the end by the bot through the maze controller, loop mode off; every sphere-log location checked, and the Maze Room panel's art stack takes the recorded exists pack. Batch playback-bot (on push)."
+            "_comment": "Content sets GEN-2: the committed tile_kinds_demo preset (the \"Randomly placed tiles\" maze biome: the furniture pack's rugs and pillars and, since GEN-5, the ledges pack's one-way ledges in a scattered 2 : classic 1 mix over Adventure) played to the end by the bot through the maze controller, loop mode off; every sphere-log location checked, and the Maze Room panel's art stack takes the recorded exists packs. Batch playback-bot (on push)."
         },
         {
             "id": "playback-bot-walk-order",
@@ -2540,6 +2552,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "AN-OMSI-3: the Playback Bot plays the omsi town to Start Journey in Loop mode in EXACTLY 7 loops (XP scale 1), equal to the pure planner and the headless live path (pinned headless in actionNodesTownScale.slow.test.js)."
+        },
+        {
+            "id": "an-mystery-goal-pending",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "AN-MYST-1, PENDING (superseded by Robert's 2026-11-26 ruling; the world-side goal is AN-MYST-2): on The Same Monday a questionSolved for the goal question checks nothing and brings no mystery:state back; the Playback Bot plays the world, the goal node checks the goal, solved still lacks it."
         },
         {
             "id": "playback-bot-loop-mode-maze",
@@ -2614,6 +2632,12 @@
             "_comment": "The mystery SUBSTRATE: a case as one region of a generated world. Loads the committed mystery_street_test preset (scripts/test/generate-mystery-street-test-preset.mjs: the long case's office beside a maze street, by the top-down driver) with the stand-in page: the panel frames the region's case, mystery:state carries the world's lock and inOffice, a question solved in the street is not checked, the same question is checked in the office, and leaving says so again. Names are read off the loaded world. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
+            "id": "mystery-real-page-lock",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The page's side of the lock, in the real page (the submodule modules/mystery-clue-game at the module's default address), with no server (the page starts on the host's offline state): on the committed mystery_street_test world the page says it is locked (body.ap-locked, the line #ap-lock shown) while the player is in the street, not in the office, and again after leaving. Reads the page's own mark; clicks nothing. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
             "id": "mystery-playback-bot-plays-the-case",
             "enabled": true,
             "category": "Playback Bot",
@@ -2624,6 +2648,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "The mystery substrate's loopSupport: the same mystery_street_test world with the loop_costs block generateLoopCosts writes for it. Loop mode comes on, the office reads as a coarse region whose Bot is the walkTo solver, and the Playback Bot plays the world to the end through the Loops queue."
+        },
+        {
+            "id": "mystery-spiral-office-played",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "The mystery entry as a shuffled-spiral content source (zoneCount / extractZoneRules, mysterySubstrateLibrary.js): a world of three maze rooms and one office is built in the page from the committed mystery_custom_house_fire world, the case's papers standing on its own questions with the source's rules, and the Playback Bot plays it to the end. The installed case is cleared again."
         },
         {
             "id": "document-library-idb",

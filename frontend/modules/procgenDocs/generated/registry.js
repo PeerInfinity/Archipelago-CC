@@ -66,7 +66,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
         },
         {
-            "fields": 20,
+            "fields": 26,
             "id": "mystery",
             "label": "Mystery case",
             "registeredBy": "frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js"
@@ -1537,10 +1537,14 @@ export const REGISTRY = frz({
                 {
                     "id": "maze",
                     "present": true,
-                    "short": "{drawRegion}",
+                    "short": "5 keys",
                     "type": "object",
                     "value": [
-                        "drawRegion"
+                        "displayRegionOf",
+                        "drawRegion",
+                        "layoutGraph",
+                        "locationTiles",
+                        "regionExtent"
                     ]
                 },
                 {
@@ -1669,7 +1673,8 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "flash_seedling",
-                "flash_seedling_gen"
+                "flash_seedling_gen",
+                "maze"
             ],
             "cells": [
                 {
@@ -1716,9 +1721,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -1847,7 +1852,8 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "flash_seedling",
-                "flash_seedling_gen"
+                "flash_seedling_gen",
+                "maze"
             ],
             "cells": [
                 {
@@ -1894,9 +1900,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -1935,7 +1941,8 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "flash_seedling",
-                "flash_seedling_gen"
+                "flash_seedling_gen",
+                "maze"
             ],
             "cells": [
                 {
@@ -1982,9 +1989,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -2023,7 +2030,8 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "flash_seedling",
-                "flash_seedling_gen"
+                "flash_seedling_gen",
+                "maze"
             ],
             "cells": [
                 {
@@ -2070,9 +2078,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -3400,6 +3408,7 @@ export const REGISTRY = frz({
                 "bounce",
                 "flash_seedling",
                 "jta",
+                "mystery",
                 "noiz2sa",
                 "omsi"
             ],
@@ -3455,9 +3464,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "mystery",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -5662,6 +5671,7 @@ export const REGISTRY = frz({
                 "cloudberry",
                 "flash_seedling_gen",
                 "jta",
+                "mystery",
                 "noiz2sa",
                 "omsi"
             ],
@@ -5792,10 +5802,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "mystery",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{}",
+                    "type": "object",
+                    "value": []
                 },
                 {
                     "id": "noiz2sa",
@@ -8221,10 +8231,11 @@ export const REGISTRY = frz({
                 {
                     "id": "mystery",
                     "present": true,
-                    "short": "caseDoc, lock",
+                    "short": "caseDoc, caseWorld, lock",
                     "type": "array",
                     "value": [
                         "caseDoc",
+                        "caseWorld",
                         "lock"
                     ]
                 },
@@ -10877,6 +10888,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "jta",
+                "mystery",
                 "noiz2sa"
             ],
             "cells": [
@@ -10931,9 +10943,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "mystery",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -11546,6 +11558,7 @@ export const REGISTRY = frz({
                 "bounce",
                 "flash_seedling",
                 "jta",
+                "mystery",
                 "noiz2sa",
                 "omsi"
             ],
@@ -11601,10 +11614,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "mystery",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "0",
+                    "type": "number",
+                    "value": 0
                 },
                 {
                     "id": "noiz2sa",

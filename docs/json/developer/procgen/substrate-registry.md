@@ -366,13 +366,13 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `mystery` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| `compositeMap` | — | — | — | 7 keys | 7 keys | — | {drawRegion} | — | — | — | {drawRegion} |
+| `compositeMap` | — | — | — | 7 keys | 7 keys | — | 5 keys | — | — | — | {drawRegion} |
 | `compositeMap.artwork` | — | — | — | yes | yes | — | — | — | — | — | — |
-| `compositeMap.displayRegionOf` | — | — | — | fn | fn | — | — | — | — | — | — |
+| `compositeMap.displayRegionOf` | — | — | — | fn | fn | — | fn | — | — | — | — |
 | `compositeMap.drawRegion` | — | — | — | fn | fn | — | fn | — | — | — | fn |
-| `compositeMap.layoutGraph` | — | — | — | fn | fn | — | — | — | — | — | — |
-| `compositeMap.locationTiles` | — | — | — | fn | fn | — | — | — | — | — | — |
-| `compositeMap.regionExtent` | — | — | — | fn | fn | — | — | — | — | — | — |
+| `compositeMap.layoutGraph` | — | — | — | fn | fn | — | fn | — | — | — | — |
+| `compositeMap.locationTiles` | — | — | — | fn | fn | — | fn | — | — | — | — |
+| `compositeMap.regionExtent` | — | — | — | fn | fn | — | fn | — | — | — | — |
 | `compositeMap.remoteLocationTiles` | — | — | — | fn | fn | — | — | — | — | — | — |
 
 **Loop mode**
@@ -458,21 +458,21 @@ Groups are this document's own § headings, matched to a field by the section th
 | `applyPipelineConfig` | — | — | — | fn | — | fn | — | fn | — | fn | — |
 | `emitsSpiralContent` | — | — | — | — | — | yes | — | — | — | — | — |
 | `entranceShuffle` | — | — | — | {atlasIds, loadHooks} | — | — | — | — | — | — | — |
-| `extractZoneRules` | — | fn | — | fn | — | fn | — | — | fn | fn | — |
+| `extractZoneRules` | — | fn | — | fn | — | fn | — | fn | fn | fn | — |
 | `fillerItem` | — | — | — | — | — | — | — | — | Noiz2sa Star | — | — |
 | `getSpiralContent` | — | — | — | — | — | fn | — | — | — | — | — |
 | `onContentEdit` | — | — | — | — | — | fn | — | — | — | — | — |
 | `pipelineConfigFromParams` | — | — | — | fn | — | fn | — | — | — | — | — |
-| `pipelineConfigKeys` | — | — | — | atlasDoc, atlasId | — | 7 items | — | caseDoc, lock | — | 5 items | — |
+| `pipelineConfigKeys` | — | — | — | atlasDoc, atlasId | — | 7 items | — | caseDoc, caseWorld, lock | — | 5 items | — |
 | `recordablePipelineConfig` | — | — | — | — | — | fn | — | fn | — | fn | — |
 | `regionSourceDefault` | — | — | — | — | — | zone | — | — | — | — | — |
 | `restartWarp` | — | — | — | {cite, label, target} | {cite, label, target} | — | — | — | — | — | — |
 | `rulesJsonBlocks` | — | — | — | fn | fn | — | — | — | — | — | — |
 | `spiralContentConfigKey` | — | — | — | — | — | datasetDoc | — | — | — | — | — |
-| `spiralItemCapacity` | — | — | — | — | — | fn | — | — | fn | — | — |
+| `spiralItemCapacity` | — | — | — | — | — | fn | — | fn | fn | — | — |
 | `victoryItem` | — | Victory | Victory | — | — | Victory | — | — | Victory | Victory | — |
 | `zoneConfigFromSlot` | — | — | — | fn | — | fn | — | — | — | — | — |
-| `zoneCount` | — | 5 | — | 4 | — | 30 | — | — | 3 | 1 | — |
+| `zoneCount` | — | 5 | — | 4 | — | 30 | — | 0 | 3 | 1 | — |
 | `zoneOfPayload` | — | — | — | fn | — | fn | — | — | — | — | — |
 | `zoneSourceLabel` | — | — | — | Atlas room | — | — | — | — | Noiz2sa segment | — | — |
 
@@ -524,7 +524,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `generateZoneForSpecs` | — | fn | fn | fn | — | fn | — | fn | fn | — | — |
 | `generateZoneForSpecsGen` | — | fn | fn | — | — | — | — | — | — | — | — |
 | `hostsSurplusExitsNatively` | — | fn | fn | — | — | — | — | — | — | — | — |
-| `libraryItems` | — | 7 keys | 13 keys | — | 3 keys | 48 keys | — | — | {Noiz2sa Star, Victory} | {Victory} | — |
+| `libraryItems` | — | 7 keys | 13 keys | — | 3 keys | 48 keys | — | {} | {Noiz2sa Star, Victory} | {Victory} | — |
 | `ownContentOnly` | — | — | — | — | — | — | — | yes | — | — | — |
 | `prepareSphereGrowth` | — | fn | — | fn | — | — | — | — | — | — | — |
 | `procgenParamsFromPayload` | — | fn | fn | — | fn | — | — | — | — | — | — |

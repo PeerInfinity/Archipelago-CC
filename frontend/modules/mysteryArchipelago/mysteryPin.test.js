@@ -58,13 +58,43 @@ describe('the mystery game submodule and the committed mystery world are one ver
     expect(mysteryPresets().length).toBeGreaterThan(0);
   });
 
+  // A case is exported one of two ways (the page reads its version the same way): a case with visits in the present
+  // as `<case>/visits.json` (scripts/export-visits.mjs: the visits, the papers, the goal; an ActionNodes world is
+  // made from it), any other as `<case>/rules.json` (a whole mystery world's rules, whose block is the world's).
+  const exportOf = (block) => {
+    const caseDir = block.case ?? `cases/${block.story}`;
+    const visits = path.join(GAME, caseDir, 'visits.json');
+    if (fs.existsSync(visits)) return { kind: 'visits', caseDir, file: visits };
+    return { kind: 'rules', caseDir, file: path.join(GAME, caseDir, 'rules.json') };
+  };
+
   it.skipIf(!gameIsCheckedOut)('each mystery preset\'s block equals the block the pinned game exports for that case', () => {
-    for (const { file, block } of mysteryPresets()) {
-      const caseDir = block.case ?? `cases/${block.story}`;
-      const exported = path.join(GAME, caseDir, 'rules.json');
-      expect(fs.existsSync(exported), `${file}: the pinned game has no ${caseDir}/rules.json`).toBe(true);
+    for (const { file, block } of mysteryPresets().filter((p) => exportOf(p.block).kind === 'rules')) {
+      const { caseDir, file: exported } = exportOf(block);
+      expect(fs.existsSync(exported), `${file}: the pinned game has no ${caseDir}/rules.json nor visits.json`).toBe(true);
       const theirs = mysteryBlockOf(JSON.parse(fs.readFileSync(exported, 'utf8')));
       expect(block, `${file} against ${GAME_SUBMODULE_PATH}/${caseDir}/rules.json`).toEqual(theirs);
+    }
+  });
+
+  // ⛓ The PAIR: the page at the pin refuses a slot of another version, so a gitlink move past a change of a visit
+  // case and the world's `slot_data.mystery.version` move together, or this is red.
+  it.skipIf(!gameIsCheckedOut)('each preset made from a visit case carries that case\'s story, case, version, goal and papers at the pin', () => {
+    const visitPresets = mysteryPresets().filter((p) => exportOf(p.block).kind === 'visits');
+    expect(visitPresets.length, 'no committed preset is made from a visit case').toBeGreaterThan(0);
+    for (const { file, block } of visitPresets) {
+      const { caseDir, file: exported } = exportOf(block);
+      const theirs = JSON.parse(fs.readFileSync(exported, 'utf8'));
+      const where = `${file} against ${GAME_SUBMODULE_PATH}/${caseDir}/visits.json`;
+      expect({ story: block.story, case: block.case, version: block.version }, where)
+        .toEqual({ story: theirs.story, case: theirs.case, version: theirs.version });
+      expect(block.goal, where).toBe(theirs.goal.question);
+      // Every paper the world maps is one of the case's, and every paper of the case is mapped.
+      const casePapers = theirs.visits.map((v) => v.paper.id).sort();
+      expect(Object.values(block.items).sort(), where).toEqual(casePapers);
+      // Every question the world maps is one of the case's.
+      const caseQuestions = new Set([theirs.goal.question, ...(theirs.questions ?? []).map((q) => q.id)]);
+      for (const q of Object.values(block.locations)) expect(caseQuestions.has(q), `${where}: question ${q}`).toBe(true);
     }
   });
 

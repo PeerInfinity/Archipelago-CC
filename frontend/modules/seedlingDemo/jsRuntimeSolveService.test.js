@@ -182,34 +182,37 @@ describe('jsRuntimeSolveService — the worker round-trip ≡ the in-place (S1) 
 });
 
 describe('jsRuntimeSolveService — the budget, the retry, and no stale plan', () => {
-    it('a solve that runs out of its WORK budget DECLINES BY NAME (the ⏱ clause) — the worker answered, nothing was terminated, and the walker takes the goal', async () => {
+    // ⛓ seedling-js-held-retry — RE-RECORDED (the reason: the JS page now runs the wasm page's held-retry policy). Before it,
+    // this cut refusal was a DECLINE and the walker walked the goal; now the cut is asked ONCE more at 4× (1 → 4 units,
+    // the room held) and the second cut FAILS the goal by `expiryFailure`'s name — never walked, never terminated.
+    it('a solve that runs out of its WORK budget twice (the held retry at 4×) FAILS BY NAME (the ⏱ clause) — the worker answered, nothing was terminated, the walker does not walk it', async () => {
         // L4 kit: its shove is REQUIRED, so the block-route search consults the hook; a 1-unit budget trips it in
-        // both passes (the full pass has no plan in hand), and the answer is a refusal by name.
+        // both passes (the full pass has no plan in hand), and the answer is a refusal by name; 4 units trip it again.
         const { service, workers } = workerService();
         const rt = midRoom({ ...WITNESSES[1], solveService: service, solverBudgetWork: 1 });
         expect(rt.playback.solverBudgetWork).toBe(1);
         rt.playback.setSolverWalk(true);
         const t0 = Date.now();
-        while (rt.playback.solverStats.declines === 0 && Date.now() - t0 < 60000) {
+        while (rt.playback.state !== WALK_STATES.FAILED && Date.now() - t0 < 60000) {
             rt.tick();
             await sleep(5);
         }
         const s = rt.playback.solverStats;
-        expect(s).toMatchObject({ solves: 0, declines: 1, expiries: 1, played: 0, backstops: 0 });
-        expect(s.lastDecline).toMatch(/⏱ DEADLINE/);
-        // ⛓ RECALIBRATE — the WORKER asks the fine sites too: the first trip is the core `walk` site, and that
-        // refusal is a NAMED DECLINE (no obstacle; not a divergence, not a failure) — the walker takes the goal.
-        expect(s.lastDecline).toMatch(/was reached at the `walk` site/);
-        expect(s.lastDeclineObstacle).toBeNull();
+        expect(s).toMatchObject({ solves: 0, declines: 0, expiries: 2, retries: 1, played: 0, backstops: 0, fallbacks: [] });
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        // ⛓ RECALIBRATE — the WORKER asks the fine sites too: the first trip is the core `walk` site; the failure names
+        // both budgets, then the refusal (`wasmPlayback.expiryFailure`, the wasm page's own words).
+        expect(rt.playback.reason).toMatch(/^the solver ran out of 1, then 4 work units on its held retry on exit in level 4: .*⏱ DEADLINE/s);
+        expect(rt.playback.reason).toMatch(/was reached at the `walk` site/);
         expect(s.lastSolve ?? null).toBeNull();
-        expect(rt.playback.reason).toMatch(/^the solver declined — .*⏱ DEADLINE.*; walking instead$/s);
         expect(workers[0].terminated).toBe(false);
         expect(service.stats).toMatchObject({ terminated: 0 });
-        // The walker walks it now: its own planner runs, the run steps.
-        const ticks = rt.run.ticksCompleted;
+        // The walker does NOT walk it: the goal has failed, the run stands.
+        const plans = rt.playback.stats.plans; // the 40 walker ticks before the solver was switched on planned
+        const driven = rt.playback.stats.driven;
         for (let t = 0; t < 10; t += 1) rt.tick();
-        expect(rt.run.ticksCompleted).toBe(ticks + 10);
-        expect(rt.playback.stats.plans).toBeGreaterThan(0);
+        expect(rt.playback.stats.plans).toBe(plans);
+        expect(rt.playback.stats.driven).toBe(driven);
         expect(rt.playback.solving).toBe(false);
     }, 90000);
 

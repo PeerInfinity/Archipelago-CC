@@ -322,3 +322,87 @@ registerTest({
     testFunction: mysteryRegionOfficeAndStreet,
     category: CATEGORY,
 });
+
+/** Does the game's own page say it is locked? Its mark: `body.ap-locked` with the line `#ap-lock` shown. */
+const pageSaysLocked = () => gameFrames().some((frame) => {
+    try {
+        const doc = frame.contentDocument;
+        return !!doc?.body?.classList.contains('ap-locked') && doc.getElementById('ap-lock')?.hidden === false;
+    } catch { return false; }
+});
+/** Has the game's own page started (its bridge state has a first state)? */
+const pageStarted = () => gameFrames().some((frame) => {
+    try { return !!frame.contentWindow?.__ap?.first; } catch { return false; }
+});
+
+/**
+ * The page's side of the lock, in the REAL page (this app's copy of the game): on the committed
+ * `mystery_street_test` world it says it is locked while the player is in the street, not while in
+ * the office, and again after leaving. Only the page's own mark is read; nothing on it is clicked.
+ * No server: the page starts on the host's offline state.
+ */
+export async function mysteryRealPageLock(testController) {
+    const panelWasOpen = panelIsOpen();
+    const pageBefore = await settingsManager.getSetting(PAGE_URL_SETTING);
+    const seen = { states: [], refusals: [] };
+    const handlers = {
+        'mystery:state': (data) => seen.states.push(data),
+        'mystery:refused': (data) => seen.refusals.push(data),
+    };
+    for (const [event, handler] of Object.entries(handlers)) testController.eventBus.subscribe(event, handler);
+    try {
+        await settingsManager.updateSetting(PAGE_URL_SETTING, DEFAULT_PAGE_URL, { persist: false });
+        await window.moduleManagerApi.enableModule(MODULE_ID);
+        const panel = await testController.pollForValue(
+            () => document.querySelector('.mystery-panel-container')?.mysteryPanelUI ?? null,
+            'the Mystery Game panel', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('the Mystery Game panel is open', !!panel);
+        if (!panel) return testController.getOverallResult();
+
+        await testController.loadRulesFromFile(STREET_PRESET_PATH);
+        await testController.stateManager.pingWorker('after-rules-load', TIMEOUT_MS);
+        const warehouse = procgen('getWarehouse');
+        const office = (warehouse?.keys?.() ?? []).find((id) => warehouse.get(id)?.substrate === 'mystery');
+        const started = await testController.pollForCondition(() => !!activeRegionId(), 'the player is placed in a region', TIMEOUT_MS, POLL_MS);
+        const street = activeRegionId();
+        testController.reportCondition(`the player starts away from the office ("${street}" / "${office}")`,
+            started && !!office && street !== office);
+        if (!started || !office || street === office) return testController.getOverallResult();
+        const exitOf = (from, to) => [...(warehouse.get(from)?.world?.exits?.entries?.() ?? [])]
+            .find(([, exit]) => exit?.targetRegion === to)?.[0];
+
+        const up = await testController.pollForCondition(pageStarted, 'the game\'s page started with no server', TIMEOUT_MS * 2, POLL_MS);
+        testController.reportCondition('the game\'s page started on the host\'s offline state', up);
+        testController.assertEqual('nothing was refused', 0, seen.refusals.length);
+        testController.assertEqual('the state says the player is away', false, last(seen.states)?.inOffice);
+        if (!up) return testController.getOverallResult();
+
+        const lockedAway = await testController.pollForCondition(pageSaysLocked, 'the page says it is locked', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('in the street the game\'s page says it is locked', lockedAway);
+
+        moveTo(street, office, exitOf(street, office));
+        const open = await testController.pollForCondition(
+            () => last(seen.states)?.inOffice === true && !pageSaysLocked(), 'the page is unlocked in the office', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('in the office the game\'s page is not locked', open);
+
+        moveTo(office, street, exitOf(office, street));
+        const lockedAgain = await testController.pollForCondition(
+            () => last(seen.states)?.inOffice === false && pageSaysLocked(), 'the page is locked again', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('back in the street the game\'s page says it is locked again', lockedAgain);
+    } finally {
+        for (const [event, handler] of Object.entries(handlers)) testController.eventBus.unsubscribe?.(event, handler);
+        await settingsManager.updateSetting(PAGE_URL_SETTING, pageBefore, { persist: false });
+        if (!panelWasOpen) await closePanel();
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'mystery-real-page-lock',
+    name: 'Mystery substrate: the game\'s own page locks away from the office',
+    description: 'Loads the committed mystery_street_test preset at the module\'s default address (this app\'s copy of the '
+        + 'game), with no server: the page says it is locked while the player is in the street, is not locked in the office, '
+        + 'and is locked again after leaving.',
+    testFunction: mysteryRealPageLock,
+    category: CATEGORY,
+});

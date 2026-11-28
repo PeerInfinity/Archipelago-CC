@@ -1,0 +1,304 @@
+{
+  "rules": "./presets/procgen_topdown/AP_1/AP_1_rules.json",
+  "errors": [
+    "phone: SecurityError: Failed to read a named property from 'Window': Blocked a frame with origin \"http://localhost:8144\" from accessing a cross-origin frame.",
+    "phone: SecurityError: Failed to read a named property from 'Window': Blocked a frame with origin \"http://localhost:8144\" from accessing a cross-origin frame."
+  ],
+  "regionMap": {
+    "cellSize": "level",
+    "cells": [
+      {
+        "key": "BlackCastle",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Dungeon0@1,3",
+          "Dungeon1@3,3",
+          "Black Castle Foyer@5,3",
+          "Slay Rhindle@7,3"
+        ]
+      },
+      {
+        "key": "BlackCastleVault",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Dungeon Vault@1,3"
+        ]
+      },
+      {
+        "key": "CreditsRoom",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Credits Left Side@1,3"
+        ]
+      },
+      {
+        "key": "CreditsRoomFarSide",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Credits Right Side@1,3"
+        ]
+      },
+      {
+        "key": "Overworld",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Blue Labyrinth 0@1,3",
+          "Blue Labyrinth 1@3,3",
+          "Catacombs@5,3",
+          "Adjacent to Catacombs@7,3",
+          "Southwest of Catacombs@9,3",
+          "White Castle Gate@11,3",
+          "Black Castle Gate@13,3",
+          "Yellow Castle Gate@15,3",
+          "Northeast of Catacombs@17,3",
+          "Southeast of Catacombs@1,5",
+          "Slay Yorgle@3,5"
+        ]
+      },
+      {
+        "key": "WhiteCastle",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "RedMaze0@1,3",
+          "RedMaze1@3,3"
+        ]
+      },
+      {
+        "key": "WhiteCastlePreVaultPeek",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Red Maze Vault Entrance@1,3"
+        ]
+      },
+      {
+        "key": "WhiteCastleVault",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Red Maze Vault@1,3",
+          "Slay Grundle@3,3"
+        ]
+      },
+      {
+        "key": "YellowCastle",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Inside Yellow Castle@1,3",
+          "Chalice Home@3,3"
+        ]
+      }
+    ],
+    "unplaced": 0,
+    "painted": {
+      "cells": 9,
+      "squares": 25,
+      "art": 9
+    }
+  },
+  "direction": {
+    "counts": {
+      "exits": 16,
+      "withDirection": 0,
+      "without": 16,
+      "border": 0,
+      "twoOnOneSide": 0,
+      "twoOnOneSideLevels": 0
+    },
+    "preferred": 0,
+    "mean": null,
+    "max": null,
+    "n": 0,
+    "overlaps": 0,
+    "nodeSizes": [
+      "Menu:38x28",
+      "WhiteCastlePreVaultPeek:74x74",
+      "WhiteCastleVault:74x74",
+      "WhiteCastle:74x74",
+      "BlackCastleVault:74x74",
+      "BlackCastle:74x74",
+      "Overworld:76x76",
+      "YellowCastle:74x74",
+      "CreditsRoomFarSide:74x74",
+      "CreditsRoom:74x74"
+    ]
+  },
+  "phone": {
+    "cellSize": "level",
+    "cells": [
+      {
+        "key": "BlackCastle",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Dungeon0@1,3",
+          "Dungeon1@3,3",
+          "Black Castle Foyer@5,3",
+          "Slay Rhindle@7,3"
+        ]
+      },
+      {
+        "key": "BlackCastleVault",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Dungeon Vault@1,3"
+        ]
+      },
+      {
+        "key": "CreditsRoom",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Credits Left Side@1,3"
+        ]
+      },
+      {
+        "key": "CreditsRoomFarSide",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Credits Right Side@1,3"
+        ]
+      },
+      {
+        "key": "Overworld",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Blue Labyrinth 0@1,3",
+          "Blue Labyrinth 1@3,3",
+          "Catacombs@5,3",
+          "Adjacent to Catacombs@7,3",
+          "Southwest of Catacombs@9,3",
+          "White Castle Gate@11,3",
+          "Black Castle Gate@13,3",
+          "Yellow Castle Gate@15,3",
+          "Northeast of Catacombs@17,3",
+          "Southeast of Catacombs@1,5",
+          "Slay Yorgle@3,5"
+        ]
+      },
+      {
+        "key": "WhiteCastle",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "RedMaze0@1,3",
+          "RedMaze1@3,3"
+        ]
+      },
+      {
+        "key": "WhiteCastlePreVaultPeek",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Red Maze Vault Entrance@1,3"
+        ]
+      },
+      {
+        "key": "WhiteCastleVault",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Red Maze Vault@1,3",
+          "Slay Grundle@3,3"
+        ]
+      },
+      {
+        "key": "YellowCastle",
+        "extent": null,
+        "frame": [
+          320,
+          320
+        ],
+        "tileSource": "generic",
+        "squares": [
+          "Inside Yellow Castle@1,3",
+          "Chalice Home@3,3"
+        ]
+      }
+    ],
+    "unplaced": 0,
+    "painted": {
+      "cells": 9,
+      "squares": 25,
+      "art": 9
+    }
+  }
+}

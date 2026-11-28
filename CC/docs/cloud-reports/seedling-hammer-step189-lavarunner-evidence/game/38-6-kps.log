@@ -1,0 +1,6 @@
+SOLVE {"ok":true,"work":2562,"ticks":1081,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":1081,"work":1613,"modelHits":{"hits":0,"deaths":0}},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":949,"deadline":"sword-dash","limit":"budget"}],"message":null,"answer":"733c3d7160f8"}
+MODEL {"hits":[],"end":{"level":71,"x":168.0621763988746,"y":263.6229207742218}}
+SLOTS {"reqSlots":[0,1,3,2],"freshSlots":[0,1,2,3],"equips":[[150,2]],"remapped":[[150,3]]}
+# box lock: TAKEN by step189-lavarunner-witness (browser, pid 5639) — head d9a5bf7d7, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"finished":true,"ticks":1081,"prefix":0,"hitsAtPrefix":{"tick":0,"hits":0},"end":{"level":71,"x":168.0621763988746,"y":263.6229207742218},"hits":0}

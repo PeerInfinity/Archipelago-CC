@@ -28,6 +28,11 @@
     },
     "default": "an-time4"
   },
+  "mystery": {
+    "story": "same-monday", "version": "f778f1b06ee9", "case": "cases/miniatures/same-monday",
+    "goal": { "node": "question", "question": "q.who" },
+    "papers": { "paper-office": "office", "paper-inn": "inn", "paper-watch": "watch", "paper-pilot": "pilot", "paper-chandler": "chandler" }
+  },
   "clock": { "start": "09:00", "minutesPerUnit": 60 },
   "pool": { "name": "Time", "unit": "h" },
   "loop": { "mana": 3 },

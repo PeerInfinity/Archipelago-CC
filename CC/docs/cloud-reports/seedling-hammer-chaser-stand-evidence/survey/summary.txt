@@ -1,0 +1,3 @@
+
+# survey-both = OAC + PSB (no PKSW); survey-all4oachsb ran in the queued 'all4both' slot, redirected to all4 + OAC + HSB with the reach preload (tools/variants.sh).
+# The survey solves in place (no solveAnytime ladder): HIT_AVOID_STAND_BOMBS is unreachable there (reach hsb.tried = 0 on all 250 steps, step 24 included).

@@ -1842,7 +1842,7 @@ export const CAPABILITIES = frz({
                     "why": [
                         {
                             "field": "libraryItems",
-                            "value": "—"
+                            "value": "{}"
                         },
                         {
                             "field": "supportedFeatures",
@@ -4755,7 +4755,7 @@ export const CAPABILITIES = frz({
                     "why": [
                         {
                             "field": "zoneCount",
-                            "value": "—"
+                            "value": "0"
                         },
                         {
                             "field": "zoneSourceLabel",

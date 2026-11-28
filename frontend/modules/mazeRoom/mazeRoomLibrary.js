@@ -43,6 +43,9 @@ import {
 import { getPanelInstance } from './index.js';
 import { describeMazeAction } from './mazeKeys.js';
 import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
+import {
+    mazeDisplayRegionOf, mazeLayoutGraph, mazeLocationTiles, mazeRegionExtent,
+} from './mazeRegionMapHooks.js';
 import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
 import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames, tileGridApExitNames } from './mazeSerializer.js';
 import { mazeCapacityAt } from './mazeLocationCapacity.js';
@@ -237,8 +240,21 @@ export const substrateRegistryEntry = Object.freeze({
      * `loadable: true` in the generated capability matrix, so the painter lives
      * in `mazeCompositeMap.js` and takes `ctx` as a parameter. Nothing here
      * touches a DOM at module load.
+     *
+     * ⛓ region-map-maze-hooks — the Region Map's DATA hooks, as Seedling declares them (`mazeRegionMapHooks.js`, pure,
+     * reading the sidecar's JSON payload): `regionExtent` (the level's `width` × `height`), `locationTiles` (each
+     * item's `locationName` at its tile, each rope's event at its rope), `displayRegionOf` (a sub-region folds onto
+     * its level: `atlas_region`, else the sidecar's `shared_world`; ⚖ "Fold, no dimming", 2026-11-27T17:24:33.938Z)
+     * and `layoutGraph` (the exits, with the side each door is on). No `remoteLocationTiles`: a maze location is
+     * always a tile of its own level's payload.
      */
-    compositeMap: Object.freeze({ drawRegion: drawMazeCompositeRegion }),
+    compositeMap: Object.freeze({
+        drawRegion: drawMazeCompositeRegion,
+        regionExtent: mazeRegionExtent,
+        locationTiles: mazeLocationTiles,
+        displayRegionOf: mazeDisplayRegionOf,
+        layoutGraph: mazeLayoutGraph,
+    }),
 
     // Action labelling (Q-a A8). How the maze says one shared actionQueue
     // entry out loud — `move E`, `wait`, `check Sword Room`. The ONE owner of

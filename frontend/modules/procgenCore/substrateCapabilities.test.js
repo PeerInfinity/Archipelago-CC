@@ -430,7 +430,9 @@ describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ p
                 expect(c.text.startsWith(String(e.zoneCount)), e.id).toBe(true);
             } else {
                 expect(c.kind, e.id).toBe(CELL_KINDS.NO);
-                expect(e.zoneCount, e.id).toBeUndefined();
+                // No zone table, or a table that is empty until content is installed (mystery: `zoneCount` reads
+                // its installed case, 0 with none).
+                expect(e.zoneCount ?? 0, e.id).toBe(0);
             }
         }
         // ⛓ The ✗ arm is held by `cloudberry` (P2a: levels only from a region-library

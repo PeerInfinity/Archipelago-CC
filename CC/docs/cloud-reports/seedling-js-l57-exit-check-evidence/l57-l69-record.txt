@@ -1,0 +1,18 @@
+L57 entities: 12
+   shadow 48 64 {"alpha":"0.25","color":"0x000000","width":"16","height":"32"} tile 3 4 
+   shadow 64 32 {"alpha":"0.25","color":"0x000000","width":"16","height":"32"} tile 4 2 
+   shadow 80 16 {"alpha":"0.25","color":"0x000000","width":"48","height":"32"} tile 5 1 
+   shadow 128 32 {"alpha":"0.25","color":"0x000000","width":"16","height":"32"} tile 8 2 
+   shadow 144 64 {"alpha":"0.25","color":"0x000000","width":"16","height":"32"} tile 9 4 
+   shadow 0 48 {"alpha":"0.25","color":"0x000000","width":"16","height":"16"} tile 0 3 
+   shadow 192 48 {"alpha":"0.25","color":"0x000000","width":"16","height":"16"} tile 12 3 
+   lightalpha 0 0 {"alpha":"0.1"} tile 0 0 
+   orb 64 144 {"c":"0x0088FF"} tile 4 9 
+   orb 144 144 {"c":"0x0088FF"} tile 9 9 
+   tentaclebeast 80 48 {"tag":"0"} tile 5 3 
+   watcher 48 32 {"tag":"1","text":"","text1":"","frames":"10"} tile 3 2 
+L69 entities: 4
+   lightalpha 16 0 {"alpha":"0.05"} tile 1 0 
+   droplet 0 0 {"heaviness":"100","startheight":"48","color":"0x882266","width":"-1","height":"-1"} tile 0 0 
+   watcher 144 144 {"tag":"1","text":"","text1":"","frames":"10"} tile 9 9 
+   lightbosscontroller 72 72 {"fliernum":"6","tag":"0"} tile 4 4 

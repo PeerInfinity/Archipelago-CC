@@ -92,6 +92,8 @@ export const ACTION_GRAPH_REFUSALS = Object.freeze({
     // makes the minimal-set logic unsound (design §1: 107 of 1,000 random graphs). Refused by name so a graph that
     // wants it says so.
     EARLIER_START: 'unsupported-earlier-start',
+    // The mystery link (AN-MYST-1): `mystery: {story, version, case, goal: {node, question}, papers: {<boon>: <paper>}}`.
+    BAD_MYSTERY: 'bad-mystery',
     // Knowledge (AN-TIME-1, ⚖ Q8 brought forward): flags learned by performing a node, kept across loops.
     UNKNOWN_KNOWLEDGE: 'unknown-knowledge',
     KNOWLEDGE_NEVER_LEARNED: 'knowledge-never-learned',
@@ -112,7 +114,7 @@ export class ActionGraphError extends Error {
 }
 
 const TOP_FIELDS = Object.freeze(['kind', 'schema_version', 'graph_id', 'name', 'loop', 'stats', 'resources',
-    'boons', 'filler', 'start', 'settings', 'nodes', 'provenance', 'clock', 'knowledge', 'pool']);
+    'boons', 'filler', 'start', 'settings', 'nodes', 'provenance', 'clock', 'knowledge', 'pool', 'mystery']);
 const NODE_FIELDS = Object.freeze(['name', 'kind', 'time', 'requires', 'results', 'limit', 'after', 'position',
     'src', 'window']);
 const BOON_FIELDS = Object.freeze(['name', 'count', 'gives', 'src']);
@@ -126,6 +128,9 @@ const SETTINGS_FIELDS = Object.freeze(['xpGainScale', 'xpEffect']);
 const WINDOW_FIELDS = Object.freeze(['from', 'until']);
 const CLOCK_FIELDS = Object.freeze(['start', 'minutesPerUnit']);
 const KNOWLEDGE_FIELDS = Object.freeze(['name', 'src']);
+/** The mystery link (AN-MYST-1): the case the graph is the visits of, for the mystery page's bridge. */
+const MYSTERY_FIELDS = Object.freeze(['story', 'version', 'case', 'goal', 'papers']);
+const MYSTERY_GOAL_FIELDS = Object.freeze(['node', 'question']);
 
 /** The graph-wide settings a graph may leave out, and their values (design §8). */
 export const DEFAULT_GRAPH_SETTINGS = Object.freeze({ xpGainScale: 1, xpEffect: 'cost' });
@@ -437,10 +442,46 @@ export function validateActionGraph(graph) {
         }
     }
 
+    // The mystery link (AN-MYST-1). Data for the bridge only: nothing in the model or the logic reads it.
+    if (graph.mystery !== undefined) validateMysteryLink(graph, err);
+
     // Provenance (Z.7): sources, a listed default, every `src` listed, each source's type fields present.
     validateProvenance(graph, err);
 
     return { ok: errors.length === 0, errors };
+}
+
+/**
+ * `mystery`: the mystery case this graph is the visits of (AN-MYST-1). `story`, `version` and `case` are the case
+ * export's own (`<case>/visits.json` in the mystery game; mysteryPin.test.js holds them equal at the pinned game);
+ * `goal.node` is the graph's goal node and `goal.question` the case's goal question; `papers` maps each paper boon to
+ * the case's paper id. The compiler turns it into `slot_data.mystery` (actionGraphCompiler.js `mysteryBlockOf`).
+ */
+function validateMysteryLink(graph, err) {
+    const R = ACTION_GRAPH_REFUSALS;
+    const m = graph.mystery;
+    const nonEmpty = (v) => typeof v === 'string' && v.trim() !== '';
+    if (!isPlainObject(m)) { err(R.BAD_MYSTERY, 'mystery', 'must be an object'); return; }
+    for (const key of Object.keys(m)) if (!MYSTERY_FIELDS.includes(key)) err(R.UNKNOWN_FIELD, `mystery.${key}`, 'not a mystery field');
+    for (const key of ['story', 'version', 'case']) if (!nonEmpty(m[key])) err(R.BAD_MYSTERY, `mystery.${key}`, 'must be a non-empty string');
+    const g = m.goal;
+    if (!isPlainObject(g) || Object.keys(g).some((k) => !MYSTERY_GOAL_FIELDS.includes(k)) || !nonEmpty(g.question)) {
+        err(R.BAD_MYSTERY, 'mystery.goal', '{node: <the goal node>, question: <the case\'s goal question id>}');
+    } else if (graph.nodes?.[g.node]?.kind !== 'goal') {
+        err(R.BAD_MYSTERY, 'mystery.goal.node', `'${g.node}' is not the graph's goal node`);
+    }
+    const papers = m.papers;
+    if (!isPlainObject(papers) || Object.keys(papers).length === 0) {
+        err(R.BAD_MYSTERY, 'mystery.papers', 'a non-empty {<boon id>: <paper id>} map');
+        return;
+    }
+    const seen = new Set();
+    for (const [boon, paper] of Object.entries(papers)) {
+        if (!Object.hasOwn(graph.boons ?? {}, boon)) err(R.BAD_MYSTERY, `mystery.papers.${boon}`, `no boon '${boon}'`);
+        if (!nonEmpty(paper)) err(R.BAD_MYSTERY, `mystery.papers.${boon}`, 'a non-empty paper id');
+        else if (seen.has(paper)) err(R.BAD_MYSTERY, `mystery.papers.${boon}`, `paper '${paper}' is mapped twice`);
+        seen.add(paper);
+    }
 }
 
 function validateProvenance(graph, err) {

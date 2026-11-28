@@ -7,9 +7,12 @@ import '../mazeRoom/mazeRoomLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { sidecarFieldsOf, sidecarPayloadErrors, validateSidecarFields } from '../procgenCore/sidecarFields.js';
 import { buildTopDownEnvelope, runTopDownToStep } from '../procgenPipeline/topDownSteps.js';
+import { arrangeShuffledSpiral, buildRulesJson } from '../procgenPipeline/procgenPipelineEngine.js';
+import { pipelineLayoutsOf, PIPELINE_LAYOUTS } from '../procgenCore/substratePredicates.js';
 import {
   DEFAULT_MYSTERY_LOCK, MYSTERY_LOCKS, MYSTERY_PIPELINE_CONFIG_KEYS, MYSTERY_SIDECAR_FIELDS, MYSTERY_SUBSTRATE_ID,
   MYSTERY_SUBSTRATE_REFUSALS as REFUSALS, caseDocError, mysteryConfigFromSource, mysteryRegionsOfSource, mysteryZoneForSpecs,
+  caseWorldError, mysteryFillerItem, mysteryPlacedConfigFromSource, mysterySpareQuestions, mysteryZoneRules,
   substrateRegistryEntry as entry,
 } from './mysterySubstrateLibrary.js';
 
@@ -77,7 +80,7 @@ describe('the registry entry', () => {
   });
 
   it('declares the keys its config reads, and records what was installed', () => {
-    expect([...MYSTERY_PIPELINE_CONFIG_KEYS]).toEqual(['caseDoc', 'lock']);
+    expect([...MYSTERY_PIPELINE_CONFIG_KEYS]).toEqual(['caseDoc', 'caseWorld', 'lock']);
     expect(entry.recordablePipelineConfig()).toEqual({ lock: DEFAULT_MYSTERY_LOCK });
     entry.applyPipelineConfig({ caseDoc: caseDoc(), lock: MYSTERY_LOCKS.EVERYTHING });
     expect(entry.recordablePipelineConfig()).toEqual({ caseDoc: caseDoc(), lock: MYSTERY_LOCKS.EVERYTHING });
@@ -191,5 +194,97 @@ describe('the committed long case', () => {
     const placed = (doc, name) => Object.fromEntries(doc.regions['1'][name].locations.map((l) => [l.name, l.item?.name ?? null]));
     expect(placed(rules, regionName)).toEqual(placed(source, regionName));
     expect(sidecarPayloadErrors(sidecarFieldsOf(entry), payload)).toEqual([]);
+  });
+});
+
+describe('the office placed whole (the shuffled spiral)', () => {
+  const preset = path.join(REPO, 'frontend/presets/mystery_custom_house_fire/AP_14089154938208861744/AP_14089154938208861744_rules.json');
+  const source = () => JSON.parse(fs.readFileSync(preset, 'utf8'));
+  const sourceRegion = (doc) => Object.values(doc.regions['1']).find((r) => (r.locations ?? []).length > 0);
+
+  it('reads the filled case off a source: each question\'s rule and item, and each item\'s class', () => {
+    const doc = source();
+    const cfg = mysteryPlacedConfigFromSource(doc);
+    const region = sourceRegion(doc);
+    expect(caseWorldError(cfg.caseWorld, cfg.caseDoc)).toBeNull();
+    expect(cfg.caseWorld.locations.map((l) => [l.name, l.item, l.access_rule]))
+      .toEqual(region.locations.map((l) => [l.name, l.item.name, l.access_rule]));
+    expect(mysterySpareQuestions(cfg)).toBe(region.locations.filter((l) => doc.items['1'][l.item.name].classification === 'filler').length);
+    expect(doc.items['1'][mysteryFillerItem(cfg)].classification).toBe('filler');
+  });
+
+  it('a bare source (nothing placed) gives no filled case, and the top-down config is unchanged by this', () => {
+    const doc = source();
+    for (const l of sourceRegion(doc).locations) delete l.item;
+    expect(mysteryPlacedConfigFromSource(doc)).toEqual({});
+    expect(Object.keys(mysteryConfigFromSource(source()))).toEqual(['caseDoc']);
+  });
+
+  it('with no filled case installed the entry brings no zone, item or goal; installed, one zone', () => {
+    expect([entry.zoneCount, entry.victoryItem, entry.fillerItem, entry.libraryItems]).toEqual([0, undefined, undefined, {}]);
+    expect(pipelineLayoutsOf(entry)).toEqual([PIPELINE_LAYOUTS.SPIRAL, PIPELINE_LAYOUTS.TOPDOWN]);
+    const cfg = mysteryPlacedConfigFromSource(source());
+    entry.applyPipelineConfig(cfg);
+    expect(entry.zoneCount).toBe(1);
+    expect(entry.spiralItemCapacity(0)).toBe(mysterySpareQuestions(cfg));
+    expect(Object.keys(entry.libraryItems).sort()).toEqual(Object.keys(cfg.caseWorld.items).sort());
+    expect(entry.recordablePipelineConfig().caseWorld).toEqual(cfg.caseWorld);
+  });
+
+  it('dealt items take the spare questions in order; the goal stands where the case\'s own stood', () => {
+    const cfg = mysteryPlacedConfigFromSource(source());
+    const spare = cfg.caseWorld.locations.filter((l) => l.item === mysteryFillerItem(cfg)).map((l) => l.name);
+    const goal = cfg.caseWorld.locations.find((l) => l.item === 'Victory').name;
+    const held = (zone) => Object.fromEntries(zone.locations.map((l) => [l.global_name, l.item]));
+    const dealt = held(mysteryZoneRules(cfg, 0, { region_id: 'r', itemsToPlace: ['key_red', 'Victory'], goalOwned: true }));
+    expect([dealt[spare[0]], dealt[spare[1]], dealt[goal]]).toEqual(['key_red', mysteryFillerItem(cfg), 'Victory']);
+    // The goal placed elsewhere: the case's own becomes its filler. No goal in the world: the case keeps its own.
+    expect(held(mysteryZoneRules(cfg, 0, { region_id: 'r', goalOwned: true }))[goal]).toBe(mysteryFillerItem(cfg));
+    expect(held(mysteryZoneRules(cfg, 0, { region_id: 'r' }))[goal]).toBe('Victory');
+  });
+
+  it('refuses by name: no filled case, a second zone, more items than spare questions, a filled case that is not the case', () => {
+    const cfg = mysteryPlacedConfigFromSource(source());
+    expect(reasonOf(() => mysteryZoneRules({ caseDoc: cfg.caseDoc }, 0, {}))).toBe(REFUSALS.NO_CASE_WORLD);
+    expect(reasonOf(() => mysteryZoneRules(cfg, 1, {}))).toBe(REFUSALS.NO_SUCH_ZONE);
+    const many = Array.from({ length: mysterySpareQuestions(cfg) + 1 }, (_, i) => `item_${i}`);
+    expect(reasonOf(() => mysteryZoneRules(cfg, 0, { itemsToPlace: many }))).toBe(REFUSALS.TOO_MANY_ITEMS);
+    const short = { ...cfg, caseWorld: { ...cfg.caseWorld, locations: cfg.caseWorld.locations.slice(1) } };
+    expect(reasonOf(() => entry.applyPipelineConfig(short))).toBe(REFUSALS.BAD_CASE_WORLD);
+    expect(reasonOf(() => entry.applyPipelineConfig({ caseWorld: cfg.caseWorld }))).toBe(REFUSALS.BAD_CASE_WORLD);
+  });
+
+  it('a spiral world of maze rooms and the office: the case whole, its rules kept, every location in the sphere log', () => {
+    const doc = source();
+    const cfg = mysteryPlacedConfigFromSource(doc);
+    // The stepped driver's ① installs a quota substrate's config; the monolithic call leaves it to the caller.
+    entry.applyPipelineConfig(cfg);
+    const { grid, startCell, stats } = arrangeShuffledSpiral({
+      regionSize: { width: 7, height: 7 }, itemPool: { victory: 1, key_red: 1, key_green: 1 }, obstaclePool: {}, seed: 5, regionParams: {},
+      growthParams: { substrateQuotas: { maze: 3, mystery: 1 }, maxItemsPerRegion: 2, startSubstrate: 'maze', substrateConfig: { mystery: cfg } },
+      hazardOpts: {},
+    });
+    const rules = buildRulesJson(grid, { startCell, seed: 5, completionConditionItem: 'Victory', procgenMetadata: { driver: 'test', stop_reason: stats.stopReason } });
+    const [regionName, sidecar] = Object.entries(rules.preset_sidecars['1']).find(([, s]) => s.substrate === MYSTERY_SUBSTRATE_ID);
+    const office = rules.regions['1'][regionName];
+    const region = sourceRegion(doc);
+    expect(office.locations.map((l) => [l.name, l.access_rule])).toEqual(region.locations.map((l) => [l.name, l.access_rule]));
+    // The papers stand where the source's fill put them.
+    const papers = Object.keys(cfg.caseDoc.items);
+    const at = (r) => Object.fromEntries(r.locations.filter((l) => papers.includes(l.item?.name)).map((l) => [l.name, l.item.name]));
+    expect(at(office)).toEqual(at(region));
+    // Every paper the case places is an item of the world. The papers the case starts with are not: no rule
+    // names one, and the page holds them itself (the source's `starting_items`; the spiral has no such channel).
+    const start = doc.starting_items['1'];
+    expect(JSON.stringify(region)).not.toMatch(new RegExp(start.map((n) => JSON.stringify(n).slice(1, -1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')));
+    for (const name of papers.filter((n) => !start.includes(n))) expect(rules.items['1'], name).toHaveProperty([name]);
+    expect(sidecarPayloadErrors(sidecarFieldsOf(entry), sidecar.playable_payload)).toEqual([]);
+    expect(Object.values(sidecar.playable_payload.ap_locations).sort()).toEqual(office.locations.map((l) => l.name).sort());
+    expect(rules.procgen_metadata['1'].substrate_configs.mystery.caseWorld).toEqual(cfg.caseWorld);
+    // Solvable: the world's own sphere log reaches every location, and one location holds the goal.
+    const all = Object.values(rules.regions['1']).flatMap((r) => r.locations ?? []);
+    const logged = new Set(rules.sphere_log.flatMap((e) => e.player_data?.['1']?.sphere_locations ?? []));
+    expect(all.map((l) => l.name).filter((n) => !logged.has(n))).toEqual([]);
+    expect(all.filter((l) => l.item?.name === 'Victory')).toHaveLength(1);
   });
 });

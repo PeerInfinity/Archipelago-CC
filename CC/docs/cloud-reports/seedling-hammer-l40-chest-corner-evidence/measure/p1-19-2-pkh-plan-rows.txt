@@ -1,0 +1,5 @@
+SEG 0 ROW 0 {"verb":"kill","rung":"kill","climb":1,"arm":"press","target":"spinner@880,848"} | {"kind":"collect-placement","aim":{"x":888,"y":824}} | [object Object]
+SEG 0 ROW 1427 {"verb":"bait","rung":"bait","climb":2} | {"kind":"collect-placement","aim":{"x":888,"y":824}} | [object Object]
+SEG 0 ROW 1528 {"verb":"kill","rung":"kill","climb":2,"arm":"chaser","target":"bobsoldier@880,832","stance":{"x":888,"y":840},"runnersUp":[{"x":888,"y":856,"deathAt":84}],"staged":{"cell":{"x":856,"y":856},"wait":15,"from":1427}} | {"kind":"collect-placement","aim":{"x":888,"y":824}} | [object Object]
+SEG 0 ROW 1601 {"verb":"bait","rung":"bait","climb":3} | {"kind":"collect-placement","aim":{"x":888,"y":824}} | [object Object]
+SEG 0 ROW 1612 {"verb":"kill","rung":"kill","climb":3,"arm":"orbit","target":"bobsoldier@880,832","candidate":"r 22 ccw far 110°"} | {"kind":"collect-placement","aim":{"x":888,"y":824}} | [object Object]

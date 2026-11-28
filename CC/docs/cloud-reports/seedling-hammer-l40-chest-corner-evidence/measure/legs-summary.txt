@@ -1,0 +1,159 @@
+  level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[70] digest=00c68cdd
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[70] digest=00c68cdd
+  level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[5] digest=e5d60b3c
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[5] digest=e5d60b3c
+  level_40__r0c53 <- in_L41_0_160 -> location:L40 flag 7: wandlock@208,128 cleared
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1083] digest=49f469ca
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1083] digest=49f469ca
+  level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[5] digest=e5d60b3c
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[5] digest=e5d60b3c
+  level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[70] digest=00c68cdd
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[70] digest=00c68cdd
+  level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 7: wandlock@208,128 cleared
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1012] digest=9c271097
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1012] digest=9c271097
+  level_40__r23c29 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=1 ticks=[None, 718] digest=10a3be9c
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=1 ticks=[None, 718] digest=10a3be9c
+  level_40__r23c29 <- in_L41_0_160 ~> level_40__r0c53 -> location:L40 flag 8: bosslock@480,352 cleared
+      D skipped answer=None roomHits=0 plans=0 refused=0 ticks=[] digest=97d170e1
+      DP skipped answer=None roomHits=0 plans=0 refused=0 ticks=[] digest=97d170e1
+  level_40__r23c29 <- in_L42_240_336 ~> level_40__r0c53 -> location:L40 flag 8: bosslock@480,352 cleared
+      D skipped answer=None roomHits=0 plans=0 refused=0 ticks=[] digest=97d170e1
+      DP skipped answer=None roomHits=0 plans=0 refused=0 ticks=[] digest=97d170e1
+  level_40__r23c29 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 8: bosslock@480,352 cleared
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[559] digest=e892fe90
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[559] digest=e892fe90
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_20
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1025] digest=6ff653e8
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1025] digest=6ff653e8
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_13_21
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1034] digest=317eaa32
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1034] digest=317eaa32
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_20
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1088] digest=59445240
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1088] digest=59445240
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_14_21
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1156] digest=3645a6b2
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1156] digest=3645a6b2
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_20
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[861] digest=51ae74b1
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[861] digest=51ae74b1
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_21
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[844] digest=e01bfeea
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[844] digest=e01bfeea
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_22
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[828] digest=522e1627
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[828] digest=522e1627
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_4_23
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[809] digest=5352437f
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[809] digest=5352437f
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_20
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[913] digest=72d1f61b
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[913] digest=72d1f61b
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_21
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[955] digest=81256d98
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[955] digest=81256d98
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_22
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[938] digest=c10c9384
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[938] digest=c10c9384
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_pit_5_23
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[909] digest=d4b2b7ad
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[909] digest=d4b2b7ad
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[172] digest=e435ac05
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[172] digest=e435ac05
+  level_40__r26c13 <- in_L39_144_0 -> exit:out_teleporter_480_912
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[4] digest=84b4eb18
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[4] digest=84b4eb18
+* level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=1 ticks=[None, 1231] digest=dd1e0b6d
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=1 ticks=[None, 1222] digest=a32fd8e5
+  level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[494] digest=3bbaa510
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[494] digest=3bbaa510
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_20
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[642] digest=67330067
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[642] digest=67330067
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_13_21
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[598] digest=7f33c94b
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[598] digest=7f33c94b
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_20
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[718] digest=e8448211
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[718] digest=e8448211
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_14_21
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[637] digest=b808cb20
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[637] digest=b808cb20
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_20
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[416] digest=1dd2157d
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[416] digest=1dd2157d
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_21
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[482] digest=8bad8881
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[482] digest=8bad8881
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_22
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[340] digest=370007c3
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[340] digest=370007c3
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_4_23
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[433] digest=bf6d7b56
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[433] digest=bf6d7b56
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_20
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[480] digest=90c1fb54
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[480] digest=90c1fb54
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_21
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[527] digest=94fa049e
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[527] digest=94fa049e
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_22
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[476] digest=cfb463e9
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[476] digest=cfb463e9
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_pit_5_23
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[499] digest=4cf6da59
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[499] digest=4cf6da59
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[5] digest=e5d60b3c
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[5] digest=e5d60b3c
+  level_40__r26c13 <- in_L43_176_464 -> exit:out_teleporter_480_912
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[417] digest=721245fa
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[417] digest=721245fa
+* level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Chest
+      D timeout answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=2 ticks=[None, None] digest=697f99cb
+      DP timeout answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=1 ticks=[None, 1684] digest=d17a734c
+  level_40__r26c13 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[118] digest=a6489eae
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[118] digest=a6489eae
+  level_40__r32c36 <- in_L39_144_0 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2
+      D timeout answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=1 ticks=[None, 4491] digest=48ad1248
+      DP timeout answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=1 ticks=[None, 4491] digest=48ad1248
+  level_40__r32c36 <- in_L43_176_464 ~> level_40__r26c13 -> location:Level 040 - Boss Key 2
+      D timeout answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=1 ticks=[None, 4308] digest=2616f107
+      DP timeout answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=1 ticks=[None, 4308] digest=2616f107
+* level_40__r48c54 <- in_L39_144_0 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+      D timeout answer=(True, 'force-re-arrival') roomHits=0 plans=3 refused=2 ticks=[None, 1364, None] digest=59c0d785
+      DP timeout answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=1 ticks=[None, 1101] digest=cd9ff17f
+  level_40__r48c54 <- in_L43_176_464 ~> level_40__r26c13 -> location:L40 flag 12: wandlock@480,560 cleared
+      D timeout answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=2 ticks=[None, None] digest=697f99cb
+      DP timeout answer=(True, 'force-re-arrival') roomHits=0 plans=2 refused=2 ticks=[None, None] digest=697f99cb
+  level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:L40 flag 1: wandlock@176,80 cleared
+      D skipped answer=None roomHits=0 plans=0 refused=0 ticks=[] digest=97d170e1
+      DP skipped answer=None roomHits=0 plans=0 refused=0 ticks=[] digest=97d170e1
+  level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144
+      D failed answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=1 ticks=[None] digest=088b5600
+      DP failed answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=1 ticks=[None] digest=088b5600
+  level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:L40 flag 1: wandlock@176,80 cleared
+      D skipped answer=None roomHits=0 plans=0 refused=0 ticks=[] digest=97d170e1
+      DP skipped answer=None roomHits=0 plans=0 refused=0 ticks=[] digest=97d170e1
+  level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1239] digest=b6d3260d
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[1239] digest=b6d3260d
+  level_92__r4c2 <- in_L91_240_48 -> exit:out_teleporter_32_144
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[4] digest=84b4eb18
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[4] digest=84b4eb18
+  level_92__r7c17 <- in_L87_16_32 -> exit:out_teleporter_272_144
+      D done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[11] digest=e7a1a6ad
+      DP done answer=(True, 'force-re-arrival') roomHits=0 plans=1 refused=0 ticks=[11] digest=e7a1a6ad
+legs 52 identical 49
+D {'done': 42, 'timeout': 5, 'skipped': 4, 'failed': 1} legs with roomHits: 0
+DP {'done': 42, 'timeout': 5, 'skipped': 4, 'failed': 1} legs with roomHits: 0

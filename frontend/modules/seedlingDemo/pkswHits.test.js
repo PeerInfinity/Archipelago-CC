@@ -52,8 +52,8 @@ describe('PRESS_KILL_REFUGE_BOMBS (hammer-phase PKSW-HITS)', () => {
         // the declaration, deriveRefuge's question, and the kill's "nowhere to be" sentence
         expect(reads).toHaveLength(3);
         expect(bodyOf('export function deriveRefuge(')).toContain('const bombs = refugeAsksBombs(run);');
-        // `deriveStrike`'s stand question stays BW's alone
-        expect(SOURCE).toContain('    const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);\n    let bombed = 0;');
+        // `deriveStrike`'s stand question stays BW's (or CHASER-STAND's stand half, `PRESS_KILL_STRIKE_BOMBS`): never this switch
+        expect(SOURCE).toContain('    const bombs = (PRESS_KILL_BOMBS.enabled || PRESS_KILL_STRIKE_BOMBS.enabled) && bombsInPlay(run);\n    let bombed = 0;');
         // nothing single-game in the switch's own code
         expect(gate).not.toMatch(/level\s*===\s*\d|@\d+,\d+|spinner@|bombpusher/);
     });

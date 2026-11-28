@@ -13,8 +13,12 @@ Open **Mystery Game** from Quick Launch.
 
 - Each question of the case is a location. When you solve a question in the game, its check is sent.
 - Each paper of the case is an item. Papers you have received appear in the game; papers still out in the multiworld do not.
-- The game waits for the Archipelago connection before it starts, and keeps a separate save for each multiworld slot.
+- Connecting to a server, the game waits for the connection before it starts. It keeps a separate save for each multiworld slot.
 - If the game says the world is for another story or another version of the case, the world was generated from a different version of the case than the page has. Nothing is sent in that state. The app's own copy of the game is kept at the version of the mystery world that ships with the app, so this happens only with a world generated elsewhere or a changed page address.
+
+## Playing with no server
+
+A mystery world loaded as a preset plays without a server: the app keeps the checks and hands out the papers itself, and the game starts at once. This local game has a save of its own, apart from any multiworld's. The feature check **Mystery: a case played through with no server** (Tutorial panel) shows it: the game's own careful reader plays the whole case.
 
 ## A case as one place in a larger world
 

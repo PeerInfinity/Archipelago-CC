@@ -1,0 +1,10 @@
+import { readFileSync } from 'node:fs';
+import { gunzipSync } from 'node:zlib';
+const [file, id, i] = process.argv.slice(2);
+const raw = gunzipSync(readFileSync(file)).toString();
+const row = raw.split('\n').filter(Boolean).map((l) => JSON.parse(l)).find((r) => String(r.id) === id);
+const req = row.requests[Number(i)];
+const { restoreRequest } = await import('/home/user/Archipelago-CC/scripts/procgen/seedlingSolveRequestCodec.js');
+const { passes, source, ...tape } = restoreRequest(req.request);
+console.log(JSON.stringify({ staging: tape.staging, equips: tape.equips, solverGoal: tape.solverGoal, name: tape.name, live: tape.live }, (k, v) => (v instanceof Map ? [...v] : v instanceof Set ? [...v] : v)).slice(0, 9000));
+console.log(Object.keys(row), row.requests.length, row.requests.map(r=>r.result?.ok+':'+r.result?.kind));

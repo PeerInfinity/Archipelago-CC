@@ -1,0 +1,16 @@
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -97
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -90
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -80
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -70
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -60
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -50
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -40
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -30
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -20
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 -10
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 0
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 7
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 10
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 20
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 30
+cap /tmp/claude-0/-home-user-Archipelago-CC/71f3de28-d5be-51d6-97a1-b4b3a0697b79/scratchpad/cap/r8-P1.jsonl 32 10 40

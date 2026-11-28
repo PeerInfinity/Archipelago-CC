@@ -1,0 +1,5 @@
+SOLVE {"ok":true,"work":361,"ticks":926,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":926,"work":150,"modelHits":{"hits":1,"deaths":0}},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":125},{"pass":"hit-avoid","ok":false,"kind":null,"ticks":null,"work":86,"tries":1,"cut":"window"}],"message":null}
+MODEL {"hits":["t1799 chaser:bob@272,112"],"end":{"level":40,"x":72.18928856385847,"y":152.65825836595553}}
+# box lock: TAKEN by chaser-stand-f1-witness (browser, pid 5711) — head ecd648269, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"finished":true,"ticks":2375,"prefix":1449,"hitsAtPrefix":{"tick":1449,"hits":0},"end":{"level":40,"x":72.18928856385847,"y":152.65825836595553},"hits":1}

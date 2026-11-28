@@ -1,0 +1,6 @@
+INFO: mode bare: 1 legs in 1 page(s) (of 915 legs)
+SOLVER_ENV: page 1: SEEDLING_HIT_PLAN_RETRY=1 (--solver-env)
+INFO: page 1 booted in 31 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+INFO: page 1: 2 page error(s), ~2 swaps
+INFO: sweep done
+exit 0

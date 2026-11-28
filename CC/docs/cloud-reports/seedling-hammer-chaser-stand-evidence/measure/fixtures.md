@@ -1,0 +1,23 @@
+| fixture (key) | off | oachsb | all4 | all4oac | all4oachsb |
+|---|---|---|---|---|---|
+| leg376-l40-request.json.gz () | 1614 t, 1 h t1248 bomb:bombpusher@112,128#9 `330c2f595a6b` | 1614 t, 1 h t1248 bomb:bombpusher@112,128#9 `330c2f595a6b` | 1599 t, 0 h `e1a48e4ab2b2` | 1599 t, 0 h `e1a48e4ab2b2` | 1599 t, 0 h `e1a48e4ab2b2` |
+| leg371-l40-request.json.gz (level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144) | 1796 t, 0 h `3d1bccefb626` | 1796 t, 0 h `3d1bccefb626` | 1678 t, 0 h `16ae75667c23` | 1678 t, 0 h `16ae75667c23` | 1678 t, 0 h `16ae75667c23` |
+| chest-L39-request.json.gz (level_40__r26c13 <- in_L39_144_0 -> location:Level 040 - Chest) | 1317 t, 0 h `adb8f1aa327a` | 1317 t, 0 h `adb8f1aa327a` | 1317 t, 0 h `adb8f1aa327a` | 1317 t, 0 h `adb8f1aa327a` | 1317 t, 0 h `adb8f1aa327a` |
+| leg873-l39-l40-bk2-request.json.gz (level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2) | 4491 t, 0 h `535a61951b01` | 4491 t, 0 h `535a61951b01` | 4491 t, 0 h `535a61951b01` | 4491 t, 0 h `535a61951b01` | 4491 t, 0 h `535a61951b01` |
+| leg874-l43-l40-bk2-request.json.gz (level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2) | 4308 t, 0 h `a9ccf0f57ae7` | 4308 t, 0 h `a9ccf0f57ae7` | 4308 t, 0 h `a9ccf0f57ae7` | 4308 t, 0 h `a9ccf0f57ae7` | 4308 t, 0 h `a9ccf0f57ae7` |
+| leg398-l39-l40-flag8-request.json.gz (level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared) | 718 t, 0 h `981a17d6218e` | 718 t, 0 h `981a17d6218e` | 718 t, 0 h `981a17d6218e` | 718 t, 0 h `981a17d6218e` | 718 t, 0 h `981a17d6218e` |
+| leg388-l40-l43-request.json.gz (level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21) | 1156 t, 0 h `9637801db14d` | 1156 t, 0 h `9637801db14d` | 1156 t, 0 h `9637801db14d` | 1156 t, 0 h `9637801db14d` | 1156 t, 0 h `9637801db14d` |
+| leg387-l40-l43-request.json.gz (level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21) | 1034 t, 0 h `77cdce01efe4` | 1034 t, 0 h `77cdce01efe4` | 1034 t, 0 h `77cdce01efe4` | 1034 t, 0 h `77cdce01efe4` | 1034 t, 0 h `77cdce01efe4` |
+| leg403-l40-l43-request.json.gz (level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21) | 527 t, 0 h `4b6d58820416` | 527 t, 0 h `4b6d58820416` | 527 t, 0 h `4b6d58820416` | 527 t, 0 h `4b6d58820416` | 527 t, 0 h `4b6d58820416` |
+| leg377-l42-l40-request.json.gz (level_40__r0c53 <- in_L42_240_336 -> location:L40 flag 1: wandlock@176,80 cleared) | 1482 t, 0 h `f2a421ec7677` | 1482 t, 0 h `f2a421ec7677` | 1438 t, 0 h `3e3fbf4bfa4a` | 1438 t, 0 h `3e3fbf4bfa4a` | 1438 t, 0 h `3e3fbf4bfa4a` |
+| leg871-l39-l40-request.json.gz (level_40__r48c54 <- in_L39_144_0 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared) | REFUSED `785fcf0cd37f` | REFUSED `785fcf0cd37f` | REFUSED `785fcf0cd37f` | REFUSED `785fcf0cd37f` | REFUSED `785fcf0cd37f` |
+| leg872-l43-l40-request.json.gz (level_40__r48c54 <- in_L43_176_464 ~> level_40__r23c29 -> location:L40 flag 12: wandlock@480,560 cleared) | REFUSED `785fcf0cd37f` | REFUSED `785fcf0cd37f` | REFUSED `785fcf0cd37f` | REFUSED `785fcf0cd37f` | REFUSED `785fcf0cd37f` |
+| leg356-l40-request.json.gz (level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144) | 1702 t, 0 h `ae37c251645d` | 1702 t, 0 h `ae37c251645d` | 1702 t, 0 h `ae37c251645d` | 1702 t, 0 h `ae37c251645d` | 1702 t, 0 h `ae37c251645d` |
+| leg853-l40-request.json.gz (level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2) | REFUSED `22a13cc16402` | REFUSED `22a13cc16402` | REFUSED `22a13cc16402` | REFUSED `22a13cc16402` | REFUSED `22a13cc16402` |
+| leg367-l40-l43-request.json.gz (level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21) | 955 t, 0 h `bef31d3abaf6` | 955 t, 0 h `bef31d3abaf6` | 955 t, 0 h `bef31d3abaf6` | 955 t, 0 h `bef31d3abaf6` | 955 t, 0 h `bef31d3abaf6` |
+| leg855-l41-l40-totem64-request.json.gz (level_40__r4c4 <- in_L41_0_160 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144) | REFUSED `28f07ce9897a` | REFUSED `28f07ce9897a` | REFUSED `28f07ce9897a` | REFUSED `28f07ce9897a` | REFUSED `28f07ce9897a` |
+| leg857-l42-l40-totem64-request.json.gz (level_40__r4c4 <- in_L42_240_336 ~> level_40__r0c53 -> location:Level 040 - Totem Part 64,144) | 1239 t, 0 h `ae1624a3c5be` | 1239 t, 0 h `ae1624a3c5be` | 1239 t, 0 h `ae1624a3c5be` | 1239 t, 0 h `ae1624a3c5be` | 1239 t, 0 h `ae1624a3c5be` |
+| leg368-request.jsonl.gz (level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144) | 1599 t, 0 h `fdbc9fe9932a` | 1599 t, 0 h `fdbc9fe9932a` | 1599 t, 0 h `fdbc9fe9932a` | 1599 t, 0 h `fdbc9fe9932a` | 1599 t, 0 h `fdbc9fe9932a` |
+
+all4 vs all4oac / all4oachsb differ on: []
+off vs oachsb differ on: []

@@ -1,0 +1,6 @@
+start 2026-11-28T00:44:57Z head e136ff4b
+vitest rc=0 00:48:14
+inapp seedling-js rc=0 00:53:20
+measure2 head eae3f6da eae3f6da MEASUREMENT-ONLY: the service capture probe reaches the walk's binding through window.top (the JS page's iframe) b7b0c883 MEASUREMENT-ONLY: TEST_MEASURE_CAPTURE_SERVICE — a solve-service probe that captures BOTH runtimes' requests (the JS frame's too) e136ff4b Merge origin/main (edb026f9: trains region-map-maze-hooks, region-graph-floors) into seedling-js-l57-exit-check 
+back on claude/js-l57-exit-check-izu8ut e136ff4b; status: 0
+FINALDONE 01:56:02

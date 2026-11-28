@@ -1,0 +1,115 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [31m❯[39m frontend/modules/seedlingDemo/procgenPostSword.test.js [2m([22m[2m13 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 9193[2mms[22m[39m
+     [32m✓[39m declares the sword and withholds the shield — the arc's own boundary[32m 2[2mms[22m[39m
+     [32m✓[39m is a superset of the pre-sword roster — and the extra is EMPTY since 4c[32m 5[2mms[22m[39m
+     [32m✓[39m every kill lock takes a tag the GOAL does not own — now the ELEMENT's[32m 20[2mms[22m[39m
+     [32m✓[39m each biome carries its OWN exclusions, and they are different lists[32m 1[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ no longer generates the pre-sword level — the roster split is REAL [33m 1338[2mms[22m[39m
+     [33m[2m✓[22m[39m and the same room under both boots gives the same verdict and tick count [33m 525[2mms[22m[39m
+     [32m✓[39m chest-in-the-gap: the verb is SELECTED and the corridor never opens[32m 20[2mms[22m[39m
+     [32m✓[39m key-keylock-pair: unkeyed it THROWS; keyed the corridor still never opens[32m 56[2mms[22m[39m
+     [33m[2m✓[22m[39m spinner-killlock: SOLVES, and the clear is DISCHARGED in the records [33m 555[2mms[22m[39m
+[31m     [31m×[31m …and with the clock UNDECLARED the same room throws, as it always did[39m[33m 1256[2mms[22m[39m
+     [32m✓[39m shieldboss-door: a live boss refuses the goal's own ceremony[32m 239[2mms[22m[39m
+     [32m✓[39m every excluded row above is one this file actually drove — or a NAMED supersession[32m 0[2mms[22m[39m
+     [33m[2m✓[22m[39m seed 13: >= 5 kept obstacles over >= 3 families, and the KILL GATE is DISCHARGED [33m 5174[2mms[22m[39m
+ [31m❯[39m frontend/modules/seedlingDemo/hammerFightFallback.test.js [2m([22m[2m15 tests[22m[2m | [22m[31m4 failed[39m[2m)[22m[33m 50501[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte [33m 3773[2mms[22m[39m
+     [32m✓[39m ⛓⛓ the rewind's replay (`replayOntoFork`, `to`) lands on the straight run, and refuses a factory from another state[32m 5[2mms[22m[39m
+     [32m✓[39m ⛓⛓ b3c — a rewind across a DEAD-FRAME span lands on the straight run: equips on the run clock, cut on it[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ b3c — a TAKE after a DEAD-FRAME span replays on the TAPE index, not the run clock[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓ b3b — on a BOOT factory the prefix is replayed too (the factory re-makes the PLAY's equips); skipping it is refused by the clock check[32m 35[2mms[22m[39m
+     [32m✓[39m ⛓⛓ OFF by default, rewind mode by default, the switch restores; the trigger is the two press-kill codes[32m 1[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's[39m[33m 6275[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence[39m[33m 8105[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing [33m 4978[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ inert while the fight itself is on (the retry would be the same path) [33m 16759[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged [33m 734[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged [33m 5819[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓⛓ ON: the rewind that solves is a plan whose `expected` IS a replay of its keys, row by row[39m[33m 2093[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓⛓ ON, the deadline tripping AFTER the rewind solved: the plan's `expected` IS a replay of its keys[39m[33m 1918[2mms[22m[39m
+     [32m✓[39m ⛓⛓ `withSolveDeadline` keeps a non-enumerable `liveRun` across a tripped deadline, and adds none without one[32m 2[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 5 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerFightFallback.test.js[2m > [22mhammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)[2m > [22m⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's
+[31m[1mAssertionError[22m: expected null to be an instance of SolverBotError[39m
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerFightFallback.test.js:[2m210:25[22m[39m
+    [90m208| [39m        [35mawait[39m [34mwithHammerEscape[39m([35mfalse[39m[33m,[39m [35masync[39m () [33m=>[39m {
+    [90m209| [39m            [35mconst[39m off [33m=[39m [35mawait[39m [34mrefusalOf[39m([34msolveR9At[39m([34m4[39m))[33m;[39m
+    [90m210| [39m            [34mexpect[39m(off)[33m.[39m[34mtoBeInstanceOf[39m([33mSolverBotError[39m)[33m;[39m
+    [90m   | [39m                        [31m^[39m
+    [90m211| [39m            [34mexpect[39m(off[33m.[39mcode)[33m.[39m[34mtoBe[39m([33mHAMMER_SAFETY[39m)[33m;[39m
+    [90m212| [39m            // `STRIKE_ETA_FLOOR` OFF: "There is no step out. The corn…
+[90m [2m❯[22m frontend/modules/seedlingDemo/hammerFightFallback.test.js:[2m208:9[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerFightFallback.test.js[2m > [22mhammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)[2m > [22m⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence
+[31m[1mAssertionError[22m: expected null to be an instance of SolverBotError[39m
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerFightFallback.test.js:[2m245:24[22m[39m
+    [90m243| [39m                [33mHAMMER_FIGHT[39m[33m.[39mbounds [33m=[39m [35mnull[39m[33m;[39m
+    [90m244| [39m            }
+    [90m245| [39m            [34mexpect[39m(on)[33m.[39m[34mtoBeInstanceOf[39m([33mSolverBotError[39m)[33m;[39m
+    [90m   | [39m                       [31m^[39m
+    [90m246| [39m            [34mexpect[39m(on[33m.[39mcode)[33m.[39m[34mtoBe[39m(off[33m.[39mcode)[33m;[39m
+    [90m247| [39m            expect(on.message.startsWith(`${off.message} The fight fal…
+[90m [2m❯[22m frontend/modules/seedlingDemo/hammerFightFallback.test.js:[2m236:9[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerFightFallback.test.js[2m > [22mFF-HARNESS — the tape solver's recorder follows a rewound run (`liveRun`)[2m > [22m⛓⛓⛓ ON: the rewind that solves is a plan whose `expected` IS a replay of its keys, row by row
+[31m[1mAssertionError[22m: expected null to be an instance of SolverBotError[39m
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerFightFallback.test.js:[2m319:25[22m[39m
+    [90m317| [39m        [34mwithHammerEscape[39m([35mfalse[39m[33m,[39m () [33m=>[39m {
+    [90m318| [39m            const off = (() => { try { solveTapeR9At4(); return null; …
+    [90m319| [39m            [34mexpect[39m(off)[33m.[39m[34mtoBeInstanceOf[39m([33mSolverBotError[39m)[33m;[39m
+    [90m   | [39m                        [31m^[39m
+    [90m320| [39m            [34mexpect[39m(off[33m.[39mcode)[33m.[39m[34mtoBe[39m([33mHAMMER_SAFETY[39m)[33m;[39m
+    [90m321| [39m            [35mconst[39m fallbacks [33m=[39m [][33m;[39m
+[90m [2m❯[22m withHammerEscape frontend/modules/seedlingDemo/solverBot.js:[2m17275:21[22m[39m
+[90m [2m❯[22m frontend/modules/seedlingDemo/hammerFightFallback.test.js:[2m317:25[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerFightFallback.test.js[2m > [22mSDC — a tripped deadline keeps a rewound run's `liveRun`[2m > [22m⛓⛓⛓ ON, the deadline tripping AFTER the rewind solved: the plan's `expected` IS a replay of its keys
+[31m[1mAssertionError[22m: expected null to be an instance of SolverBotError[39m
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerFightFallback.test.js:[2m370:25[22m[39m
+    [90m368| [39m            const shouldStop = (site) => { asked.push([site, fallbacks…
+    [90m369| [39m            const off = (() => { try { solveTapeR9At4(shouldStop); ret…
+    [90m370| [39m            [34mexpect[39m(off)[33m.[39m[34mtoBeInstanceOf[39m([33mSolverBotError[39m)[33m;[39m
+    [90m   | [39m                        [31m^[39m
+    [90m371| [39m            [34mexpect[39m(off[33m.[39mcode)[33m.[39m[34mtoBe[39m([33mHAMMER_SAFETY[39m)[33m;[39m
+    [90m372| [39m            asked[33m.[39mlength [33m=[39m [34m0[39m[33m;[39m
+[90m [2m❯[22m withHammerEscape frontend/modules/seedlingDemo/solverBot.js:[2m17275:21[22m[39m
+[90m [2m❯[22m frontend/modules/seedlingDemo/hammerFightFallback.test.js:[2m364:25[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/procgenPostSword.test.js[2m > [22m⛔⛔ THE RE-PROBE — every excluded family, driven in the door geometry[2m > [22m…and with the clock UNDECLARED the same room throws, as it always did
+[31m[1mAssertionError[22m: expected 'levelRun: at tick 266 the player box …' to match /13 px hammer's union over all 45 phas…/[39m
+
+[32m- Expected:[39m 
+/13 px hammer's union over all 45 phases/
+
+[31m+ Received:[39m 
+"levelRun: at tick 266 the player box at (23.951077551116445,71.80526618389982) is inside spinner@48,32's HAMMER REACH — its entity point is (38.32,73.23) and the reach is 13 px — on a tape that does NOT declare `noDamage`, AND whose `Game.time` this run cannot count: the boot block declares no `save.time`. `Spinner.update` swings a `collideLine(\"Player\", …)` at `(Game.time % 45) / 45 · 2π` and calls `player.hit(this, 4, …)`, so without the clock the honest quantity is the UNION over all 45 phases — the disc above — and a walk inside it is a contact this run cannot price. Declare the boot state the clock needs, route clear of the disc (`dangerMap.spinnerDanger` forbids it at plan time), or declare `noDamage`."
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/procgenPostSword.test.js:[2m501:32[22m[39m
+    [90m499| [39m         * mean anything.
+    [90m500| [39m         */[39m
+    [90m501| [39m        expect(out.reasonText).toMatch(/13 px hammer's union over all …
+    [90m   | [39m                               [31m^[39m
+    [90m502| [39m        [34mexpect[39m(out[33m.[39mreasonText)[33m.[39mnot[33m.[39m[34mtoMatch[39m([36m/hammer line/[39m)[33m;[39m
+    [90m503| [39m    })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m5 failed[39m[22m[2m | [22m[1m[32m23 passed[39m[22m[90m (28)[39m
+[2m   Start at [22m 03:25:40
+[2m   Duration [22m 53.96s[2m (transform 4.81s, setup 416ms, import 6.56s, tests 59.69s, environment 0ms)[22m
+

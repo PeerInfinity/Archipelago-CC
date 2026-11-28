@@ -147,7 +147,7 @@ import { playerBoxAt } from './playerPhysicsV2.js';
 import { BUILD_SPAWN, heldKeysAt, INVENTORY_ITEM_IDS, ITEM_PROPERTIES, parseTape, SAVE_SLOTS } from './tapeFormat.js';
 import { stagingFromTape } from './tapeRunner.js';
 import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
-import { createRuntimeSolver } from './jsRuntimeSolver.js';
+import { createRuntimeSolver, fightExitOf } from './jsRuntimeSolver.js';
 import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
 import { encounterReportServed, locationGoalServed } from './wasmPlayback.js';
 import { R7_GOAL_LEDGER } from './r7Acceptance.js';
@@ -459,6 +459,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     const collected = new Set();
     /** ⛓ RE2 — the restore's reboot in place is pending (the ONLY reboot in place since seedling-js-item-live-delivery). */
     let deferredReboot = false;
+    /** ⛓ seedling-js-held-retry (W7) — the solver's forced re-arrival, queued (its `why`), or null. Any boot clears it. */
+    let pendingReArrival = null;
     /**
      * ⛓ seedling-js-item-live-delivery — host deliveries the session's ledgers hold and the LIVE run has not been handed
      * yet (`applyDeliveries`): `{kind: 'flag'|'key'|'totem'|'seal', …}`, `levelRun.deliver`'s vocabulary. A boot drops
@@ -526,12 +528,22 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         getRecords: () => roomSource()?.records ?? null,
         placementOf: (goal) => locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null),
         onEvent: (e) => note({ type: 'solver', solver: e.type, message: e.message }),
+        // ⛓ seedling-js-held-retry (W7) — a refused CONTINUATION's forced re-arrival: QUEUED here, landed by `tickOnce` at
+        // the next tick's boundary (never inside the walker's `heldFor`, whose caller holds the old run). The JS frame's
+        // re-arrival is this page's own `boot(arrival)` — the wasm page's is a host teleport to the room's spawn.
+        reArrive: (why) => {
+            if (!session || !arrival || halted) return false;
+            pendingReArrival = why;
+            return true;
+        },
     });
     /** ⛓ S1 — `instant`: play the solver's planned keys in one burst (a page tick each). */
     let instant = false;
     let bursting = false;
     const walker = createRuntimeWalker({
         solver,
+        // ⛓ seedling-js-l57-exit-check — an exit a boss fight adds (L57's mouth, L69's Lights teleporter): `fightExit`.
+        fightExitOf: (run, goal) => fightExit(run, goal),
         apItemOf: (level, tag) => (mounted?.apItems.get(level) ?? []).find((a) => a.tag === tag) ?? null,
         // ⛓ J3 — a real room's location is an ENTITY of the room (a chest, a
         // pickup), walked to its own stance; an apitem is still the J1 row.
@@ -569,6 +581,19 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     /** The room source a boot reads: a delivered set first, else the vanilla map. */
     const roomSource = () => mounted ?? vanilla;
     function roomRecord(level) { return roomSource()?.records.get(level) ?? null; }
+
+    /**
+     * ⛓ seedling-js-l57-exit-check — **AN EXIT A BOSS FIGHT ADDS.** `TentacleBeast.createMouthEntrance` (`:211-214`, L57's
+     * mouth at the body's `(x - 8, y - 8)`) and `LightBossController.endState` (`:102-107`, L69's) put a `Teleporter`
+     * into the world at RUNTIME: it is no `.oel` entity, so no `EXIT_TYPES` cell of the record holds it. The exit is the
+     * solver's own `FIGHT_EXITS` row (`jsRuntimeSolver.fightExitOf`: the room's placement of the fight's entity, and the
+     * model's offsets), asked of the live run standing in the goal's level — the very row `solverGoalFor` maps the
+     * goal by (the fight, then the exit), so this accepts exactly the exits the solver plays. null = none.
+     */
+    function fightExit(run, goal) {
+        if (!run || run.level !== goal?.level) return null;
+        return fightExitOf(run, goal, roomSource()?.source ?? null);
+    }
 
     /**
      * Carry what the run cleared into the next boot. ⛓ J3: every in-band
@@ -719,6 +744,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (declared) bootItems = { ...flags, ...pickItems(session.run.inventory ?? {}) };
         halted = null;
         deferredReboot = false;
+        pendingReArrival = null;
         pendingDeliveries = [];
         note({ type: 'boot', level, x, y, why, message: `[js runtime] boot level ${level} at (${x}, ${y}) — ${why}` });
         saveChanged('boot');
@@ -921,6 +947,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ RE2 — a restore's reboot in place WAITS while a tape is armed (it would replace the tape's run mid-stream),
         // and lands on the first tick after the tape finishes.
         if (deferredReboot && !tape.armed && !session.run.inCeremony && !encounterHoldsDelivery()) rebootInPlace(IN_PLACE_REBOOT_WHY);
+        // ⛓ seedling-js-held-retry (W7) — the solver's forced re-arrival lands here, at a tick boundary: the room is
+        // re-booted at its arrival (`arrival`, the respawn point) with what the run banked, and the next solve is fresh.
+        if (pendingReArrival !== null && !tape.armed && arrival) {
+            const why = pendingReArrival;
+            pendingReArrival = null;
+            boot(arrival, why);
+        }
         // ⛓ seedling-js-item-live-delivery — and so does a delivery's live write (a write into a tape's run would desync
         // it): it lands at the boundary of the first tick after the tape finishes.
         applyDeliveries();
@@ -1757,6 +1790,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             && Math.floor(e.x / 16) === tx && Math.floor(e.y / 16) === ty))
             // ⛓ S4 — a PIT exit (`out_pit_*`): its cell is a pit tile of the room (⛓ §5.36 — any room, of any kind).
             && !tiles.some(([tx, ty]) => pitTilesOf(goal.level, record).some((p) => p.tx === tx && p.ty === ty))) {
+            // ⛓ seedling-js-l57-exit-check — or the exit a boss FIGHT adds (`fightExit`): walked by the solver's fight.
+            const fight = fightExit(session?.run ?? null, goal);
+            if (fight && !solver.enabled) {
+                return { ok: false, reason: `level ${goal.level}'s exit at (${fight.exit.x}, ${fight.exit.y}) is the teleporter a `
+                    + 'boss fight adds when it ends: it is walked by the solver\'s fight, and the solver mode is off '
+                    + '(`flashPanel.seedlingSolverWalk`)' };
+            }
+            if (fight) return { ok: true };
             return { ok: false, reason: `level ${goal.level} has no teleporter or pit on ${tiles.length === 1
                 ? `tile (${tiles[0][0]}, ${tiles[0][1]})` : `any of the tiles ${JSON.stringify(tiles)}`}` };
         }

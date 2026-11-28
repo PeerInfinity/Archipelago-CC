@@ -15,6 +15,8 @@ import { getActivePanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import { generateLoopCosts } from '../../shared/procgen/loopCostGenerator.js';
+import { arrangeShuffledSpiral, buildRulesJson } from '../../procgenPipeline/procgenPipelineEngine.js';
+import { mysteryPlacedConfigFromSource, substrateRegistryEntry as mysteryEntry } from '../../mysteryArchipelago/mysterySubstrateLibrary.js';
 
 const CATEGORY = 'Playback Bot';
 const STREET_PRESET_PATH = './presets/mystery_street_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
@@ -140,5 +142,63 @@ registerTest({
     description: 'The mystery_street_test world with a loop_costs block: loop mode comes on, the office is a coarse region '
         + 'whose Bot is the walkTo solver, and the Playback Bot plays the world to the end through the Loops queue.',
     testFunction: mysteryPlaybackBotLoopMode,
+    category: CATEGORY,
+});
+
+const CASE_PRESET_PATH = './presets/mystery_custom_house_fire/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+/**
+ * The office placed WHOLE by the shuffled spiral (the entry's content-source half): a world of maze
+ * rooms and one office, built here from the committed case world, then played to the end by the bot.
+ * The case's papers stand on its own questions, so the office needs nothing from the maze rooms.
+ */
+export async function mysterySpiralOfficePlayed(testController) {
+    const bot = await botOf(testController);
+    if (!bot) return testController.getOverallResult();
+    const source = await (await fetch(CASE_PRESET_PATH)).json();
+    const cfg = mysteryPlacedConfigFromSource(source, '1');
+    testController.reportCondition('the committed case world gives a filled case', !!cfg.caseWorld);
+    if (!cfg.caseWorld) return testController.getOverallResult();
+    try {
+        // The stepped driver's first step installs a quota substrate's config; this is the monolithic call.
+        mysteryEntry.applyPipelineConfig(cfg);
+        const seed = 5;
+        const { grid, startCell, stats } = arrangeShuffledSpiral({
+            regionSize: { width: 7, height: 7 },
+            itemPool: { victory: 1, key_red: 1, key_green: 1 },
+            obstaclePool: {},
+            seed,
+            regionParams: {},
+            growthParams: { substrateQuotas: { maze: 3, mystery: 1 }, maxItemsPerRegion: 2, startSubstrate: 'maze', substrateConfig: { mystery: cfg } },
+            hazardOpts: {},
+        });
+        const rulesJson = buildRulesJson(grid, {
+            startCell, seed, completionConditionItem: 'Victory',
+            procgenMetadata: { driver: 'mystery-spiral-office-played', stop_reason: stats.stopReason },
+        });
+        const questions = questionsOf(rulesJson);
+        testController.assertEqual('the office holds every question of the case', Object.keys(cfg.caseDoc.locations).length, questions.length);
+        const sphereLocations = await loadWorld(testController, rulesJson, 'mysterySpiralOffice');
+        const every = Object.values(rulesJson.regions['1']).flatMap((r) => (r.locations ?? []).map((l) => l.name));
+        testController.reportCondition(`the sphere log reaches every location (${sphereLocations.length} of ${every.length})`,
+            every.length > 0 && every.every((n) => sphereLocations.includes(n)));
+        bot.refresh();
+        await bot.instant();
+        const finished = await testController.pollForCondition(
+            () => (bot.getStatus() || '').startsWith('finished'), 'bot reaches finished status', 90000, 250);
+        reportEnd(testController, bot, finished, sphereLocations, questions);
+    } finally {
+        bot.stop();
+        mysteryEntry.applyPipelineConfig({});
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'mystery-spiral-office-played',
+    name: 'Playback Bot: a spiral world with the office placed whole',
+    description: 'Builds a shuffled-spiral world of three maze rooms and one mystery office from the committed case world '
+        + '(the case\'s papers on its own questions), and lets the Playback Bot play it to the end.',
+    testFunction: mysterySpiralOfficePlayed,
     category: CATEGORY,
 });

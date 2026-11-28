@@ -13,6 +13,7 @@ import { CHECK_SEEDLING_SOLVE_PROGRESS_LINE } from './seedlingSolveProgress.js';
 import { CHECK_SEEDLING_DASH_WINDOW } from './seedlingSlowSolve.js';
 import { CHECK_SEEDLING_SET_MAP } from './seedlingSetMap.js';
 import { CHECK_CONTENT_THEME_MAZE } from './contentThemeMaze.js';
+import { CHECK_MYSTERY_LOCAL_PLAY } from './mysteryLocalPlay.js';
 import {
     CHECK_REGION_EDIT_APWORLD_EDITOR, CHECK_REGION_EDIT_MAZE_LAB_CLOSED, CHECK_REGION_EDIT_SEEDLING_GENERATED,
     CHECK_REGION_EDIT_SEEDLING_REAL_GAME, CHECK_SEEDLING_LOAD_VANILLA_AFTER_HANDOVER,
@@ -31,4 +32,5 @@ export const FEATURE_CHECKS = Object.freeze([
     entry('regionEditing.js', CHECK_SEEDLING_LOAD_VANILLA_AFTER_HANDOVER),
     entry('seedlingSetMap.js', CHECK_SEEDLING_SET_MAP),
     entry('contentThemeMaze.js', CHECK_CONTENT_THEME_MAZE),
+    entry('mysteryLocalPlay.js', CHECK_MYSTERY_LOCAL_PLAY),
 ]);

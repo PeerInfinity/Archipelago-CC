@@ -1,0 +1,65 @@
+# seed-1 divergence-sweep leg list (seedling-divergence-legs.mjs --presets=seedling_playthrough) at base de6e6e7fa8: 915 legs.
+# KILLLOCK_PINNED_SPEAR is read only inside killLockChaserRewindTurn (a kill-lock whose chaser arm spent its stances), and it acts
+# only when the run holds a spear in a slot, so a leg can move only if it starts in a kill-lock room (killlock-census.txt) AND its
+# AP inventory holds the Ghost Spear (hasSpear). spear=no rows can only change refusal TEXT (the arm appends its no-spear why).
+# id	sphere	spear	key
+64	5.6	no	level_5__r1c1 <- in_L12_96_240 -> exit:out_stairsup_16_16
+65	0	no	level_5__r1c5 <- in_L4_64_16 -> exit:out_teleporter_48_112
+66	0	no	level_5__r1c5 <- in_L4_64_16 -> exit:out_stairsup_80_16
+67	0	no	level_5__r1c5 <- in_L6_32_0 -> exit:out_teleporter_48_112
+68	0	no	level_5__r1c5 <- in_L6_32_0 -> exit:out_stairsup_80_16
+222	1.3	no	level_18__r1c1 <- in_L16_352_80 -> exit:out_stairsdown_16_16
+223	1.3	no	level_18__r1c1 <- in_L16_352_80 -> location:L18 flag 0: lock@144,112 cleared
+224	1.3	no	level_18__r7c10 <- in_L19_0_144 -> exit:out_teleporter_176_112
+462	5.6	no	level_53__r2c2 <- in_L48_0_112 -> exit:out_stairsdown_32_144
+463	5.6	no	level_53__r2c2 <- in_L48_0_112 -> exit:out_teleporter_208_64
+464	5.6	no	level_53__r2c2 <- in_L51_176_144 -> exit:out_stairsdown_32_144
+465	5.6	no	level_53__r2c2 <- in_L51_176_144 -> exit:out_teleporter_208_64
+466	5.6	no	level_53__r14c9 <- in_L54_144_0 -> exit:out_teleporter_144_240
+494	0.1	no	level_60__r5c0 <- in_L59_304_128 -> exit:out_teleporter_0_80
+495	5.6	no	level_60__r5c0 <- in_L59_304_128 -> location:L60 flag 0: lock@128,80 cleared
+496	5.6	no	level_60__r5c9 <- in_L61_0_160 -> exit:out_teleporter_160_80
+584	10.1	yes	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0
+585	10.1	yes	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304
+586	10.1	yes	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96
+587	10.1	yes	level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest
+588	11.7	yes	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+589	10.1	yes	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_96_0
+590	10.1	yes	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_304
+591	10.1	yes	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_304_96
+592	10.1	yes	level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Chest
+593	11.7	yes	level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared
+594	10.1	yes	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0
+595	10.1	yes	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_224_304
+596	10.1	yes	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_304_96
+597	10.1	yes	level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest
+598	11.7	yes	level_71__r0c6 <- in_L76_0_80 -> location:L71 flag 2: shieldlock@288,256 cleared
+599	10.1	yes	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0
+600	10.1	yes	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_224_304
+601	10.1	yes	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_304_96
+602	10.1	yes	level_71__r0c6 <- in_L80_32_0 -> location:Level 071 - Chest
+603	11.7	yes	level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared
+604	10.1	yes	level_71__r13c7 <- in_L85_80_0 -> exit:out_teleporter_16_304
+620	11.7	yes	level_78__r0c2 <- in_L79_64_224 -> exit:out_teleporter_32_0
+621	11.7	yes	level_78__r0c16 <- in_L77_96_304 -> exit:out_teleporter_256_0
+726	12.2	yes	level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112
+727	12.2	yes	level_98 <- in_L93_112_80 -> exit:out_teleporter_112_192
+728	12.2	yes	level_98 <- in_L93_112_80 -> location:Level 098 - Chest
+729	12.2	yes	level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112
+730	12.2	yes	level_98 <- in_L99_112_112 -> exit:out_teleporter_112_192
+731	12.2	yes	level_98 <- in_L99_112_112 -> location:Level 098 - Chest
+732	12.2	yes	level_99__r2c4 <- in_L100_48_96 -> exit:out_stairsup_48_96
+733	12.2	yes	level_99__r7c5 <- in_L98_112_112 -> exit:out_stairsdown_112_112
+734	12.2	yes	level_99__r7c5 <- in_L98_112_112 -> location:L99 flag 0: lock@80,96 cleared
+892	5.6	no	level_53__r9c10 <- in_L48_0_112 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared
+893	5.6	no	level_53__r9c10 <- in_L51_176_144 ~> level_53__r2c2 -> location:L53 flag 2: lock@144,208 cleared
+894	5.6	no	level_53__r9c10 <- in_L54_144_0 ~> level_53__r14c9 -> location:L53 flag 2: lock@144,208 cleared
+901	12.2	yes	level_71__r14c12 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_pit_10_17
+902	12.2	yes	level_71__r14c12 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_pit_10_17
+903	12.2	yes	level_71__r14c12 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_pit_10_17
+904	12.2	yes	level_71__r14c12 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_pit_10_17
+905	11.7	yes	level_71__r16c19 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_teleporter_304_256
+906	11.7	yes	level_71__r16c19 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_teleporter_304_256
+907	11.7	yes	level_71__r16c19 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_teleporter_304_256
+908	11.7	yes	level_71__r16c19 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_teleporter_304_256
+# counts by (level, spear): {(5, False): 5, (18, False): 3, (53, False): 8, (60, False): 3, (71, True): 29, (78, True): 2, (98, True): 6, (99, True): 3}

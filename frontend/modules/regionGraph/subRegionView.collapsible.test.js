@@ -315,7 +315,11 @@ describe('⛓ collapsible: the badge', () => {
         ui.cy.zoom(0.5);
         ui.groupBadges.sync();
         const c = G.badgeCentre(node.renderedBoundingBox({ includeLabels: false }));
-        expect(ui.groupBadges.centreOf(key)).toEqual(c);
+        // Not toEqual: centreOf reads back (c.x - HIT/2) + HIT/2 from the style string, which can be 1 ulp off c.x.
+        const at = ui.groupBadges.centreOf(key);
+        expect(at).not.toBeNull();
+        expect(at.x).toBeCloseTo(c.x, 6);
+        expect(at.y).toBeCloseTo(c.y, 6);
         const btn = ui.groupBadges.buttonOf(key);
         expect(btn.style.display).toBe('block');
         // The hit square is centred on the corner: a tap at the centre is inside the button.

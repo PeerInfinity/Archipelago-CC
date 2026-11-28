@@ -34,6 +34,11 @@ const KNOWN_SPIRAL_GOAL_GAPS = Object.freeze({
 /** The ruled sphere gaps: spiral substrates with no region realiser, so sphere growth cannot place them at all. */
 const KNOWN_SPHERE_GAPS = Object.freeze({
     omsi: '⚖ "Defer omsi": no spec path (`generateZoneForSpecs`)',
+    // ⚖ Robert 2026-11-27: may mystery-placement land "with mystery listed as a KNOWN SPHERE GAP until sphere growth
+    // for a case is built?" — "Yes, a known gap". The office placed whole carries its own chain of papers (a question
+    // opens on a paper another question gives), which adds spheres the sphere plan did not schedule; the plan is
+    // sphere growth's oracle, so that needs the planner's support first (as `itemIntroduction` has for one key).
+    mystery: '⚖ "Yes, a known gap": the case\'s own paper chain is not in the sphere plan (`ownContentOnly`: no planned-region realiser)',
 });
 
 beforeAll(async () => {

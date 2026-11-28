@@ -377,7 +377,10 @@ export const META_TRIAL_STATE = Object.freeze({
  * room, sized 16×12 so the open top-down rooms (`maxIterations: 0`) have room for pillars. It names the pack
  * `furniture` under "what exists" (⚖ Q2: a rug, walkable, and a pillar, blocked, both `generate: true`) and gives the
  * maze the PER-ROOM MIX (⚖ Q8) `scattered` 2 : `classic` 1, so the same world shows both halves: furnished rooms and
- * bare ones, each room's pick a hash of (seed, region). The compiled logic is the same world's all-`classic` build's
+ * bare ones, each room's pick a hash of (seed, region). ⛓ GEN-5 — it also names the pack `ledges` (one `one-way` kind,
+ * entered moving S only, `generate: true`), so the same rooms show a ledge beside the rug and the pillar. A slot's kind
+ * is a hash over the plan's kinds, so the third kind re-dealt the furniture (seed 3: rugs 24 → 13, pillars 24 → 18,
+ * ledges 17). The compiled logic is the same world's all-`classic` build's
  * (`tileKindsDemoWorld.test.js`). Its readers: that test, the committed preset `tile_kinds_demo`
  * (`make-seedling-spiral-room-preset.mjs --state=tile-kinds-demo`) and the in-app row `playback-bot-tile-kinds-demo`.
  */
@@ -387,7 +390,7 @@ export const TILE_KINDS_DEMO_STATE = Object.freeze({
         seed: 3,
         regionWidth: 16,
         regionHeight: 12,
-        exists: Object.freeze(['furniture']),
+        exists: Object.freeze(['furniture', 'ledges']),
         mazeBiome: Object.freeze([
             Object.freeze({ id: 'scattered', weight: 2 }),
             Object.freeze({ id: 'classic', weight: 1 }),
@@ -1012,11 +1015,11 @@ export const SHIPPED_PRESETS = Object.freeze([
         label: "Top-down: randomly placed tiles (from the loaded world — load any game's preset first)",
         group: PRESET_GROUPS.topDown,
         description: 'The "Randomly placed tiles" maze biome: every region of the LOADED world (load any game\'s preset '
-            + 'first; a plain page load has Adventure loaded) becomes a 16×12 maze room, and the world names the pack "furniture" under what exists (a rug you walk over, a pillar you '
-            + 'walk around). Each room draws its biome from the mix Randomly placed tiles 2 : classic 1, so some rooms '
-            + 'are furnished and some are bare (on Adventure, seed 3: 6 furnished rooms, 4 rugs and 4 pillars each, and '
+            + 'first; a plain page load has Adventure loaded) becomes a 16×12 maze room, and the world names the packs "furniture" and "ledges" under what exists (a rug you walk over, a pillar you '
+            + 'walk around, a ledge you can only jump down onto, moving south). Each room draws its biome from the mix Randomly placed tiles 2 : classic 1, so some rooms '
+            + 'are furnished and some are bare (on Adventure, seed 3: 6 furnished rooms, 13 rugs, 18 pillars and 17 ledges between them, and '
             + '3 bare ones). The kinds go only where the room\'s logic stays exactly as it was: the compiled rules equal '
-            + 'the same world built all-classic. Look at the maze parameters\' Maze biome block, the rugs and pillars '
+            + 'the same world built all-classic. Look at the maze parameters\' Maze biome block, the rugs, pillars and ledges '
             + 'on the composite map, and play a furnished room after Load. The same world over Adventure is committed '
             + 'as the tile_kinds_demo preset.',
         state: TILE_KINDS_DEMO_STATE,

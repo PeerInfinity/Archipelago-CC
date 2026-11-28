@@ -1,0 +1,5 @@
+cap /tmp/claude-0/-home-user-Archipelago-CC/c1f54890-e81b-5038-ba9e-d806679828c9/scratchpad/cap/r8-P1.jsonl 32 10 -80
+cap /tmp/claude-0/-home-user-Archipelago-CC/c1f54890-e81b-5038-ba9e-d806679828c9/scratchpad/cap/r8-P1.jsonl 32 10 10
+cap /tmp/claude-0/-home-user-Archipelago-CC/c1f54890-e81b-5038-ba9e-d806679828c9/scratchpad/cap/r8-P1.jsonl 32 10 -10
+fx frontend/modules/seedlingDemo/fixtures/hammer-cleartag-chain/leg871-l39-l40-request.json.gz
+fx frontend/modules/seedlingDemo/fixtures/hammer-cleartag-chain/leg872-l43-l40-request.json.gz

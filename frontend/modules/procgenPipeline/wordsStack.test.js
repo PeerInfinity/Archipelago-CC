@@ -77,8 +77,9 @@ describe('⛔ every world on main resolves its words exactly as before', () => {
      */
     const RECORDS_EXISTS = Object.freeze({
         'frontend/presets/tile_kinds_demo/AP_1/AP_1_rules.json': Object.freeze({
-            exists: Object.freeze(['furniture']),
-            why: 'content sets GEN-2: the "Randomly placed tiles" demo names the furniture pack under what exists (⚖ Q2)',
+            exists: Object.freeze(['furniture', 'ledges']),
+            why: 'content sets GEN-2: the "Randomly placed tiles" demo names the furniture pack under what exists (⚖ Q2); '
+                + 'GEN-5 adds the ledges pack (a one-way kind)',
         }),
     });
 

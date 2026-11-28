@@ -64,6 +64,8 @@ import {
     AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, WAND_TARGET_TAGS, WAND_VERB,
     ROCKLOCK_KILL, clearTagTalkArmOf, solveSegment, withRockLockKill,
     GOAL_START_WAIT, withGoalStartWaitLaterPass,
+    PRESS_KILL_STRIKE_BOMBS, withPressKillStrikeBombs,
+    armStrikeStandLobber, disarmStrikeStandLobber,
 } from './solverBot.js';
 import { pageSolverEnvSwitchOff, pageSolverEnvSwitchOn } from './solverEnvChannel.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
@@ -80,6 +82,10 @@ import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withC
 import { axeDodgeAskStamp, withAxeDodgeAsk } from './axeDodgeAskHook.js';
 import { DASH_ONLY_WINDOW, dashOnlyWindowStamp, withDashOnlyWindow } from './dashOnlyWindowHook.js';
 import { dashShapeRead, dashShapeStamp, withDashShape } from './dashShapeHook.js';
+// ⛓ seedling-js-held-retry — the wasm page's held-retry policy, IMPORTED (never copied): the factor, the "once" bound
+// (`expiryAction` reads `MAX_SOLVE_RETRIES`) and the named failure. ⚠ An import CYCLE (wasmPlayback → wasmArrival →
+// this module): every name below is read inside `createRuntimeSolver`'s closures only, never at module top level.
+import { expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR } from './wasmPlayback.js';
 
 /** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
 export const MAX_REFUTATIONS = 3;
@@ -548,6 +554,108 @@ export function hitAvoidPass({ tape, pass, budgetWork = null, windowWork = null,
     return { answer, row };
 }
 
+/** ⛓⛓ hammer-phase L39-ARRIVAL-HIT (`HIT_PLAN_RETRY`, OFF): the switch lives in `hitPlanRetry.js` (read on the page's main thread). */
+export { HIT_PLAN_RETRY, HIT_PLAN_RETRY_DEFAULT, hitPlanHeldOpen, hitPlanRetryAsks, withHitPlanRetry } from './hitPlanRetry.js';
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE CHASER-STAND — **A PLAN THAT STILL BILLS A HIT ASKS THE STRIKE'S STAND OF THE LOBBER, ONCE**
+ * (`HIT_AVOID_STAND_BOMBS`, OFF; `SEEDLING_HIT_AVOID_STAND_BOMBS=1`, `withHitAvoidStandBombs(enabled, fn)`). ⚖ The user,
+ * 2026-11-26: *"Chaser-stand fix (Recommended)"* (`CC/docs/cloud-reports/seedling-hammer-chaser-stand.md`).
+ *
+ * MEASURED (re-measure-8's P1 32:10 swept over 16 arrival clocks, under all4): `PRESS_KILL_STRIKE_BOMBS` ON everywhere
+ * removes the strike-stand bomb (seam +7: 719 t 1 h → 582 t 0 h) but refuses three clocks all4 solves hitless — its
+ * stand question prices a stand the drive, re-deriving, never makes (seam −60: the refused cell is never reached and
+ * the bomb lands elsewhere). Asked only AFTER the ladder, and only of a plan that still bills a hit, it cannot cost a
+ * hitless plan: ON, when the passes and the hit-avoid pass are done and the plan in hand still takes a model hit
+ * (`planTakesHit`), the FIRST pass's search runs once more with `PRESS_KILL_STRIKE_BOMBS` ON, on the attempt's work
+ * clock to the attempt's budget (no window: the plan in hand is shipped if the try is cut); its plan replaces the one
+ * in hand only when the model plays it hitless and `betterAnswer` prefers it. ⚖ No-hit logic: it only ever ADDS a
+ * hitless candidate. Where the room holds no lobber the stand question reads nothing and the try repeats the first
+ * pass. Already ON (`PRESS_KILL_STRIKE_BOMBS`), it does not run. OFF: never runs — byte-identical.
+ * ⛓ THE THREAD: inside `solveAnytime`, i.e. the page's SOLVE WORKER (and node). It posts no `onPass`.
+ */
+export const HIT_AVOID_STAND_BOMBS = { enabled: globalThis.process?.env?.SEEDLING_HIT_AVOID_STAND_BOMBS === '1' };
+export const HIT_AVOID_STAND_BOMBS_DEFAULT = false;
+/** ON only: tries made / tries whose hitless plan replaced the one in hand (an instrument; nothing that decides reads it). */
+export const HIT_AVOID_STAND_BOMBS_COUNTS = { tried: 0, replaced: 0 };
+
+/** Run `fn` with `HIT_AVOID_STAND_BOMBS` set to `enabled`, restoring the previous value. */
+export function withHitAvoidStandBombs(enabled, fn) {
+    const was = HIT_AVOID_STAND_BOMBS.enabled;
+    HIT_AVOID_STAND_BOMBS.enabled = enabled === true;
+    try { return fn(); } finally { HIT_AVOID_STAND_BOMBS.enabled = was; }
+}
+
+/**
+ * ⛓ `HIT_AVOID_STAND_BOMBS` — the try itself: `pass`'s search under `PRESS_KILL_STRIKE_BOMBS`, on `work` to `budgetWork`.
+ * `{answer, row}`: `answer` a hitless plan (`pass: 'stand-bombs'`) or null; `row` the pass row (`cut` when the budget
+ * ended it — never `limit`/`deadline`, which name a cut of the shipped passes to a held retry). Already ON ⇒ no try.
+ */
+export function standBombsPass({ tape, pass, budgetWork = null, work = createWorkClock(), clock = () => Date.now() }) {
+    const t0 = clock();
+    const w0 = work.units;
+    const budgeted = Number.isFinite(budgetWork) && budgetWork > 0;
+    if (PRESS_KILL_STRIKE_BOMBS.enabled) return { answer: null, row: { pass: 'stand-bombs', ok: false, kind: 'skipped', ticks: null, ms: 0 } };
+    let cut = null;
+    const shouldStop = budgeted ? () => { if (work.tick() > budgetWork) { cut ??= 'budget'; return true; } return false; } : null;
+    const one = withPressKillStrikeBombs(true, () => settleSolve(() => solveFromTape({ ...tape, clock, dashMode: pass.dashMode,
+        adds: pass.adds ?? null, shouldStop, fineCheckpoints: shouldStop !== null && FINE_CHECKPOINTS })));
+    const hitless = one.ok && !one.plan.deadline && planTakesHit(one.plan) === false;
+    const answer = hitless ? { ...one, pass: 'stand-bombs', plan: { ...one.plan, pass: 'stand-bombs' } } : null;
+    const row = { pass: 'stand-bombs', ok: answer !== null, kind: one.ok ? null : (one.kind ?? null),
+        ticks: one.ok ? one.plan.solution.length : null, ms: Math.round(clock() - t0), ...(budgeted ? { work: work.units - w0 } : {}),
+        ...(one.ok && one.plan.modelHits ? { modelHits: { ...one.plan.modelHits } } : {}), ...(cut ? { cut } : {}) };
+    return { answer, row };
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE F1-REFUSAL — **A LADDER THAT REFUSES IN A LOBBER ROOM ASKS ITS WIDEST PASS AGAIN, THE STRIKE'S
+ * STAND ASKING THE LOBBER, ONCE** (`REFUSAL_STAND_BOMBS`, OFF; `SEEDLING_REFUSAL_STAND_BOMBS=1`,
+ * `withRefusalStandBombs(enabled, fn)`). ⚖ The user, 2026-11-26: *"F1 refusal follow-up"*
+ * (`CC/docs/cloud-reports/seedling-hammer-f1-refusal.md`).
+ *
+ * MEASURED (re-measure-9's F1 32:10, under PKSW+PKRB+DSS+OAC+HSB): every pass refuses — the dashless pass on the
+ * latched hold after the kill (a bomb in flight lands on every walk out at its 16th tick; LATCHED_HOLD_MOVE is asked and
+ * finds no cell), the full pass on a death by a strike-stand bomb (the stand `PRESS_KILL_STRIKE_BOMBS` prices). HSB asks
+ * only a plan that bills a hit, so a refusal never reaches it. ON, when the ladder (and hit-avoid, and HSB) leaves a
+ * REFUSAL, no pass was cut by the budget (that is the held retry's), and a press kill of this attempt derived a strike
+ * with bombs in play (`STRIKE_STAND_LOBBER`, so the stand question reads something), the LAST pass — the ladder's widest
+ * search — runs once more under `PRESS_KILL_STRIKE_BOMBS` (`standBombsPass`, on the attempt's work clock to the attempt's
+ * budget, no window, a cut is the row's `cut`, never `limit`). Its plan is kept only when the model plays it hitless.
+ * ⚖ No-hit logic: it only ever replaces a refusal with a hitless plan; a solve never reaches it. OFF: never armed,
+ * never runs — byte-identical. ⛓ THE THREAD: inside `solveAnytime`, i.e. the page's SOLVE WORKER (and node).
+ */
+export const REFUSAL_STAND_BOMBS = { enabled: globalThis.process?.env?.SEEDLING_REFUSAL_STAND_BOMBS === '1' };
+export const REFUSAL_STAND_BOMBS_DEFAULT = false;
+/** ON only: attempts that ended in a refusal / of those, the lobber read nothing / tries made / tries that replaced it. */
+export const REFUSAL_STAND_BOMBS_COUNTS = { refusals: 0, noLobber: 0, tried: 0, replaced: 0 };
+
+/** Run `fn` with `REFUSAL_STAND_BOMBS` set to `enabled`, restoring the previous value. */
+export function withRefusalStandBombs(enabled, fn) {
+    const was = REFUSAL_STAND_BOMBS.enabled;
+    REFUSAL_STAND_BOMBS.enabled = enabled === true;
+    try { return fn(); } finally { REFUSAL_STAND_BOMBS.enabled = was; }
+}
+
+/**
+ * ⛓ `REFUSAL_STAND_BOMBS` — the decision: should a ladder that ended in `best`, with pass rows `rows`, ask the try?
+ * `lobberSeen` is `STRIKE_STAND_LOBBER`'s count over the ladder. Pure.
+ */
+export function refusalStandBombsAsks(best, rows, lobberSeen) {
+    if (best?.ok !== false || best.kind !== 'refusal') return false;
+    if ((rows ?? []).some((r) => r.limit === 'budget')) return false;
+    return lobberSeen > 0;
+}
+
+/**
+ * ⛓ `REFUSAL_STAND_BOMBS` — the try: `standBombsPass` of `pass`, its row and answer named `refusal-stand-bombs`.
+ */
+export function refusalStandBombsPass({ tape, pass, budgetWork = null, work = createWorkClock(), clock = () => Date.now() }) {
+    const { answer, row } = standBombsPass({ tape, pass, budgetWork, work, clock });
+    const named = answer ? { ...answer, pass: 'refusal-stand-bombs', plan: { ...answer.plan, pass: 'refusal-stand-bombs' } } : null;
+    return { answer: named, row: { ...row, pass: 'refusal-stand-bombs', from: pass?.pass ?? null } };
+}
+
 /** ⛓ HIT-AWARE ANSWER — the model's `playerHits` ledger length of `run` (0 when the run keeps none). */
 function modelHitCount(run) {
     if (typeof run?.ledger === 'function') return run.ledger('playerHits').length;
@@ -661,6 +769,8 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
     // ONE work clock from this attempt's start. `clock` only times the rows (`ms`); it decides nothing.
     const { budgetWork = null, upgradeWindowWork: windowWork = null, ...tape } = request;
     const work = createWorkClock();
+    // ⛓ hammer-phase F1-REFUSAL (`REFUSAL_STAND_BOMBS`, OFF ⇒ never armed): watch the ladder's strikes for a lobber
+    const lobberWatch = REFUSAL_STAND_BOMBS.enabled ? armStrikeStandLobber() : null;
     for (let i = 0; i < passes.length; i += 1) {
         const p = passes[i];
         const t0 = clock();
@@ -692,6 +802,33 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
         const avoid = hitAvoidPass({ tape, pass: passes[0], budgetWork, windowWork, work, clock });
         rows.push(avoid.row);
         if (avoid.answer && betterAnswer(best, avoid.answer)) best = avoid.answer;
+    }
+    // ⛓ hammer-phase CHASER-STAND (`HIT_AVOID_STAND_BOMBS`, OFF): the plan still bills a hit — the first pass again,
+    // the strike's stand asking the lobber.
+    if (HIT_AVOID_STAND_BOMBS.enabled && best?.ok === true && best.kind !== 'divergence' && planTakesHit(best.plan) === true) {
+        const sb = standBombsPass({ tape, pass: passes[0], budgetWork, work, clock });
+        rows.push(sb.row);
+        HIT_AVOID_STAND_BOMBS_COUNTS.tried += 1;
+        if (sb.answer && betterAnswer(best, sb.answer)) {
+            best = sb.answer;
+            HIT_AVOID_STAND_BOMBS_COUNTS.replaced += 1;
+        }
+    }
+    // ⛓ hammer-phase F1-REFUSAL (`REFUSAL_STAND_BOMBS`, OFF): the ladder refused where a strike's stand had a lobber to
+    // ask — the widest pass again, the stand asking it.
+    if (lobberWatch !== null) {
+        const lobberSeen = disarmStrikeStandLobber(lobberWatch);
+        if (best?.ok === false && best.kind === 'refusal') REFUSAL_STAND_BOMBS_COUNTS.refusals += 1;
+        if (best?.ok === false && best.kind === 'refusal' && lobberSeen === 0) REFUSAL_STAND_BOMBS_COUNTS.noLobber += 1;
+        if (refusalStandBombsAsks(best, rows, lobberSeen)) {
+            const rb = refusalStandBombsPass({ tape, pass: passes[passes.length - 1], budgetWork, work, clock });
+            rows.push(rb.row);
+            REFUSAL_STAND_BOMBS_COUNTS.tried += 1;
+            if (rb.answer && betterAnswer(best, rb.answer)) {
+                best = rb.answer;
+                REFUSAL_STAND_BOMBS_COUNTS.replaced += 1;
+            }
+        }
     }
     // Every pass skipped (a held retry resumed at a pass the run cannot use): the skip itself is the
     // answer — `betterAnswer` never lets it replace what an earlier attempt's passes said.
@@ -1369,17 +1506,50 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
  * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): past it the goal FAILS by name
  * @param {(goal:object) => ({x:number, y:number}|null)} deps.placementOf  a location's entity (OEL)
  * @param {(e:object) => void} [deps.onEvent]  `{type, message, …}` per solve / refutation / decline
+ * @param {((why:string) => boolean)|null} [deps.reArrive]  ⛓ seedling-js-held-retry (W7) — ask the page for a FORCED
+ *   RE-ARRIVAL: re-boot the room at its arrival, so the next solve is a FRESH one. true = queued. null (the default,
+ *   every caller but `jsRuntimeCore`) = no fallback: a refused continuation is declined, as before.
+ *
+ * ⛓⛓ seedling-js-held-retry (⚖ Robert 2026-11-27: "Fix the retry only" → "Include the fallback") — the wasm page's
+ * two solve policies (`seedlingWasmPlayback.js` `pollSolve` / `retrySolve` / `fallback`), on the JS page:
+ *  1. THE HELD RETRY — an answer CUT at its work budget (`budgetCut`) is handed to `wasmPlayback.expiryAction`:
+ *     `provisional` (a plan) plays; `retry` (a refusal, a pass the cut left unanswered, `MAX_SOLVE_RETRIES` not
+ *     spent) asks AGAIN, the room still held (the session has not ticked), with the SAME request at
+ *     `budget × SOLVE_RETRY_BUDGET_FACTOR` and `passes: passesAfter(passes, answered)` (a pass that answered is not
+ *     paid again); `give-up` (a second cut) FAILS the goal by `expiryFailure`'s name — or, on a continuation, falls
+ *     back (2). A retry's answer is kept only when `betterAnswer` says it beats what the cut attempt had.
+ *  2. CONTINUATION → FRESH SOLVE (W7) — a CONTINUATION (this goal's first ask, on the same run and in the same level
+ *     where an earlier goal's plan was played: the wasm page's "solving on from the held room") that cannot be served
+ *     (declined, a divergence, or cut twice) is never a failure on its own: ONE forced re-arrival (`reArrive`) per
+ *     goal, then a fresh solve from the new arrival, named (`fallback` event) and counted (`stats.fallbacks`). The
+ *     fresh solve is not a continuation: its refusal takes the existing path (a decline).
+ * WHERE THE JS FRAME DIFFERS (named): there is no `botStatus` and no host teleport — the re-arrival is the page's
+ * own `boot(arrival)` (`jsRuntimeCore`), in page; the "held room" is the session not ticking while `solving`; and a
+ * refusal that is NOT a cut stays a decline on a fresh solve (the JS walker's decline policy), where wasm fails it.
  */
 export function createRuntimeSolver({
     getSession, getLevelSource, getRecords = () => null, placementOf = () => null,
     onEvent = () => {}, maxRefutations = MAX_REFUTATIONS, clock = () => Date.now(), solveService = null,
     budgetWork = SOLVER_BUDGET_WORK, loadBudgetMs = LOAD_BUDGET_MS, upgradeWindowWork: windowWork = SOLVER_UPGRADE_WINDOW_WORK,
-    backstopMs = SOLVE_BACKSTOP_MS,
+    backstopMs = SOLVE_BACKSTOP_MS, reArrive = null,
 } = {}) {
     let enabled = false;
     let plan = null;
-    /** ⛓ S2 — the solve in flight: `{handle, run, session, prefixLength, goal, solverGoal, askedAt}`, or null. */
+    /**
+     * ⛓ S2 — the solve in flight: `{handle, run, session, prefixLength, goal, solverGoal, askedAt}`, or null.
+     * ⛓ seedling-js-held-retry — and its held-retry state: the `request` it sent (a retry re-sends it), the `budget`
+     * it ran under, every `budgets` spent, the `retries` spent, the `best` answer a cut attempt had, and whether it
+     * is a `continuation`.
+     */
     let pending = null;
+    /** ⛓ seedling-js-held-retry — the goal (a `clear()` is a new one), its solve asks, and its forced re-arrivals. */
+    let goalSeq = 0;
+    let asks = 0;
+    let fallbacks = 0;
+    /** ⛓ W7 — the session a forced re-arrival was asked FROM: the solver holds until the page has replaced it. */
+    let awaiting = null;
+    /** ⛓ W7 — where a plan was last played: `{run, level, goalSeq}` (what makes the next goal's solve a continuation). */
+    let lastPlayed = null;
     let refutations = 0;
     let lastRefutation = null;
     let budget = budgetKnob(budgetWork, SOLVER_BUDGET_WORK);
@@ -1392,7 +1562,9 @@ export function createRuntimeSolver({
     /** session -> Map(perTick index -> slot): the equips the play made on each live session. */
     const playedEquips = new WeakMap();
     const stats = { solves: 0, refutations: 0, declines: 0, played: 0, lastSolve: null, lastDecline: null, lastDeclineObstacle: null,
-        expiries: 0, stale: 0, solving: false, lastWaitMs: null, provisionalPlays: 0, backstops: 0, stops: 0 };
+        expiries: 0, stale: 0, solving: false, lastWaitMs: null, provisionalPlays: 0, backstops: 0, stops: 0,
+        // ⛓ seedling-js-held-retry — the held retries asked, the continuations asked, and each W7 fallback (named)
+        retries: 0, continuations: 0, fallbacks: [] };
 
     const emit = (e) => { try { onEvent(e); } catch { /* a listener's bug is not the solve's */ } };
 
@@ -1437,17 +1609,71 @@ export function createRuntimeSolver({
             // ⛓ DETERMINISTIC BUDGET — the worker's pass deadlines, in work units (the in-place service drops both).
             budgetWork: budget, upgradeWindowWork: upgradeWindow,
         };
-        const handle = service
-            // ⛓ RETRY ATTEMPT — this solver never re-asks a start at a larger budget: each start is attempt 0
-            ? service.start({ ...request, source: { records: getRecords() } },
-                { attempt: { retry: 0, budgets: budgetLimited(budget) ? [budget] : [] } })
-            : inPlace.start({ ...request, levelSource: getLevelSource() });
-        pending = { handle, run, session, prefixLength: session.perTick.length, goal, solverGoal, askedAt: clock(), startedAt: null };
+        // ⛓ W7 — a CONTINUATION: this goal's first ask, on the run and in the level where an EARLIER goal's plan was
+        // played (the wasm page's "solving on from the held room"). Every other ask (a re-solve after a refutation, a
+        // decline-retry, the fresh solve after a fallback) is not one.
+        const continuation = asks === 0 && lastPlayed !== null && lastPlayed.run === run && lastPlayed.level === goal.level
+            && lastPlayed.goalSeq !== goalSeq;
+        asks += 1;
+        if (continuation) stats.continuations += 1;
+        const records = getRecords();
+        const budgets = budgetLimited(budget) ? [budget] : [];
+        const handle = send(request, records, { retry: 0, budgets });
+        pending = { handle, run, session, prefixLength: session.perTick.length, goal, solverGoal, askedAt: clock(), startedAt: null,
+            request, records, budget, budgets, retries: 0, best: null, continuation };
         stats.solving = true;
         if (!handle.settled) {
-            emit({ type: 'solving', message: `[js runtime] solving ${solverGoal.kind} in level ${goal.level} `
+            emit({ type: 'solving', continuation, message: `[js runtime] solving ${solverGoal.kind} in level ${goal.level} `
                 + `(budget ${budgetText(budget)}) — the room is held while the solver thinks` });
         }
+    }
+
+    /** One request to the service (or in place). ⛓ RETRY ATTEMPT — the service is TOLD which attempt it is. */
+    function send(request, records, attempt) {
+        return service
+            ? service.start({ ...request, source: { records } }, { attempt: { retry: attempt.retry, budgets: [...attempt.budgets] } })
+            : inPlace.start({ ...request, levelSource: getLevelSource() });
+    }
+
+    /**
+     * ⛓ seedling-js-held-retry (O2, `seedlingWasmPlayback.retrySolve`) — THE HELD RETRY: the session has not ticked
+     * (the room is held), so the SAME request is sent again with `SOLVE_RETRY_BUDGET_FACTOR`× the budget, resuming at
+     * the first pass the cut left unanswered (`passesAfter`). What the cut attempt answered is kept (`best`).
+     * false = nothing to retry (no work limit, or no pass left).
+     */
+    function retryHeld(p, cut) {
+        if (!budgetLimited(p.budget)) return false;
+        const passes = passesAfter(p.request.passes ?? ANYTIME_PASSES, p.handle.answered ?? 0);
+        if (passes.length === 0) return false;
+        const next = p.budget * SOLVE_RETRY_BUDGET_FACTOR;
+        const request = { ...p.request, passes, budgetWork: next };
+        const budgets = [...p.budgets, next];
+        const retries = p.retries + 1;
+        stats.retries += 1;
+        const handle = send(request, p.records, { retry: retries, budgets });
+        pending = { ...p, handle, request, budget: next, budgets, retries, best: betterAnswer(p.best, cut) ? cut : p.best,
+            askedAt: clock(), startedAt: null };
+        stats.solving = true;
+        emit({ type: 'retry', message: `[js runtime] ${p.goal.name ?? p.goal.kind}: the solver ran out of ${p.budget} work units `
+            + `in level ${p.goal.level} — asking again with ${next}, the room held (retry ${retries})` });
+        return true;
+    }
+
+    /**
+     * ⛓ seedling-js-held-retry (W7, `seedlingWasmPlayback.fallback`) — a continuation that cannot be served falls back
+     * to a FORCED RE-ARRIVAL, named, never a failure on its own: ONE per goal. The page re-boots the room at its
+     * arrival (`reArrive`); until the session is replaced the room stays held, then the next ask is a fresh solve.
+     * false = no fallback here (no `reArrive`, or this goal's is spent): the caller takes the existing path.
+     */
+    function fallback(p, why, kind) {
+        if (typeof reArrive !== 'function' || fallbacks >= 1) return false;
+        const g = p.goal;
+        if (reArrive(`re-entering level ${g.level} (forced re-arrival: ${why.split('\n')[0]})`) !== true) return false;
+        fallbacks += 1;
+        awaiting = p.session;
+        stats.fallbacks.push({ goal: g.name ?? g.kind, level: g.level, kind, why });
+        emit({ type: 'fallback', kind, message: `[js runtime] ${g.name ?? g.kind}: ${why} — falling back to a forced re-arrival` });
+        return true;
     }
 
     /** The answer in hand → a plan, a decline or a failure (null = keep waiting). */
@@ -1512,10 +1738,35 @@ export function createRuntimeSolver({
                 + 'tick(s)) — its answer is stale');
             return null;
         }
-        if (!r.ok) {
-            if (r.kind === 'divergence') return { failed: r.message };
-            return decline(String(r.message), r.obstacle ?? null);
+        let res = r;
+        // ⛓ seedling-js-held-retry (O2) — a CUT answer goes to the wasm page's own policy (`expiryAction`): a plan plays
+        // (provisional), a refusal with a pass left is asked again HELD at 4×, a second cut ends the goal by name
+        // (`expiryFailure`) — or, on a continuation, falls back (W7). `seedlingWasmPlayback.pollSolve` :1544-1562.
+        if (expired) {
+            const unanswered = (p.handle.answered ?? 0) < (p.request.passes ?? ANYTIME_PASSES).length;
+            const action = expiryAction({ provisional: r, retries: p.retries, unanswered });
+            if (action === 'retry' && retryHeld(p, r)) return { solving: true };
+            if (action !== 'provisional') {
+                const refusal = betterAnswer(p.best, r) ? r : p.best;
+                const why = expiryFailure({ goal: p.goal, budgets: p.budgets, refusal });
+                if (p.continuation && fallback(p, why, 'continuation-budget')) return { solving: true };
+                return { failed: why };
+            }
         }
+        // ⛓ O2 — a retry's answer against what the cut attempt's passes had answered.
+        if (p.best && !betterAnswer(p.best, res)) res = p.best;
+        if (!res.ok) {
+            // ⛓ W7 — a continuation the solver cannot serve (any refusal kind, as on the wasm page) falls back.
+            if (p.continuation && fallback(p, `the solver declined ${p.goal.name ?? p.goal.kind} in level ${p.goal.level} `
+                + `(${res.kind}): ${res.message}`, 'continuation-declined')) return { solving: true };
+            if (res.kind === 'divergence') return { failed: res.message };
+            return decline(String(res.message), res.obstacle ?? null);
+        }
+        return played(p, res, budgetCut(res));
+    }
+
+    /** A plan in hand (`r`) → the plan this solver plays (`take`'s last step, unchanged but for the hoist). */
+    function played(p, r, expired) {
         const plan0 = r.plan;
         stats.solves += 1;
         if (expired) stats.provisionalPlays += 1;
@@ -1532,7 +1783,7 @@ export function createRuntimeSolver({
             + `${plan0.solution.length} tick(s), verbs ${plan0.verbs.join(', ') || '—'} (replay ${plan0.replayMs} ms over `
             + `${plan0.prefixLength} tick(s), solve ${plan0.solveMs} ms${service ? `, ${service.kind}` : ''}`
             + `${plan0.pass ? `; ${passNote(plan0, { expired })}` : ''}${forcedHitNote(plan0)})` });
-        plan = { ...plan0, run, i: 0 };
+        plan = { ...plan0, run: p.run, i: 0 };
         return null;
     }
 
@@ -1545,7 +1796,8 @@ export function createRuntimeSolver({
         /** True while a plan is being played (the core's burst and `autoAdvanceText` read it). */
         get planning() { return plan !== null; },
         /** ⛓ S2 — true while a solve is in flight (the page holds the model). */
-        get solving() { return pending !== null && !pending.stopped; },
+        // ⛓ W7 — and while a forced re-arrival is pending (the room is held until the page re-boots it).
+        get solving() { return (pending !== null && !pending.stopped) || awaiting !== null; },
         /** Planned keys not yet played. */
         get remaining() { return plan ? plan.solution.length - plan.i : 0; },
         /**
@@ -1556,7 +1808,10 @@ export function createRuntimeSolver({
         owesTrailingTick(run) {
             return Boolean(plan?.trailingEquip && plan.run === run && plan.i === plan.solution.length - 1);
         },
-        get stats() { return { ...stats, refutations: stats.refutations, current: refutations, lastRefutation, budgetWork: budget }; },
+        get stats() {
+            return { ...stats, fallbacks: stats.fallbacks.map((f) => ({ ...f })), refutations: stats.refutations, current: refutations,
+                lastRefutation, budgetWork: budget };
+        },
         /** ⛓ DETERMINISTIC BUDGET — one solve's budget, in work units (a test knob and the page's `?solverBudgetWork=`). */
         get budgetWork() { return budget; },
         /**
@@ -1589,7 +1844,12 @@ export function createRuntimeSolver({
         setSolveService(next) { cancel(); service = next ?? null; if (enabled) service?.warm?.(); },
         get solveService() { return service; },
         /** A new goal (or none): forget the plan, the solve in flight and the refutation count. */
-        clear() { plan = null; cancel(); refutations = 0; lastRefutation = null; },
+        clear() {
+            plan = null; cancel(); refutations = 0; lastRefutation = null;
+            // ⛓ seedling-js-held-retry — a new goal: its asks and its one fallback start again (a re-arrival asked for
+            // the old goal is the page's to land; the new goal does not wait on it).
+            goalSeq += 1; asks = 0; fallbacks = 0; awaiting = null;
+        },
         /** ⛓ S2 — the walk left this goal's room or settled: a solve in flight is dropped (named). */
         cancel(why) { cancel(why); },
         /**
@@ -1606,6 +1866,11 @@ export function createRuntimeSolver({
             // ⛓ EVENT GOALS — an event's refusal (`wrong-level`, `no-verb`) FAILS the goal by that name: no walk sets a flag.
             if (mapped.walker && goal?.event && mapped.refusal) { cancel(); return { failed: mapped.walker }; }
             if (mapped.walker) { cancel(); return null; }
+            // ⛓ W7 — a forced re-arrival is pending: HOLD until the page has replaced the session, then solve fresh.
+            if (awaiting !== null) {
+                if (getSession() === awaiting) return { solving: true };
+                awaiting = null;
+            }
             if (plan) {
                 if (plan.run !== run) refute('the run was re-booted (an item flag or a host teleport) — a new session');
                 else if (plan.i >= plan.solution.length) refute('the plan played out and the goal is not complete');
@@ -1644,6 +1909,8 @@ export function createRuntimeSolver({
             const held = new Set(plan.solution[plan.i]);
             plan.i += 1;
             stats.played += 1;
+            // ⛓ W7 — where a plan was played: the next goal's first solve on this run, in this level, is a continuation.
+            lastPlayed = { run, level: run.level, goalSeq };
             return { held };
         },
     };
