@@ -54,7 +54,7 @@ describe('fidelity WANDSWINGDRILL — the keys', () => {
         expect(CONTACT_FIDELITY_DEFAULTS[ITEM]).toBe(false);
         expect(CONTACT_FIDELITY_DEFAULTS[DRILL]).toBe(false);
         // ⛓ wave 69 (DEADFRAME2) landed its three keys first; wave 71 (WANDKILL) appended its one after these.
-        expect(CONTACT_FIDELITY_KEYS.slice(CONTACT_FIDELITY_KEYS.indexOf('wandShotEnemyBodies') + 1)).toEqual(['freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame', ITEM, DRILL, 'wandShotKill']);
+        expect(CONTACT_FIDELITY_KEYS.slice(CONTACT_FIDELITY_KEYS.indexOf('wandShotEnemyBodies') + 1)).toEqual(['freezeFramesStepResponders', 'pulserDeadFrameUpdate', 'blockPressesFallRockButtonSameFrame', ITEM, DRILL, 'wandShotKill', 'wandKillBlastBodies']);
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_ITEM_PRESS_HELD_BY_SLASH');
         expect(SOLVER_ENV_NAMES).toContain('SEEDLING_DRILL_SIGHT_LINE_GAME');
         expect([...SOLVER_ENV_NAMES].sort()).toEqual([...SOLVER_ENV_NAMES]);
