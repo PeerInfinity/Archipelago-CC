@@ -24,6 +24,7 @@
     "oppFallbackHits.js",
     "oppPressFallback.js",
     "pressEscapeExact.js",
+    "pressGlideFollow.js",
     "pressKillGuards.js",
     "pressNoFacing.js",
     "solveProgress.js",
@@ -586,9 +587,9 @@
         "crusherBait.js": 8,
         "dangerMap.js": 28,
         "lightsVerb.js": 1,
-        "solverBot.js": 265
+        "solverBot.js": 266
       },
-      "sites": 407,
+      "sites": 408,
       "seen": "both",
       "via": [
         "direct",
@@ -707,7 +708,7 @@
         },
         "pushables": {
           "botDriverV2.js": 17,
-          "solverBot.js": 30
+          "solverBot.js": 31
         },
         "pushesSettled": {
           "botDriverV2.js": 5,
@@ -1218,10 +1219,10 @@
         "botDriverV2.js": 27,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 187,
+        "solverBot.js": 188,
         "strikePolicy.js": 2
       },
-      "sites": 222,
+      "sites": 223,
       "seen": "both",
       "via": [
         "direct",
@@ -1278,7 +1279,7 @@
         },
         "slashInfo": {
           "lightsVerb.js": 1,
-          "solverBot.js": 13,
+          "solverBot.js": 14,
           "strikePolicy.js": 1
         },
         "takenPickups": {
@@ -5571,9 +5572,9 @@
         "botDriverV2.js": 54,
         "bulbPlacement.js": 2,
         "crusherBait.js": 4,
-        "solverBot.js": 264
+        "solverBot.js": 265
       },
-      "sites": 324,
+      "sites": 325,
       "seen": "static",
       "via": [
         "import"
