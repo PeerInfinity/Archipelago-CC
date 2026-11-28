@@ -1,0 +1,2 @@
+base: whole game: 306 regions; problems 1, accepted 16, lines 845; engine searches (cache misses) 12580, replans 569; wall 97322 ms
+Archipelago-CC: whole game: 306 regions; problems 1, accepted 16, lines 845; engine searches (cache misses) 12597, replans 789; wall 100534 ms

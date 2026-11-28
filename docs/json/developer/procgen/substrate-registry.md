@@ -368,13 +368,13 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `action_nodes` | `bounce` | `cloudberry` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `mystery` | `noiz2sa` | `omsi` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| `compositeMap` | — | — | — | 7 keys | 7 keys | — | {drawRegion} | — | — | — | {drawRegion} |
+| `compositeMap` | — | — | — | 7 keys | 7 keys | — | 5 keys | — | — | — | {drawRegion} |
 | `compositeMap.artwork` | — | — | — | yes | yes | — | — | — | — | — | — |
-| `compositeMap.displayRegionOf` | — | — | — | fn | fn | — | — | — | — | — | — |
+| `compositeMap.displayRegionOf` | — | — | — | fn | fn | — | fn | — | — | — | — |
 | `compositeMap.drawRegion` | — | — | — | fn | fn | — | fn | — | — | — | fn |
-| `compositeMap.layoutGraph` | — | — | — | fn | fn | — | — | — | — | — | — |
-| `compositeMap.locationTiles` | — | — | — | fn | fn | — | — | — | — | — | — |
-| `compositeMap.regionExtent` | — | — | — | fn | fn | — | — | — | — | — | — |
+| `compositeMap.layoutGraph` | — | — | — | fn | fn | — | fn | — | — | — | — |
+| `compositeMap.locationTiles` | — | — | — | fn | fn | — | fn | — | — | — | — |
+| `compositeMap.regionExtent` | — | — | — | fn | fn | — | fn | — | — | — | — |
 | `compositeMap.remoteLocationTiles` | — | — | — | fn | fn | — | — | — | — | — | — |
 
 **Loop mode**

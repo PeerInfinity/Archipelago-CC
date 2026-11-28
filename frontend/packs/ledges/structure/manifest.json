@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "_comment": "WHAT EXISTS where a generated room has a drop (content sets GEN-5): one terrain kind, a ledge you can jump down onto moving south and cannot climb from any other side. Its pass is one-way with fixed dirs [S] (the engine's entry_gates: every other way in is shut). It says generate: true, so a world that names this pack under \"what exists\" (params.exists) lets the \"Randomly placed tiles\" maze biome place it, only where the room's logic stays exactly as it was (GEN-4's laws (a)-(d)). Never offered by a theme (⚖ Q4). The direction is the kind's, not the placement's: per-placement dirs would need a pack field (a later design question).",
+  "provenance": {
+    "sources": {
+      "gen5": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-26",
+        "note": "the ledges pack, content sets GEN-5 (Co-Authored-By: Claude Opus 5.5). No approval of its names or shapes is recorded"
+      }
+    },
+    "default": "gen5"
+  },
+  "entries": {
+    "ledges:terrain/ledge": { "kind": "terrain", "pass": "one-way", "dirs": ["S"], "generate": true }
+  }
+}

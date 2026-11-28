@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 32,
-        "headings": 1370,
+        "headings": 1371,
         "indexHeadings": 2,
-        "lines": 37415,
+        "lines": 37427,
         "pages": 4,
-        "words": 579978
+        "words": 580683
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -236,7 +236,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 26638
+            "words": 26709
         },
         {
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
@@ -333,7 +333,7 @@ export const DOCS_INDEX = frz({
                 "seedling-derived-rules.md"
             ],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 2672
+            "words": 2693
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",
@@ -356,17 +356,18 @@ export const DOCS_INDEX = frz({
             "description": "The ActionNodes substrate (id `action_nodes`) is a puzzle played in loops: one region is one node, and a node is one action with a mana cost, stat and resource minimums, results and a limit per loop.",
             "file": "action-nodes.md",
             "h1": "ActionNodes Substrate",
-            "headings": 16,
-            "lines": 217,
+            "headings": 17,
+            "lines": 227,
             "links": [
                 "architecture.md",
                 "gotchas.md",
                 "loop-recording.md",
+                "mystery.md",
                 "playback-and-debugging.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/action-nodes.md",
-            "words": 7145
+            "words": 7459
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",
@@ -405,7 +406,7 @@ export const DOCS_INDEX = frz({
             "lines": 457,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-solve-progress.md",
-            "words": 13621
+            "words": 13632
         },
         {
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
@@ -460,7 +461,7 @@ export const DOCS_INDEX = frz({
             "file": "flash.md",
             "h1": "Flash Substrate",
             "headings": 36,
-            "lines": 882,
+            "lines": 883,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -473,7 +474,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 35862
+            "words": 36107
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",
@@ -527,12 +528,13 @@ export const DOCS_INDEX = frz({
             "file": "mystery.md",
             "h1": "Mystery Substrate",
             "headings": 13,
-            "lines": 128,
+            "lines": 129,
             "links": [
+                "action-nodes.md",
                 "architecture.md"
             ],
             "path": "docs/json/developer/procgen/mystery.md",
-            "words": 2241
+            "words": 2284
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",
