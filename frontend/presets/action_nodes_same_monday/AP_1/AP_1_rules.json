@@ -343,7 +343,23 @@
       "game": "Action Nodes",
       "world_class_name": "ActionNodesWorld",
       "options": {},
-      "world_directory": "action_nodes"
+      "world_directory": "action_nodes",
+      "slot_data": {
+        "mystery": {
+          "story": "same-monday",
+          "version": "f778f1b06ee9",
+          "case": "cases/miniatures/same-monday",
+          "goal": "q.who",
+          "locations": {},
+          "items": {
+            "The harbour office": "office",
+            "At the Ship inn": "inn",
+            "The night watchman": "watch",
+            "The pilot": "pilot",
+            "At the chandler's": "chandler"
+          }
+        }
+      }
     }
   },
   "game_info": {

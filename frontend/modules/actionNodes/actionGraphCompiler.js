@@ -339,6 +339,8 @@ export function compileActionGraph(graph, {
         rules.player_names = { [p]: 'Player1' };
     }
     rules.world[p].world_directory = ACTION_NODES_GAME.gameDirectory;
+    // The mystery page's bridge (AN-MYST-1): only a graph that declares a mystery link carries it.
+    if (graph.mystery) rules.world[p].slot_data = { mystery: mysterySlotDataOf(graph) };
     rules.game_info[p] = { completion_condition: { type: 'item_check', item: GOAL_ITEM } };
     // ⛓ The world LISTS its back-exits (the reverse exits below), so it states that none may be assumed. `true` would
     // let consumers construct a back-exit for every listed exit — `start -> Menu` included, which does not exist (the
@@ -457,6 +459,36 @@ export function compileActionGraph(graph, {
     // discovery module's `actionNodes` bundle (worldDiscoveryMode.js). Per world: no other world sees it.
     rules.discovery_mode = { [p]: { enabled: true, bundle: ACTION_NODES_DISCOVERY_BUNDLE } };
     return { rules, report };
+}
+
+/**
+ * ⚑ PENDING (superseded by Robert's 2026-11-26 ruling: page questions are the locations, q.who the goal; the
+ * world-side goal is AN-MYST-2). Until then a mystery-linked world names NO location for any page question, so the
+ * page's `mystery:questionSolved` maps to nothing and the host drops it silently (mysteryArchipelagoLogic.js
+ * `handleQuestionSolved`: no check, no state sent back), and the goal is still the goal node's to check. AN-MYST-2
+ * fills this map from the graph's questions (and rules from the case export), which is a compiler change plus a
+ * re-record of every mystery-linked preset.
+ */
+export const MYSTERY_QUESTION_LOCATIONS_PENDING = Object.freeze({});
+
+/**
+ * `slot_data.mystery` for a graph with a mystery link (actionGraph.js `validateMysteryLink`): the case's own story,
+ * version and case directory, its goal question, the question locations (⚑ PENDING, above), and each paper boon's
+ * item name mapped to the case's paper id. The mystery host (mysteryArchipelago) reads it: the page is framed for the
+ * case, the papers held are the received items by `items`, and a page of another version is refused.
+ */
+export function mysterySlotDataOf(graph) {
+    const m = graph.mystery;
+    const items = {};
+    for (const [boonId, paperId] of Object.entries(m.papers)) items[graph.boons[boonId].name] = paperId;
+    return {
+        story: m.story,
+        version: m.version,
+        case: m.case,
+        goal: m.goal.question,
+        locations: { ...MYSTERY_QUESTION_LOCATIONS_PENDING },
+        items,
+    };
 }
 
 /**
