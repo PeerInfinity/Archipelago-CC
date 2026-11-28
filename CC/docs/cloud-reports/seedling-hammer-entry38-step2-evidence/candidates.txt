@@ -1,0 +1,59 @@
+# step 2 — the three candidates, measured at base f67cb64987 (switch OFF), ALL+WBA, on A1 38:2.
+# Plan = the full pass's 651-tick plan at budget 2000 (KEYS_OUT of planhits2.mjs). tools/probe.mjs replays T of its keys, then a scripted tail.
+
+## work split (temporary site-ask hook in askDeadline + a marker per route step, since removed; full pass alone, budget 2000)
+# dashless: walk 1, block-route 5, walk 12, axe-dodge 152, walk 10 | STEP 1 t342 @152.1,103.0 (180 asks) | walk 1 | STEP 2 t382 @189.2,103.0 | walk 3, axe-dodge 14, walk 6 => 204, refuses at step 2's stance
+# full:     walk 1, block-route 5, walk 12, axe-dodge 152, walk 8, sword-dash 125, walk 1 | STEP 1 t298 @151.6,104.9 (304 asks)
+#           | walk 1 | STEP 2 t333 (305) | walk 5, sword-dash 217, walk 4 | STEP 3 t463 @108.2,103.9 (531) | walk 2, sword-dash 29, walk 1
+#           | STEP 4 t505 (563) | walk 2, sword-dash 5, walk 7, sword-dash 21, walk 4, block-route 5, walk 10, axe-dodge 70, kill-chaser 1, walk 1 => 601 (+ hit-avoid 88)
+# page budget 640: dashless 204 leaves 436 for the full pass, which needs 601.
+# step-2 stance walk row (trace): path (152,136) (120,136) (120,104); swordDash planned, 90 t against an undashed baseline of 118, scanned 216.
+
+## (c) a cheaper step-2 stance walk: from t333 (151.6,104.9), stall s, then hold left to x<=120.5 along the stance row
+s=0   HITS [{"t":344,"source":"spinningaxe","id":"spinningaxe@128,80"}] DEATHS 361 END 386 end 120.5,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
+s=4   HITS [{"t":346,"source":"spinningaxe","id":"spinningaxe@128,80"}] DEATHS 365 END 390 end 120.5,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
+s=8   HITS [{"t":347,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":367,"source":"chaser","id":"jellyfish@192,56"},{"t":414,"source":"spinningaxe","id":"spinningaxe@128,80"}] DEATHS 418 END 443 end 120.5,296.0 blk=112,96 jellyfi
+s=12  HITS [{"t":349,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":369,"source":"chaser","id":"jellyfish@192,56"},{"t":389,"source":"chaser","id":"jellyfish@192,56"},{"t":415,"source":"spinningaxe","id":"spinningaxe@128,80"}] D
+s=16  HITS [{"t":350,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":415,"source":"spinningaxe","id":"spinningaxe@128,80"}] DEATHS 426 END 451 end 120.5,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
+s=24  HITS [{"t":350,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":415,"source":"spinningaxe","id":"spinningaxe@128,80"}] DEATHS 426 END 451 end 120.5,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
+s=32  HITS [{"t":350,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":415,"source":"spinningaxe","id":"spinningaxe@128,80"}] DEATHS 426 END 451 end 120.5,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
+s=40  HITS [{"t":350,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":387,"source":"chaser","id":"jellyfish@192,56"},{"t":416,"source":"spinningaxe","id":"spinningaxe@128,80"}] DEATHS 433 END 458 end 120.5,296.0 blk=112,96 jellyfi
+s=48  HITS [{"t":350,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":419,"source":"spinningaxe","id":"spinningaxe@128,80"}] DEATHS 438 END 463 end 120.5,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
+s=56  HITS [{"t":350,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":388,"source":"chaser","id":"jellyfish@192,56"}] DEATHS 0 END 514 end 178.0,117.4 blk=96,96 jellyfish@192,56(180.9,105.8)
+s=64  HITS [{"t":350,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":388,"source":"chaser","id":"jellyfish@192,56"}] DEATHS 0 END 524 end 178.0,117.4 blk=96,96 jellyfish@192,56(180.9,105.8)
+s=72  HITS [{"t":350,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":388,"source":"chaser","id":"jellyfish@192,56"}] DEATHS 0 END 530 end 178.0,117.4 blk=96,96 jellyfish@192,56(180.9,105.8)
+s=80  HITS [{"t":350,"source":"spinningaxe","id":"spinningaxe@128,80"},{"t":388,"source":"chaser","id":"jellyfish@192,56"}] DEATHS 0 END 539 end 178.0,117.4 blk=96,96 jellyfish@192,56(181.2,105.6)
+## (c) the same with a south detour to row Y (down, left to 120.5, up to 104.5); every (Y, s) with no hit and no death:
+Y=130 s=4 after settle 423 118.3,99.5
+Y=136 s=0 after settle 428 117.5,102.5
+Y=136 s=2 after settle 430 117.5,102.5
+Y=136 s=4 after settle 432 117.5,102.5
+## (a) the glide wait follows the block: from t430 (step 2 thrust at t429), control (idle glide, the plan's shape) vs follow (hold left to x<=104 during the glide)
+### control
+AT 430 start 118.7,103.9 blk=96,96 jellyfish@192,56(141.3,106.6)
+after glide:5 463  108.2,103.9 blk=80,96 jellyfish@192,56(124.7,106.3)
+after walk:left:104 470  103.7,103.9 blk=80,96 jellyfish@192,56(121.2,106.0)
+after press 471  103.7,103.9 blk=80,96 jellyfish@192,56(120.7,106.3)
+after glide:4 505  103.7,103.9 blk=64,96 jellyfish@192,56(118.2,106.3)
+after walk:left:88 526  83.2,103.9 blk=64,96 jellyfish@192,56(118.2,106.0)
+after press 527  83.2,103.9 blk=64,96 jellyfish@192,56(118.2,106.3)
+after sink 572  83.2,103.9 blk=GONE jellyfish@192,56(118.2,106.0)
+after idle:30 602  83.2,103.9 blk=GONE jellyfish@192,56(118.2,106.0)
+HITS [{"t":459,"source":"chaser","id":"jellyfish@192,56"}] DEATHS 0 END 602 end 83.2,103.9 blk=GONE jellyfish@192,56(118.2,106.0)
+### follow
+AT 430 start 118.7,103.9 blk=96,96 jellyfish@192,56(141.3,106.6)
+after walk:left:104 457  102.0,103.9 blk=82.5,96 jellyfish@192,56(127.7,106.4)
+after glide:5 463  102.0,103.9 blk=80,96 jellyfish@192,56(124.7,106.4)
+after press 464  102.0,103.9 blk=80,96 jellyfish@192,56(124.2,106.6)
+after glide:4 498  102.0,103.9 blk=64,96 jellyfish@192,56(118.1,106.6)
+after walk:left:88 515  85.6,103.9 blk=64,96 jellyfish@192,56(118.1,106.4)
+after press 516  85.6,103.9 blk=64,96 jellyfish@192,56(118.1,106.6)
+after sink 561  85.6,103.9 blk=GONE jellyfish@192,56(118.1,106.4)
+after idle:30 591  85.6,103.9 blk=GONE jellyfish@192,56(118.1,106.4)
+HITS [] DEATHS 0 END 591 end 85.6,103.9 blk=GONE jellyfish@192,56(118.1,106.4)
+## (a) at step 1 (thrust t298): hold left during the glide (the unguarded lean) — the player leans into the axe's sweep and dies (respawn at the arrival)
+AT 300 start 151.6,104.9 blk=112,96 jellyfish@160,64(174.2,87.4) jellyfish@192,56(186.3,90.8)
+after idle:4 304  151.6,104.9 blk=110,96 jellyfish@160,64(174.2,87.4) jellyfish@192,56(186.3,91.5)
+after key:left:30 334  133.8,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
+after idle:30 364  130.9,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
+HITS [] DEATHS 332 END 364 end 130.9,296.0 blk=112,96 jellyfish@160,64(168.0,72.0) jellyfish@192,56(200.0,64.0)
