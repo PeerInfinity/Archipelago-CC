@@ -470,7 +470,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity WANDSWINGDRILL (wave 70): a lone wand/fire press during a swing is dropped; a drill's first-tick line sees no tile — OFF.
             itemPressHeldBySlash: false, drillSightLineGame: false,
             // ⛓ fidelity WANDKILL (wave 71): the plain wand's sixth landed hit kills with the class's own death — OFF.
-            wandShotKill: false });
+            wandShotKill: false, wandKillBlastBodies: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

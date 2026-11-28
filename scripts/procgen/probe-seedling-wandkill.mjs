@@ -123,14 +123,15 @@ const near = (a, b) => Math.abs(a - b) < 1e-9;
  * `hitsTimer`, a LavaTrap's and a WallFlyer's "die", and, at the end, the wand kills, their blasts and the
  * persistence the run cleared.
  */
-export async function modelWandKillSamples(tape, switches) {
+export async function modelWandKillSamples(tape, switches, { levelSource = null } = {}) {
     const M = (p) => import(join(MODULE, p));
     const { createTapeStepper } = await M('tapeRunner.js');
     const { atlasLevelSource } = await M('levelSource.js');
     const { withContactFidelity } = await M('contactFidelity.js');
     const { withWandVerb } = await M('wandVerb.js');
     const { buildLevelWorld } = await M('levelWorld.js');
-    const src = atlasLevelSource();
+    // ⛓ wave 73 (WANDKILLBLAST): a staged witness passes its own level source (the vanilla atlas, one room edited).
+    const src = levelSource ?? atlasLevelSource();
     const census = buildLevelWorld(src(tape.boot.level), {}).pressEnemies
         .filter((e) => WAND_ENEMY_CLASSES.includes(e.as3)).map((e) => ({ id: `${e.tag}@${e.x},${e.y}`, as3: e.as3,
             x: e.x + 8, y: e.y + 8 }));
