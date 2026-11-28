@@ -90,6 +90,14 @@ export const ATLAS_LOCATION_SLOT_ITEM = 'atlas_location';
 const DIRS = Object.freeze([[0, -1], [1, 0], [0, 1], [-1, 0]]);
 
 const crossingExitId = (targetSubRegion) => `cross_${targetSubRegion}`;
+/**
+ * ⛓ `arrivalTile` (maze-arrival-spawns): where a boundary exit lands the player — `{x, y}` in the TARGET level's
+ * region-local tiles, the compiler's `wiredExit(...).arrivalTile` (the partner exit's `entrance_tile`; the flash
+ * payload's `target_spawn` in tiles). PRESENT-OR-ABSENT: a `wiredExit` that does not say (a caller's own) adds nothing.
+ * ⛔ Display only: `mazeRoomEngine.createMazeWorld` copies a fixed list of exit fields and drops this one, so play
+ * (`resolveMazeArrival`) is untouched; the Region Map / Region Graph hooks (`mazeRegionMapHooks.js`) read it.
+ */
+const arrivalOf = (wired) => (wired?.arrivalTile ? { arrivalTile: { x: wired.arrivalTile.x, y: wired.arrivalTile.y } } : {});
 const directedKey = (from, to) => `${from}>${to}`;
 
 /** The (sub-)regions one atlas region projects into, paired with their AP names. */
@@ -918,6 +926,7 @@ export function projectRegionToMaze(region, grid, ctx) {
                 targetExitId: wired.returnApExitName ?? null,
                 isTeleporter: exit.kind === 'teleporter',
                 atlas_exit_id: exit.exit_id,
+                ...arrivalOf(wired),
             });
             if (!kept) {
                 if (before === undefined) builder.obstacles.delete(`${x},${y}`); else builder.obstacles.set(`${x},${y}`, before);
@@ -1771,6 +1780,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             targetExitId: wired.returnApExitName ?? null,
             isTeleporter: exit.kind === 'teleporter',
             atlas_exit_id: exit.exit_id,
+            ...arrivalOf(wired),
         });
     }
 

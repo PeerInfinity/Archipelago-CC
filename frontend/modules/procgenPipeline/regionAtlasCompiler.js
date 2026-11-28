@@ -860,11 +860,20 @@ export function compileRegionAtlas(atlas, options = {}) {
             const back = wiredInfo.get(
                 endpointKey(info.target.region.region_id, info.target.exit.exit_id),
             );
+            // ⛓ WHERE THE PLAYER ARRIVES (maze-arrival-spawns): the partner exit's own `entrance_tile` — exactly what
+            // the flash payload's `target_spawn` is, in pixels — in the TARGET level's region-local tiles (atlas tile −
+            // the target's `bounds` origin, the projection's own `local`). Every sub-region of one atlas region shares
+            // its coordinates, so a `__rXcY` target needs no further mapping. Null when the partner has no tile.
+            const tt = info.target.exit.entrance_tile;
+            const tb = info.target.region.bounds;
+            const arrivalTile = Array.isArray(tt) && Number.isInteger(tt[0]) && Number.isInteger(tt[1])
+                ? { x: tt[0] - (tb?.x ?? 0), y: tt[1] - (tb?.y ?? 0) } : null;
             return {
                 apExitName: info.apExitName,
                 targetApRegion: info.targetApRegion,
                 targetExitId: info.target.exit.exit_id,
                 returnApExitName: back?.apExitName ?? null,
+                arrivalTile,
             };
         },
         internalExitName: (regionId, from, to) => internalInfo.get(`${regionId}|${from}|${to}`),

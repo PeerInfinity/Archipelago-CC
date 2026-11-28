@@ -692,7 +692,11 @@
               "targetRegion": "starting_house",
               "targetExitId": "starting_house -> overworld_start__r8c0",
               "isTeleporter": true,
-              "atlas_exit_id": "house_door"
+              "atlas_exit_id": "house_door",
+              "arrivalTile": {
+                "x": 3,
+                "y": 4
+              }
             },
             {
               "exit_id": "overworld_start__r8c0 -> owls_nest_entrance",
@@ -703,7 +707,11 @@
               "targetRegion": "owls_nest_entrance",
               "targetExitId": "owls_nest_entrance -> overworld_start__r8c0",
               "isTeleporter": true,
-              "atlas_exit_id": "owls_nest_stairs"
+              "atlas_exit_id": "owls_nest_stairs",
+              "arrivalTile": {
+                "x": 3,
+                "y": 1
+              }
             },
             {
               "exit_id": "overworld_start__r8c0 -> overworld_start__r11c19",
@@ -989,7 +997,11 @@
               "targetRegion": "overworld_start__r8c0",
               "targetExitId": "overworld_start__r8c0 -> starting_house",
               "isTeleporter": true,
-              "atlas_exit_id": "door"
+              "atlas_exit_id": "door",
+              "arrivalTile": {
+                "x": 10,
+                "y": 17
+              }
             }
           ],
           "obstacles": [],
@@ -1031,7 +1043,11 @@
               "targetRegion": "overworld_start__r8c0",
               "targetExitId": "overworld_start__r8c0 -> owls_nest_entrance",
               "isTeleporter": true,
-              "atlas_exit_id": "stairs_up"
+              "atlas_exit_id": "stairs_up",
+              "arrivalTile": {
+                "x": 16,
+                "y": 17
+              }
             },
             {
               "exit_id": "owls_nest_entrance -> dungeon1_room1__r0c4",
@@ -1042,7 +1058,11 @@
               "targetRegion": "dungeon1_room1__r0c4",
               "targetExitId": "dungeon1_room1__r0c4 -> owls_nest_entrance",
               "isTeleporter": true,
-              "atlas_exit_id": "descent"
+              "atlas_exit_id": "descent",
+              "arrivalTile": {
+                "x": 4,
+                "y": 0
+              }
             }
           ],
           "obstacles": [],
@@ -1077,7 +1097,11 @@
               "targetRegion": "owls_nest_entrance",
               "targetExitId": "owls_nest_entrance -> dungeon1_room1__r0c4",
               "isTeleporter": true,
-              "atlas_exit_id": "stairs_up"
+              "atlas_exit_id": "stairs_up",
+              "arrivalTile": {
+                "x": 3,
+                "y": 6
+              }
             },
             {
               "exit_id": "dungeon1_room1__r0c4 -> dungeon1_room1__r8c6",

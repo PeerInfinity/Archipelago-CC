@@ -31124,7 +31124,11 @@
               "targetRegion": "level_94__r2c16",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_128"
+              "atlas_exit_id": "out_teleporter_0_128",
+              "arrivalTile": {
+                "x": 18,
+                "y": 10
+              }
             },
             {
               "exit_id": "level_0__r7c6 -> level_94__r2c16 #2",
@@ -31135,7 +31139,11 @@
               "targetRegion": "level_94__r2c16",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_144"
+              "atlas_exit_id": "out_teleporter_0_144",
+              "arrivalTile": {
+                "x": 18,
+                "y": 11
+              }
             },
             {
               "exit_id": "level_0__r7c6 -> level_13",
@@ -31146,7 +31154,11 @@
               "targetRegion": "level_13",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_32_192"
+              "atlas_exit_id": "out_stairsdown_32_192",
+              "arrivalTile": {
+                "x": 4,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_0__r6c5 -> level_1",
@@ -31157,7 +31169,11 @@
               "targetRegion": "level_1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_80_96"
+              "atlas_exit_id": "out_teleporter_80_96",
+              "arrivalTile": {
+                "x": 4,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_0__r7c6 -> level_86",
@@ -31168,7 +31184,11 @@
               "targetRegion": "level_86",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_160_272"
+              "atlas_exit_id": "out_teleporter_160_272",
+              "arrivalTile": {
+                "x": 3,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_0__r2c13 -> level_89__r11c12",
@@ -31179,7 +31199,11 @@
               "targetRegion": "level_89__r11c12",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_240_0"
+              "atlas_exit_id": "out_teleporter_240_0",
+              "arrivalTile": {
+                "x": 10,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_0__r7c6 -> level_2",
@@ -31190,7 +31214,11 @@
               "targetRegion": "level_2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_256_272"
+              "atlas_exit_id": "out_stairsdown_256_272",
+              "arrivalTile": {
+                "x": 3,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_0__r11c19 -> level_12__r0c19",
@@ -31201,7 +31229,11 @@
               "targetRegion": "level_12__r0c19",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_176"
+              "atlas_exit_id": "out_teleporter_304_176",
+              "arrivalTile": {
+                "x": 1,
+                "y": 5
+              }
             }
           ],
           "obstacles": [
@@ -32214,7 +32246,11 @@
               "targetRegion": "level_0__r6c5",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_112"
+              "atlas_exit_id": "out_teleporter_64_112",
+              "arrivalTile": {
+                "x": 5,
+                "y": 7
+              }
             }
           ],
           "obstacles": [],
@@ -32249,7 +32285,11 @@
               "targetRegion": "level_0__r7c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_48_16"
+              "atlas_exit_id": "out_stairsup_48_16",
+              "arrivalTile": {
+                "x": 16,
+                "y": 16
+              }
             },
             {
               "exit_id": "level_2 -> level_3__r0c4",
@@ -32260,7 +32300,11 @@
               "targetRegion": "level_3__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_96"
+              "atlas_exit_id": "out_teleporter_48_96",
+              "arrivalTile": {
+                "x": 4,
+                "y": 1
+              }
             }
           ],
           "obstacles": [],
@@ -32296,7 +32340,11 @@
               "targetRegion": "level_111",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_64"
+              "atlas_exit_id": "out_teleporter_0_64",
+              "arrivalTile": {
+                "x": 18,
+                "y": 11
+              }
             },
             {
               "exit_id": "level_3__r0c4 -> level_2",
@@ -32307,7 +32355,11 @@
               "targetRegion": "level_2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_0"
+              "atlas_exit_id": "out_teleporter_64_0",
+              "arrivalTile": {
+                "x": 3,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_3__r8c6 -> level_11",
@@ -32318,7 +32370,11 @@
               "targetRegion": "level_11",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_96_128"
+              "atlas_exit_id": "out_teleporter_96_128",
+              "arrivalTile": {
+                "x": 2,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_3__r0c4 -> level_4",
@@ -32329,7 +32385,11 @@
               "targetRegion": "level_4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_128_48"
+              "atlas_exit_id": "out_teleporter_128_48",
+              "arrivalTile": {
+                "x": 1,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -33030,7 +33090,11 @@
               "targetRegion": "level_3__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_16"
+              "atlas_exit_id": "out_teleporter_0_16",
+              "arrivalTile": {
+                "x": 7,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_4 -> level_5__r1c5",
@@ -33041,7 +33105,11 @@
               "targetRegion": "level_5__r1c5",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_64_16"
+              "atlas_exit_id": "out_stairsdown_64_16",
+              "arrivalTile": {
+                "x": 5,
+                "y": 2
+              }
             }
           ],
           "obstacles": [],
@@ -33185,7 +33253,11 @@
               "targetRegion": "level_12__r13c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_16_16"
+              "atlas_exit_id": "out_stairsup_16_16",
+              "arrivalTile": {
+                "x": 6,
+                "y": 14
+              }
             },
             {
               "exit_id": "level_5__r1c5 -> level_6",
@@ -33196,7 +33268,11 @@
               "targetRegion": "level_6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_112"
+              "atlas_exit_id": "out_teleporter_48_112",
+              "arrivalTile": {
+                "x": 2,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_5__r1c5 -> level_4",
@@ -33207,7 +33283,11 @@
               "targetRegion": "level_4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_80_16"
+              "atlas_exit_id": "out_stairsup_80_16",
+              "arrivalTile": {
+                "x": 4,
+                "y": 2
+              }
             }
           ],
           "obstacles": [
@@ -33444,7 +33524,11 @@
               "targetRegion": "level_5__r1c5",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_0"
+              "atlas_exit_id": "out_teleporter_32_0",
+              "arrivalTile": {
+                "x": 3,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_6 -> level_7",
@@ -33455,7 +33539,11 @@
               "targetRegion": "level_7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_224_32"
+              "atlas_exit_id": "out_stairsup_224_32",
+              "arrivalTile": {
+                "x": 2,
+                "y": 2
+              }
             }
           ],
           "obstacles": [],
@@ -33490,7 +33578,11 @@
               "targetRegion": "level_6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_16_32"
+              "atlas_exit_id": "out_stairsdown_16_32",
+              "arrivalTile": {
+                "x": 13,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_7 -> level_8",
@@ -33501,7 +33593,11 @@
               "targetRegion": "level_8",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_192_32"
+              "atlas_exit_id": "out_stairsdown_192_32",
+              "arrivalTile": {
+                "x": 9,
+                "y": 3
+              }
             }
           ],
           "obstacles": [],
@@ -33537,7 +33633,11 @@
               "targetRegion": "level_9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_96_192"
+              "atlas_exit_id": "out_teleporter_96_192",
+              "arrivalTile": {
+                "x": 9,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_8 -> level_7",
@@ -33548,7 +33648,11 @@
               "targetRegion": "level_7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_144_32"
+              "atlas_exit_id": "out_stairsup_144_32",
+              "arrivalTile": {
+                "x": 11,
+                "y": 2
+              }
             }
           ],
           "obstacles": [
@@ -34214,7 +34318,11 @@
               "targetRegion": "level_10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_16_0"
+              "atlas_exit_id": "out_teleporter_16_0",
+              "arrivalTile": {
+                "x": 3,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_9 -> level_8",
@@ -34225,7 +34333,11 @@
               "targetRegion": "level_8",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_0"
+              "atlas_exit_id": "out_teleporter_144_0",
+              "arrivalTile": {
+                "x": 6,
+                "y": 11
+              }
             }
           ],
           "obstacles": [],
@@ -34260,7 +34372,11 @@
               "targetRegion": "level_11",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_48_16"
+              "atlas_exit_id": "out_stairsup_48_16",
+              "arrivalTile": {
+                "x": 2,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_10 -> level_9",
@@ -34271,7 +34387,11 @@
               "targetRegion": "level_9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_96"
+              "atlas_exit_id": "out_teleporter_48_96",
+              "arrivalTile": {
+                "x": 1,
+                "y": 1
+              }
             }
           ],
           "obstacles": [],
@@ -34313,7 +34433,11 @@
               "targetRegion": "level_3__r8c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_0"
+              "atlas_exit_id": "out_teleporter_32_0",
+              "arrivalTile": {
+                "x": 6,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_11 -> level_10",
@@ -34324,7 +34448,11 @@
               "targetRegion": "level_10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_32_80"
+              "atlas_exit_id": "out_stairsdown_32_80",
+              "arrivalTile": {
+                "x": 3,
+                "y": 2
+              }
             }
           ],
           "obstacles": [],
@@ -34367,7 +34495,11 @@
               "targetRegion": "level_0__r11c19",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_80"
+              "atlas_exit_id": "out_teleporter_0_80",
+              "arrivalTile": {
+                "x": 18,
+                "y": 11
+              }
             },
             {
               "exit_id": "level_12__r0c19 -> level_95",
@@ -34378,7 +34510,11 @@
               "targetRegion": "level_95",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_352"
+              "atlas_exit_id": "out_teleporter_0_352",
+              "arrivalTile": {
+                "x": 38,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_12__r0c19 -> level_95 #2",
@@ -34389,7 +34525,11 @@
               "targetRegion": "level_95",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_368"
+              "atlas_exit_id": "out_teleporter_0_368",
+              "arrivalTile": {
+                "x": 38,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_12__r42c28 -> level_83",
@@ -34400,7 +34540,11 @@
               "targetRegion": "level_83",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_848"
+              "atlas_exit_id": "out_teleporter_32_848",
+              "arrivalTile": {
+                "x": 2,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_12__r40c4 -> level_24",
@@ -34411,7 +34555,11 @@
               "targetRegion": "level_24",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_40_688"
+              "atlas_exit_id": "out_teleporter_40_688",
+              "arrivalTile": {
+                "x": 3,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_12__r13c6 -> level_5__r1c1",
@@ -34422,7 +34570,11 @@
               "targetRegion": "level_5__r1c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_96_240"
+              "atlas_exit_id": "out_stairsdown_96_240",
+              "arrivalTile": {
+                "x": 1,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_12__r0c19 -> level_35",
@@ -34433,7 +34585,11 @@
               "targetRegion": "level_35",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_96"
+              "atlas_exit_id": "out_teleporter_112_96",
+              "arrivalTile": {
+                "x": 2,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_12__r0c19 -> level_36",
@@ -34444,7 +34600,11 @@
               "targetRegion": "level_36",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_168_368"
+              "atlas_exit_id": "out_teleporter_168_368",
+              "arrivalTile": {
+                "x": 2,
+                "y": 7
+              }
             },
             {
               "exit_id": "level_12__r0c19 -> level_88",
@@ -34455,7 +34615,11 @@
               "targetRegion": "level_88",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_0"
+              "atlas_exit_id": "out_teleporter_304_0",
+              "arrivalTile": {
+                "x": 6,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_12__r43c21 -> level_34",
@@ -34466,7 +34630,11 @@
               "targetRegion": "level_34",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_336_688"
+              "atlas_exit_id": "out_teleporter_336_688",
+              "arrivalTile": {
+                "x": 2,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_12__r0c19 -> level_33",
@@ -34477,7 +34645,11 @@
               "targetRegion": "level_33",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_432_352"
+              "atlas_exit_id": "out_teleporter_432_352",
+              "arrivalTile": {
+                "x": 2,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_12__r0c37 -> level_37__r12c6",
@@ -34488,7 +34660,11 @@
               "targetRegion": "level_37__r12c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_592_0"
+              "atlas_exit_id": "out_teleporter_592_0",
+              "arrivalTile": {
+                "x": 2,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_12__r0c37 -> level_21",
@@ -34499,7 +34675,11 @@
               "targetRegion": "level_21",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_5_5"
+              "atlas_exit_id": "out_pit_5_5",
+              "arrivalTile": {
+                "x": 5,
+                "y": 5
+              }
             }
           ],
           "obstacles": [
@@ -37149,7 +37329,11 @@
               "targetRegion": "level_14",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_32_32"
+              "atlas_exit_id": "out_stairsdown_32_32",
+              "arrivalTile": {
+                "x": 10,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_13 -> level_0__r7c6",
@@ -37160,7 +37344,11 @@
               "targetRegion": "level_0__r7c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_64_144"
+              "atlas_exit_id": "out_stairsup_64_144",
+              "arrivalTile": {
+                "x": 3,
+                "y": 12
+              }
             },
             {
               "exit_id": "level_13 -> level_20__r3c1",
@@ -37171,7 +37359,11 @@
               "targetRegion": "level_20__r3c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_96_32"
+              "atlas_exit_id": "out_stairsdown_96_32",
+              "arrivalTile": {
+                "x": 2,
+                "y": 3
+              }
             }
           ],
           "obstacles": [],
@@ -37206,7 +37398,11 @@
               "targetRegion": "level_15__r1c5",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_32_64"
+              "atlas_exit_id": "out_stairsdown_32_64",
+              "arrivalTile": {
+                "x": 3,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_14 -> level_13",
@@ -37217,7 +37413,11 @@
               "targetRegion": "level_13",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_176_64"
+              "atlas_exit_id": "out_stairsup_176_64",
+              "arrivalTile": {
+                "x": 2,
+                "y": 3
+              }
             }
           ],
           "obstacles": [],
@@ -37253,7 +37453,11 @@
               "targetRegion": "level_14",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_32_64"
+              "atlas_exit_id": "out_stairsup_32_64",
+              "arrivalTile": {
+                "x": 3,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_15__r1c9 -> level_16__r1c1",
@@ -37264,7 +37468,11 @@
               "targetRegion": "level_16__r1c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_144_16"
+              "atlas_exit_id": "out_stairsdown_144_16",
+              "arrivalTile": {
+                "x": 2,
+                "y": 4
+              }
             }
           ],
           "obstacles": [
@@ -37974,7 +38182,11 @@
               "targetRegion": "level_15__r1c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_16_64"
+              "atlas_exit_id": "out_stairsup_16_64",
+              "arrivalTile": {
+                "x": 9,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_16__r3c7 -> level_17",
@@ -37985,7 +38197,11 @@
               "targetRegion": "level_17",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_112_64"
+              "atlas_exit_id": "out_stairsdown_112_64",
+              "arrivalTile": {
+                "x": 3,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_16__r4c21 -> level_18__r1c1",
@@ -37996,7 +38212,11 @@
               "targetRegion": "level_18__r1c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_352_80"
+              "atlas_exit_id": "out_stairsup_352_80",
+              "arrivalTile": {
+                "x": 1,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_16__r1c9 -> level_17",
@@ -38007,7 +38227,11 @@
               "targetRegion": "level_17",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_7_2"
+              "atlas_exit_id": "out_pit_7_2",
+              "arrivalTile": {
+                "x": 7,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_16__r1c9 -> level_17 #2",
@@ -38018,7 +38242,11 @@
               "targetRegion": "level_17",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_8_2"
+              "atlas_exit_id": "out_pit_8_2",
+              "arrivalTile": {
+                "x": 8,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_16__r1c9 -> level_17 #3",
@@ -38029,7 +38257,11 @@
               "targetRegion": "level_17",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_9_2"
+              "atlas_exit_id": "out_pit_9_2",
+              "arrivalTile": {
+                "x": 9,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_16__r1c9 -> level_17 #4",
@@ -38040,7 +38272,11 @@
               "targetRegion": "level_17",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_7_3"
+              "atlas_exit_id": "out_pit_7_3",
+              "arrivalTile": {
+                "x": 7,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_16__r1c9 -> level_17 #5",
@@ -38051,7 +38287,11 @@
               "targetRegion": "level_17",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_8_3"
+              "atlas_exit_id": "out_pit_8_3",
+              "arrivalTile": {
+                "x": 8,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_16__r1c9 -> level_17 #6",
@@ -38062,7 +38302,11 @@
               "targetRegion": "level_17",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_9_3"
+              "atlas_exit_id": "out_pit_9_3",
+              "arrivalTile": {
+                "x": 9,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_16__r1c9 -> level_17 #7",
@@ -38073,7 +38317,11 @@
               "targetRegion": "level_17",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_8_4"
+              "atlas_exit_id": "out_pit_8_4",
+              "arrivalTile": {
+                "x": 8,
+                "y": 4
+              }
             }
           ],
           "obstacles": [
@@ -38877,7 +39125,11 @@
               "targetRegion": "level_16__r3c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_32_48"
+              "atlas_exit_id": "out_stairsup_32_48",
+              "arrivalTile": {
+                "x": 7,
+                "y": 3
+              }
             }
           ],
           "obstacles": [],
@@ -38920,7 +39172,11 @@
               "targetRegion": "level_16__r4c21",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_16_16"
+              "atlas_exit_id": "out_stairsdown_16_16",
+              "arrivalTile": {
+                "x": 22,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_18__r7c10 -> level_19__r5c5",
@@ -38931,7 +39187,11 @@
               "targetRegion": "level_19__r5c5",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_176_112"
+              "atlas_exit_id": "out_teleporter_176_112",
+              "arrivalTile": {
+                "x": 1,
+                "y": 9
+              }
             }
           ],
           "obstacles": [
@@ -39120,7 +39380,11 @@
               "targetRegion": "level_18__r7c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_144"
+              "atlas_exit_id": "out_teleporter_0_144",
+              "arrivalTile": {
+                "x": 10,
+                "y": 7
+              }
             },
             {
               "exit_id": "level_19__r1c1 -> level_20__r1c4",
@@ -39131,7 +39395,11 @@
               "targetRegion": "level_20__r1c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_16_96"
+              "atlas_exit_id": "out_stairsup_16_96",
+              "arrivalTile": {
+                "x": 12,
+                "y": 4
+              }
             }
           ],
           "obstacles": [
@@ -39359,7 +39627,11 @@
               "targetRegion": "level_13",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_16_48"
+              "atlas_exit_id": "out_stairsup_16_48",
+              "arrivalTile": {
+                "x": 6,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_20__r1c4 -> level_19__r1c1",
@@ -39370,7 +39642,11 @@
               "targetRegion": "level_19__r1c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_192_48"
+              "atlas_exit_id": "out_stairsdown_192_48",
+              "arrivalTile": {
+                "x": 1,
+                "y": 5
+              }
             }
           ],
           "obstacles": [
@@ -39663,7 +39939,11 @@
               "targetRegion": "level_23",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_80"
+              "atlas_exit_id": "out_teleporter_0_80",
+              "arrivalTile": {
+                "x": 4,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_21 -> level_22__r0c6",
@@ -39674,7 +39954,11 @@
               "targetRegion": "level_22__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_80_160"
+              "atlas_exit_id": "out_teleporter_80_160",
+              "arrivalTile": {
+                "x": 6,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_21 -> level_29__r5c0",
@@ -39685,7 +39969,11 @@
               "targetRegion": "level_29__r5c0",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_160_80"
+              "atlas_exit_id": "out_teleporter_160_80",
+              "arrivalTile": {
+                "x": 1,
+                "y": 5
+              }
             }
           ],
           "obstacles": [],
@@ -39721,7 +40009,11 @@
               "targetRegion": "level_25__r2c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_128"
+              "atlas_exit_id": "out_teleporter_0_128",
+              "arrivalTile": {
+                "x": 8,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_22__r0c6 -> level_21",
@@ -39732,7 +40024,11 @@
               "targetRegion": "level_21",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_96_0"
+              "atlas_exit_id": "out_teleporter_96_0",
+              "arrivalTile": {
+                "x": 5,
+                "y": 9
+              }
             },
             {
               "exit_id": "level_22__r8c0 -> level_30__r0c4",
@@ -39743,7 +40039,11 @@
               "targetRegion": "level_30__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_96_192"
+              "atlas_exit_id": "out_teleporter_96_192",
+              "arrivalTile": {
+                "x": 4,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_22__r0c6 -> level_29__r2c2",
@@ -39754,7 +40054,11 @@
               "targetRegion": "level_29__r2c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_192_64"
+              "atlas_exit_id": "out_teleporter_192_64",
+              "arrivalTile": {
+                "x": 1,
+                "y": 14
+              }
             }
           ],
           "obstacles": [],
@@ -39954,7 +40258,11 @@
               "targetRegion": "level_24",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_32_32"
+              "atlas_exit_id": "out_stairsup_32_32",
+              "arrivalTile": {
+                "x": 6,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_23 -> level_21",
@@ -39965,7 +40273,11 @@
               "targetRegion": "level_21",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_80_32"
+              "atlas_exit_id": "out_teleporter_80_32",
+              "arrivalTile": {
+                "x": 1,
+                "y": 5
+              }
             }
           ],
           "obstacles": [],
@@ -40000,7 +40312,11 @@
               "targetRegion": "level_12__r40c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_144"
+              "atlas_exit_id": "out_teleporter_32_144",
+              "arrivalTile": {
+                "x": 2,
+                "y": 44
+              }
             },
             {
               "exit_id": "level_24 -> level_12__r40c4 #2",
@@ -40011,7 +40327,11 @@
               "targetRegion": "level_12__r40c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_144"
+              "atlas_exit_id": "out_teleporter_48_144",
+              "arrivalTile": {
+                "x": 2,
+                "y": 44
+              }
             },
             {
               "exit_id": "level_24 -> level_23",
@@ -40022,7 +40342,11 @@
               "targetRegion": "level_23",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_96_96"
+              "atlas_exit_id": "out_stairsdown_96_96",
+              "arrivalTile": {
+                "x": 3,
+                "y": 2
+              }
             }
           ],
           "obstacles": [
@@ -40127,7 +40451,11 @@
               "targetRegion": "level_26__r2c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_96"
+              "atlas_exit_id": "out_teleporter_0_96",
+              "arrivalTile": {
+                "x": 8,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_25__r2c7 -> level_28__r0c6",
@@ -40138,7 +40466,11 @@
               "targetRegion": "level_28__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_96_128"
+              "atlas_exit_id": "out_teleporter_96_128",
+              "arrivalTile": {
+                "x": 6,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_25__r2c7 -> level_22__r8c0",
@@ -40149,7 +40481,11 @@
               "targetRegion": "level_22__r8c0",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_32"
+              "atlas_exit_id": "out_teleporter_144_32",
+              "arrivalTile": {
+                "x": 1,
+                "y": 8
+              }
             }
           ],
           "obstacles": [],
@@ -40329,7 +40665,11 @@
               "targetRegion": "level_27",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_304"
+              "atlas_exit_id": "out_teleporter_64_304",
+              "arrivalTile": {
+                "x": 2,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_26__r2c4 -> level_25__r3c2",
@@ -40340,7 +40680,11 @@
               "targetRegion": "level_25__r3c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_32"
+              "atlas_exit_id": "out_teleporter_144_32",
+              "arrivalTile": {
+                "x": 1,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_26__r13c8 -> level_28__r0c6",
@@ -40351,7 +40695,11 @@
               "targetRegion": "level_28__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_208"
+              "atlas_exit_id": "out_teleporter_144_208",
+              "arrivalTile": {
+                "x": 1,
+                "y": 6
+              }
             }
           ],
           "obstacles": [
@@ -40552,7 +40900,11 @@
               "targetRegion": "level_26__r2c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_0"
+              "atlas_exit_id": "out_teleporter_32_0",
+              "arrivalTile": {
+                "x": 4,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_27 -> level_28__r11c4",
@@ -40563,7 +40915,11 @@
               "targetRegion": "level_28__r11c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_168_16"
+              "atlas_exit_id": "out_teleporter_168_16",
+              "arrivalTile": {
+                "x": 8,
+                "y": 18
+              }
             }
           ],
           "obstacles": [],
@@ -40599,7 +40955,11 @@
               "targetRegion": "level_26__r13c8",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_96"
+              "atlas_exit_id": "out_teleporter_0_96",
+              "arrivalTile": {
+                "x": 8,
+                "y": 13
+              }
             },
             {
               "exit_id": "level_28__r0c6 -> level_25__r2c7",
@@ -40610,7 +40970,11 @@
               "targetRegion": "level_25__r2c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_96_0"
+              "atlas_exit_id": "out_teleporter_96_0",
+              "arrivalTile": {
+                "x": 6,
+                "y": 7
+              }
             },
             {
               "exit_id": "level_28__r11c4 -> level_27",
@@ -40621,7 +40985,11 @@
               "targetRegion": "level_27",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_128_304"
+              "atlas_exit_id": "out_teleporter_128_304",
+              "arrivalTile": {
+                "x": 10,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_28__r1c18 -> level_30__r2c10",
@@ -40632,7 +41000,11 @@
               "targetRegion": "level_30__r2c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_16"
+              "atlas_exit_id": "out_teleporter_304_16",
+              "arrivalTile": {
+                "x": 1,
+                "y": 8
+              }
             }
           ],
           "obstacles": [
@@ -41332,7 +41704,11 @@
               "targetRegion": "level_21",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_80"
+              "atlas_exit_id": "out_teleporter_0_80",
+              "arrivalTile": {
+                "x": 9,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_29__r2c2 -> level_22__r0c6",
@@ -41343,7 +41719,11 @@
               "targetRegion": "level_22__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_224"
+              "atlas_exit_id": "out_teleporter_0_224",
+              "arrivalTile": {
+                "x": 11,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_29__r2c2 -> level_31__r5c24",
@@ -41354,7 +41734,11 @@
               "targetRegion": "level_31__r5c24",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_112_32"
+              "atlas_exit_id": "out_stairsdown_112_32",
+              "arrivalTile": {
+                "x": 24,
+                "y": 7
+              }
             }
           ],
           "obstacles": [
@@ -41574,7 +41958,11 @@
               "targetRegion": "level_28__r1c18",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_128"
+              "atlas_exit_id": "out_teleporter_0_128",
+              "arrivalTile": {
+                "x": 18,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_30__r0c4 -> level_22__r8c0",
@@ -41585,7 +41973,11 @@
               "targetRegion": "level_22__r8c0",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_0"
+              "atlas_exit_id": "out_teleporter_64_0",
+              "arrivalTile": {
+                "x": 6,
+                "y": 11
+              }
             },
             {
               "exit_id": "level_30__r2c10 -> level_31__r24c10",
@@ -41596,7 +41988,11 @@
               "targetRegion": "level_31__r24c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_192_48"
+              "atlas_exit_id": "out_stairsdown_192_48",
+              "arrivalTile": {
+                "x": 10,
+                "y": 25
+              }
             },
             {
               "exit_id": "level_30__r8c13 -> level_32",
@@ -41607,7 +42003,11 @@
               "targetRegion": "level_32",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_224_160"
+              "atlas_exit_id": "out_stairsup_224_160",
+              "arrivalTile": {
+                "x": 4,
+                "y": 7
+              }
             },
             {
               "exit_id": "level_30__r2c10 -> level_31__r5c24",
@@ -41618,7 +42018,11 @@
               "targetRegion": "level_31__r5c24",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_3_34"
+              "atlas_exit_id": "out_pit_3_34",
+              "arrivalTile": {
+                "x": 3,
+                "y": 34
+              }
             }
           ],
           "obstacles": [
@@ -42322,7 +42726,11 @@
               "targetRegion": "level_30__r2c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_160_384"
+              "atlas_exit_id": "out_stairsup_160_384",
+              "arrivalTile": {
+                "x": 11,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_31__r5c24 -> level_29__r2c2",
@@ -42333,7 +42741,11 @@
               "targetRegion": "level_29__r2c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_384_96"
+              "atlas_exit_id": "out_stairsup_384_96",
+              "arrivalTile": {
+                "x": 6,
+                "y": 2
+              }
             }
           ],
           "obstacles": [
@@ -42502,7 +42914,11 @@
               "targetRegion": "level_30__r8c13",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_72_136"
+              "atlas_exit_id": "out_stairsdown_72_136",
+              "arrivalTile": {
+                "x": 14,
+                "y": 11
+              }
             },
             {
               "exit_id": "level_32 -> level_30__r2c10",
@@ -42513,7 +42929,11 @@
               "targetRegion": "level_30__r2c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_14_5"
+              "atlas_exit_id": "out_pit_14_5",
+              "arrivalTile": {
+                "x": 14,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_32 -> level_30__r2c10 #2",
@@ -42524,7 +42944,11 @@
               "targetRegion": "level_30__r2c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_15_5"
+              "atlas_exit_id": "out_pit_15_5",
+              "arrivalTile": {
+                "x": 15,
+                "y": 5
+              }
             }
           ],
           "obstacles": [
@@ -42645,7 +43069,11 @@
               "targetRegion": "level_12__r0c19",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_64"
+              "atlas_exit_id": "out_teleporter_32_64",
+              "arrivalTile": {
+                "x": 27,
+                "y": 23
+              }
             }
           ],
           "obstacles": [],
@@ -42680,7 +43108,11 @@
               "targetRegion": "level_12__r43c21",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_144"
+              "atlas_exit_id": "out_teleporter_32_144",
+              "arrivalTile": {
+                "x": 21,
+                "y": 44
+              }
             },
             {
               "exit_id": "level_34 -> level_12__r0c37",
@@ -42691,7 +43123,11 @@
               "targetRegion": "level_12__r0c37",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_128_0"
+              "atlas_exit_id": "out_teleporter_128_0",
+              "arrivalTile": {
+                "x": 27,
+                "y": 35
+              }
             }
           ],
           "obstacles": [
@@ -42776,7 +43212,11 @@
               "targetRegion": "level_12__r0c19",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_64"
+              "atlas_exit_id": "out_teleporter_32_64",
+              "arrivalTile": {
+                "x": 7,
+                "y": 7
+              }
             }
           ],
           "obstacles": [],
@@ -42811,7 +43251,11 @@
               "targetRegion": "level_12__r0c19",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_128"
+              "atlas_exit_id": "out_teleporter_32_128",
+              "arrivalTile": {
+                "x": 10,
+                "y": 24
+              }
             }
           ],
           "obstacles": [],
@@ -42854,7 +43298,11 @@
               "targetRegion": "level_44__r6c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_256"
+              "atlas_exit_id": "out_teleporter_0_256",
+              "arrivalTile": {
+                "x": 8,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_37__r12c6 -> level_12__r0c37",
@@ -42865,7 +43313,11 @@
               "targetRegion": "level_12__r0c37",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_304"
+              "atlas_exit_id": "out_teleporter_32_304",
+              "arrivalTile": {
+                "x": 37,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_37__r0c18 -> level_38",
@@ -42876,7 +43328,11 @@
               "targetRegion": "level_38",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_288_0"
+              "atlas_exit_id": "out_teleporter_288_0",
+              "arrivalTile": {
+                "x": 9,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_37__r9c36 -> level_97",
@@ -42887,7 +43343,11 @@
               "targetRegion": "level_97",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_576_144"
+              "atlas_exit_id": "out_stairsdown_576_144",
+              "arrivalTile": {
+                "x": 2,
+                "y": 2
+              }
             }
           ],
           "obstacles": [
@@ -44984,7 +45444,11 @@
               "targetRegion": "level_39__r25c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_0"
+              "atlas_exit_id": "out_teleporter_144_0",
+              "arrivalTile": {
+                "x": 9,
+                "y": 38
+              }
             },
             {
               "exit_id": "level_38 -> level_37__r0c18",
@@ -44995,7 +45459,11 @@
               "targetRegion": "level_37__r0c18",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_304"
+              "atlas_exit_id": "out_teleporter_144_304",
+              "arrivalTile": {
+                "x": 18,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -45399,7 +45867,11 @@
               "targetRegion": "level_40__r26c13",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_0"
+              "atlas_exit_id": "out_teleporter_144_0",
+              "arrivalTile": {
+                "x": 30,
+                "y": 56
+              }
             },
             {
               "exit_id": "level_39__r25c9 -> level_38",
@@ -45410,7 +45882,11 @@
               "targetRegion": "level_38",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_624"
+              "atlas_exit_id": "out_teleporter_144_624",
+              "arrivalTile": {
+                "x": 9,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -47386,7 +47862,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_320_576"
+              "atlas_exit_id": "out_stairsdown_320_576",
+              "arrivalTile": {
+                "x": 11,
+                "y": 28
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_39__r0c9",
@@ -47397,7 +47877,11 @@
               "targetRegion": "level_39__r0c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_480_912"
+              "atlas_exit_id": "out_teleporter_480_912",
+              "arrivalTile": {
+                "x": 9,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_40__r0c53 -> level_42",
@@ -47408,7 +47892,11 @@
               "targetRegion": "level_42",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_848_0"
+              "atlas_exit_id": "out_teleporter_848_0",
+              "arrivalTile": {
+                "x": 15,
+                "y": 20
+              }
             },
             {
               "exit_id": "level_40__r0c53 -> level_41__r4c3",
@@ -47419,7 +47907,11 @@
               "targetRegion": "level_41__r4c3",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_944_96"
+              "atlas_exit_id": "out_teleporter_944_96",
+              "arrivalTile": {
+                "x": 1,
+                "y": 10
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #2",
@@ -47430,7 +47922,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_4_20"
+              "atlas_exit_id": "out_pit_4_20",
+              "arrivalTile": {
+                "x": 4,
+                "y": 20
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #3",
@@ -47441,7 +47937,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_5_20"
+              "atlas_exit_id": "out_pit_5_20",
+              "arrivalTile": {
+                "x": 5,
+                "y": 20
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #4",
@@ -47452,7 +47952,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_13_20"
+              "atlas_exit_id": "out_pit_13_20",
+              "arrivalTile": {
+                "x": 13,
+                "y": 20
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #5",
@@ -47463,7 +47967,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_14_20"
+              "atlas_exit_id": "out_pit_14_20",
+              "arrivalTile": {
+                "x": 14,
+                "y": 20
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #6",
@@ -47474,7 +47982,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_4_21"
+              "atlas_exit_id": "out_pit_4_21",
+              "arrivalTile": {
+                "x": 4,
+                "y": 21
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #7",
@@ -47485,7 +47997,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_5_21"
+              "atlas_exit_id": "out_pit_5_21",
+              "arrivalTile": {
+                "x": 5,
+                "y": 21
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #8",
@@ -47496,7 +48012,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_13_21"
+              "atlas_exit_id": "out_pit_13_21",
+              "arrivalTile": {
+                "x": 13,
+                "y": 21
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #9",
@@ -47507,7 +48027,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_14_21"
+              "atlas_exit_id": "out_pit_14_21",
+              "arrivalTile": {
+                "x": 14,
+                "y": 21
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #10",
@@ -47518,7 +48042,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_4_22"
+              "atlas_exit_id": "out_pit_4_22",
+              "arrivalTile": {
+                "x": 4,
+                "y": 22
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #11",
@@ -47529,7 +48057,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_5_22"
+              "atlas_exit_id": "out_pit_5_22",
+              "arrivalTile": {
+                "x": 5,
+                "y": 22
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #12",
@@ -47540,7 +48072,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_4_23"
+              "atlas_exit_id": "out_pit_4_23",
+              "arrivalTile": {
+                "x": 4,
+                "y": 23
+              }
             },
             {
               "exit_id": "level_40__r26c13 -> level_43__r13c7 #13",
@@ -47551,7 +48087,11 @@
               "targetRegion": "level_43__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_5_23"
+              "atlas_exit_id": "out_pit_5_23",
+              "arrivalTile": {
+                "x": 5,
+                "y": 23
+              }
             }
           ],
           "obstacles": [
@@ -59801,7 +60341,11 @@
               "targetRegion": "level_40__r0c53",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_160"
+              "atlas_exit_id": "out_teleporter_0_160",
+              "arrivalTile": {
+                "x": 58,
+                "y": 6
+              }
             }
           ],
           "obstacles": [
@@ -60929,7 +61473,11 @@
               "targetRegion": "level_40__r0c53",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_240_336"
+              "atlas_exit_id": "out_teleporter_240_336",
+              "arrivalTile": {
+                "x": 53,
+                "y": 1
+              }
             }
           ],
           "obstacles": [],
@@ -60972,7 +61520,11 @@
               "targetRegion": "level_37__r0c18",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_64"
+              "atlas_exit_id": "out_teleporter_144_64",
+              "arrivalTile": {
+                "x": 18,
+                "y": 11
+              }
             },
             {
               "exit_id": "level_43__r13c7 -> level_40__r26c13",
@@ -60983,7 +61535,11 @@
               "targetRegion": "level_40__r26c13",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_176_464"
+              "atlas_exit_id": "out_stairsup_176_464",
+              "arrivalTile": {
+                "x": 20,
+                "y": 37
+              }
             }
           ],
           "obstacles": [
@@ -61255,7 +61811,11 @@
               "targetRegion": "level_87__r1c3",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_80"
+              "atlas_exit_id": "out_teleporter_0_80",
+              "arrivalTile": {
+                "x": 28,
+                "y": 17
+              }
             },
             {
               "exit_id": "level_44__r0c4 -> level_45__r0c7",
@@ -61266,7 +61826,11 @@
               "targetRegion": "level_45__r0c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_0"
+              "atlas_exit_id": "out_teleporter_64_0",
+              "arrivalTile": {
+                "x": 7,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_44__r6c4 -> level_37__r12c6",
@@ -61277,7 +61841,11 @@
               "targetRegion": "level_37__r12c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_128"
+              "atlas_exit_id": "out_teleporter_144_128",
+              "arrivalTile": {
+                "x": 1,
+                "y": 16
+              }
             }
           ],
           "obstacles": [
@@ -61670,7 +62238,11 @@
               "targetRegion": "level_46__r0c11",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_0"
+              "atlas_exit_id": "out_teleporter_112_0",
+              "arrivalTile": {
+                "x": 15,
+                "y": 28
+              }
             },
             {
               "exit_id": "level_45__r0c7 -> level_44__r0c4",
@@ -61681,7 +62253,11 @@
               "targetRegion": "level_44__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_304"
+              "atlas_exit_id": "out_teleporter_112_304",
+              "arrivalTile": {
+                "x": 4,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -62450,7 +63026,11 @@
               "targetRegion": "level_47__r2c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_176_0"
+              "atlas_exit_id": "out_teleporter_176_0",
+              "arrivalTile": {
+                "x": 15,
+                "y": 28
+              }
             },
             {
               "exit_id": "level_46__r0c11 -> level_45__r0c7",
@@ -62461,7 +63041,11 @@
               "targetRegion": "level_45__r0c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_240_464"
+              "atlas_exit_id": "out_teleporter_240_464",
+              "arrivalTile": {
+                "x": 7,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -66043,7 +66627,11 @@
               "targetRegion": "level_48__r18c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_216_112"
+              "atlas_exit_id": "out_teleporter_216_112",
+              "arrivalTile": {
+                "x": 7,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_47__r2c9 -> level_46__r0c11",
@@ -66054,7 +66642,11 @@
               "targetRegion": "level_46__r0c11",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_240_464"
+              "atlas_exit_id": "out_teleporter_240_464",
+              "arrivalTile": {
+                "x": 11,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -69797,7 +70389,11 @@
               "targetRegion": "level_53__r2c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_112"
+              "atlas_exit_id": "out_teleporter_0_112",
+              "arrivalTile": {
+                "x": 12,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_48__r18c7 -> level_47__r2c9",
@@ -69808,7 +70404,11 @@
               "targetRegion": "level_47__r2c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_304"
+              "atlas_exit_id": "out_teleporter_112_304",
+              "arrivalTile": {
+                "x": 13,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_48__r2c10 -> level_49",
@@ -69819,7 +70419,11 @@
               "targetRegion": "level_49",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_2_2"
+              "atlas_exit_id": "out_pit_2_2",
+              "arrivalTile": {
+                "x": 2,
+                "y": 2
+              }
             }
           ],
           "obstacles": [
@@ -70253,7 +70857,11 @@
               "targetRegion": "level_50",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_128"
+              "atlas_exit_id": "out_teleporter_32_128",
+              "arrivalTile": {
+                "x": 2,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -70327,7 +70935,11 @@
               "targetRegion": "level_49",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_0"
+              "atlas_exit_id": "out_teleporter_32_0",
+              "arrivalTile": {
+                "x": 2,
+                "y": 7
+              }
             },
             {
               "exit_id": "level_50 -> level_51__r3c10",
@@ -70338,7 +70950,11 @@
               "targetRegion": "level_51__r3c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_304"
+              "atlas_exit_id": "out_teleporter_48_304",
+              "arrivalTile": {
+                "x": 9,
+                "y": 1
+              }
             }
           ],
           "obstacles": [],
@@ -70374,7 +70990,11 @@
               "targetRegion": "level_50",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_0"
+              "atlas_exit_id": "out_teleporter_144_0",
+              "arrivalTile": {
+                "x": 3,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_51__r3c10 -> level_53__r2c2",
@@ -70385,7 +71005,11 @@
               "targetRegion": "level_53__r2c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_176_144"
+              "atlas_exit_id": "out_stairsup_176_144",
+              "arrivalTile": {
+                "x": 3,
+                "y": 9
+              }
             },
             {
               "exit_id": "level_51__r14c6 -> level_52__r5c10",
@@ -70396,7 +71020,11 @@
               "targetRegion": "level_52__r5c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_256_256"
+              "atlas_exit_id": "out_teleporter_256_256",
+              "arrivalTile": {
+                "x": 1,
+                "y": 7
+              }
             }
           ],
           "obstacles": [
@@ -70844,7 +71472,11 @@
               "targetRegion": "level_55",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_48"
+              "atlas_exit_id": "out_teleporter_0_48",
+              "arrivalTile": {
+                "x": 4,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_52__r5c10 -> level_51__r14c6",
@@ -70855,7 +71487,11 @@
               "targetRegion": "level_51__r14c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_112"
+              "atlas_exit_id": "out_teleporter_0_112",
+              "arrivalTile": {
+                "x": 15,
+                "y": 16
+              }
             },
             {
               "exit_id": "level_52__r0c7 -> level_54__r27c8",
@@ -70866,7 +71502,11 @@
               "targetRegion": "level_54__r27c8",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_0"
+              "atlas_exit_id": "out_teleporter_112_0",
+              "arrivalTile": {
+                "x": 8,
+                "y": 28
+              }
             },
             {
               "exit_id": "level_52__r5c10 -> level_56",
@@ -70877,7 +71517,11 @@
               "targetRegion": "level_56",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_224_112"
+              "atlas_exit_id": "out_teleporter_224_112",
+              "arrivalTile": {
+                "x": 1,
+                "y": 7
+              }
             }
           ],
           "obstacles": [],
@@ -71054,7 +71698,11 @@
               "targetRegion": "level_51__r3c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_32_144"
+              "atlas_exit_id": "out_stairsdown_32_144",
+              "arrivalTile": {
+                "x": 10,
+                "y": 9
+              }
             },
             {
               "exit_id": "level_53__r14c9 -> level_54__r1c8",
@@ -71065,7 +71713,11 @@
               "targetRegion": "level_54__r1c8",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_240"
+              "atlas_exit_id": "out_teleporter_144_240",
+              "arrivalTile": {
+                "x": 9,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_53__r2c2 -> level_48__r7c0",
@@ -71076,7 +71728,11 @@
               "targetRegion": "level_48__r7c0",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_208_64"
+              "atlas_exit_id": "out_teleporter_208_64",
+              "arrivalTile": {
+                "x": 1,
+                "y": 7
+              }
             }
           ],
           "obstacles": [
@@ -71716,7 +72372,11 @@
               "targetRegion": "level_52__r0c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_128_464"
+              "atlas_exit_id": "out_teleporter_128_464",
+              "arrivalTile": {
+                "x": 7,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_54__r1c8 -> level_53__r14c9",
@@ -71727,7 +72387,11 @@
               "targetRegion": "level_53__r14c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_0"
+              "atlas_exit_id": "out_teleporter_144_0",
+              "arrivalTile": {
+                "x": 9,
+                "y": 14
+              }
             }
           ],
           "obstacles": [
@@ -73713,7 +74377,11 @@
               "targetRegion": "level_52__r2c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_80_48"
+              "atlas_exit_id": "out_teleporter_80_48",
+              "arrivalTile": {
+                "x": 1,
+                "y": 3
+              }
             }
           ],
           "obstacles": [
@@ -73792,7 +74460,11 @@
               "targetRegion": "level_52__r5c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_112"
+              "atlas_exit_id": "out_teleporter_0_112",
+              "arrivalTile": {
+                "x": 13,
+                "y": 7
+              }
             },
             {
               "exit_id": "level_56 -> level_57",
@@ -73803,7 +74475,11 @@
               "targetRegion": "level_57",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_6_10"
+              "atlas_exit_id": "out_pit_6_10",
+              "arrivalTile": {
+                "x": 6,
+                "y": 10
+              }
             }
           ],
           "obstacles": [
@@ -73939,7 +74615,11 @@
               "targetRegion": "level_58__r4c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_tentaclebeast_80_48"
+              "atlas_exit_id": "out_tentaclebeast_80_48",
+              "arrivalTile": {
+                "x": 3,
+                "y": 6
+              }
             }
           ],
           "obstacles": [
@@ -74667,7 +75347,11 @@
               "targetRegion": "level_57",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_112"
+              "atlas_exit_id": "out_teleporter_48_112",
+              "arrivalTile": {
+                "x": 6,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_58__r6c5 -> level_57",
@@ -74678,7 +75362,11 @@
               "targetRegion": "level_57",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_112"
+              "atlas_exit_id": "out_teleporter_64_112",
+              "arrivalTile": {
+                "x": 6,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_58__r1c4 -> level_46__r6c24",
@@ -74689,7 +75377,11 @@
               "targetRegion": "level_46__r6c24",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_80_16"
+              "atlas_exit_id": "out_teleporter_80_16",
+              "arrivalTile": {
+                "x": 22,
+                "y": 8
+              }
             }
           ],
           "obstacles": [
@@ -75035,7 +75727,11 @@
               "targetRegion": "level_67__r6c11",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_128"
+              "atlas_exit_id": "out_teleporter_0_128",
+              "arrivalTile": {
+                "x": 13,
+                "y": 7
+              }
             },
             {
               "exit_id": "level_59 -> level_95",
@@ -75046,7 +75742,11 @@
               "targetRegion": "level_95",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_304"
+              "atlas_exit_id": "out_teleporter_144_304",
+              "arrivalTile": {
+                "x": 2,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_59 -> level_95 #2",
@@ -75057,7 +75757,11 @@
               "targetRegion": "level_95",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_160_304"
+              "atlas_exit_id": "out_teleporter_160_304",
+              "arrivalTile": {
+                "x": 3,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_59 -> level_60__r5c0",
@@ -75068,7 +75772,11 @@
               "targetRegion": "level_60__r5c0",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_128"
+              "atlas_exit_id": "out_teleporter_304_128",
+              "arrivalTile": {
+                "x": 1,
+                "y": 5
+              }
             }
           ],
           "obstacles": [],
@@ -75104,7 +75812,11 @@
               "targetRegion": "level_59",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_80"
+              "atlas_exit_id": "out_teleporter_0_80",
+              "arrivalTile": {
+                "x": 18,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_60__r5c9 -> level_61__r0c7",
@@ -75115,7 +75827,11 @@
               "targetRegion": "level_61__r0c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_160_80"
+              "atlas_exit_id": "out_teleporter_160_80",
+              "arrivalTile": {
+                "x": 1,
+                "y": 10
+              }
             }
           ],
           "obstacles": [
@@ -75517,7 +76233,11 @@
               "targetRegion": "level_60__r5c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_160"
+              "atlas_exit_id": "out_teleporter_0_160",
+              "arrivalTile": {
+                "x": 9,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_61__r0c7 -> level_62",
@@ -75528,7 +76248,11 @@
               "targetRegion": "level_62",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_0"
+              "atlas_exit_id": "out_teleporter_112_0",
+              "arrivalTile": {
+                "x": 3,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_61__r0c10 -> level_62",
@@ -75539,7 +76263,11 @@
               "targetRegion": "level_62",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_160_0"
+              "atlas_exit_id": "out_teleporter_160_0",
+              "arrivalTile": {
+                "x": 6,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_61__r0c10 -> level_63__r0c1",
@@ -75550,7 +76278,11 @@
               "targetRegion": "level_63__r0c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_224_48"
+              "atlas_exit_id": "out_teleporter_224_48",
+              "arrivalTile": {
+                "x": 1,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_61__r0c7 -> level_63__r0c1",
@@ -75561,7 +76293,11 @@
               "targetRegion": "level_63__r0c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_224_96"
+              "atlas_exit_id": "out_teleporter_224_96",
+              "arrivalTile": {
+                "x": 1,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_61__r13c12 -> level_63__r10c2",
@@ -75572,7 +76308,11 @@
               "targetRegion": "level_63__r10c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_224_208"
+              "atlas_exit_id": "out_teleporter_224_208",
+              "arrivalTile": {
+                "x": 1,
+                "y": 13
+              }
             }
           ],
           "obstacles": [
@@ -75693,7 +76433,11 @@
               "targetRegion": "level_61__r0c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_304"
+              "atlas_exit_id": "out_teleporter_48_304",
+              "arrivalTile": {
+                "x": 7,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_62 -> level_61__r0c10",
@@ -75704,7 +76448,11 @@
               "targetRegion": "level_61__r0c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_96_304"
+              "atlas_exit_id": "out_teleporter_96_304",
+              "arrivalTile": {
+                "x": 10,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_62 -> level_64",
@@ -75715,7 +76463,11 @@
               "targetRegion": "level_64",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_64"
+              "atlas_exit_id": "out_teleporter_112_64",
+              "arrivalTile": {
+                "x": 2,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_62 -> level_63__r0c1",
@@ -75726,7 +76478,11 @@
               "targetRegion": "level_63__r0c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_192_304"
+              "atlas_exit_id": "out_teleporter_192_304",
+              "arrivalTile": {
+                "x": 1,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_62 -> level_63__r0c1 #2",
@@ -75737,7 +76493,11 @@
               "targetRegion": "level_63__r0c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_240_304"
+              "atlas_exit_id": "out_teleporter_240_304",
+              "arrivalTile": {
+                "x": 4,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -76024,7 +76784,11 @@
               "targetRegion": "level_61__r0c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_48"
+              "atlas_exit_id": "out_teleporter_0_48",
+              "arrivalTile": {
+                "x": 13,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_63__r0c1 -> level_61__r0c7",
@@ -76035,7 +76799,11 @@
               "targetRegion": "level_61__r0c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_96"
+              "atlas_exit_id": "out_teleporter_0_96",
+              "arrivalTile": {
+                "x": 13,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_63__r10c2 -> level_61__r13c12",
@@ -76046,7 +76814,11 @@
               "targetRegion": "level_61__r13c12",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_208"
+              "atlas_exit_id": "out_teleporter_0_208",
+              "arrivalTile": {
+                "x": 13,
+                "y": 13
+              }
             },
             {
               "exit_id": "level_63__r0c1 -> level_62",
@@ -76057,7 +76829,11 @@
               "targetRegion": "level_62",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_16_0"
+              "atlas_exit_id": "out_teleporter_16_0",
+              "arrivalTile": {
+                "x": 12,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_63__r10c2 -> level_65__r0c2",
@@ -76068,7 +76844,11 @@
               "targetRegion": "level_65__r0c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_304"
+              "atlas_exit_id": "out_teleporter_32_304",
+              "arrivalTile": {
+                "x": 2,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_63__r0c1 -> level_62 #2",
@@ -76079,7 +76859,11 @@
               "targetRegion": "level_62",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_0"
+              "atlas_exit_id": "out_teleporter_64_0",
+              "arrivalTile": {
+                "x": 15,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_63__r6c9 -> level_65__r0c8",
@@ -76090,7 +76874,11 @@
               "targetRegion": "level_65__r0c8",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_128_304"
+              "atlas_exit_id": "out_teleporter_128_304",
+              "arrivalTile": {
+                "x": 8,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -77236,7 +78024,11 @@
               "targetRegion": "level_62",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_96"
+              "atlas_exit_id": "out_teleporter_32_96",
+              "arrivalTile": {
+                "x": 7,
+                "y": 5
+              }
             }
           ],
           "obstacles": [],
@@ -77279,7 +78071,11 @@
               "targetRegion": "level_66__r9c8",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_128"
+              "atlas_exit_id": "out_teleporter_0_128",
+              "arrivalTile": {
+                "x": 8,
+                "y": 9
+              }
             },
             {
               "exit_id": "level_65__r0c2 -> level_63__r10c2",
@@ -77290,7 +78086,11 @@
               "targetRegion": "level_63__r10c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_0"
+              "atlas_exit_id": "out_teleporter_32_0",
+              "arrivalTile": {
+                "x": 2,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_65__r0c8 -> level_63__r6c9",
@@ -77301,7 +78101,11 @@
               "targetRegion": "level_63__r6c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_128_0"
+              "atlas_exit_id": "out_teleporter_128_0",
+              "arrivalTile": {
+                "x": 8,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_65__r4c11 -> level_68__r3c1",
@@ -77312,7 +78116,11 @@
               "targetRegion": "level_68__r3c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_184_64"
+              "atlas_exit_id": "out_teleporter_184_64",
+              "arrivalTile": {
+                "x": 1,
+                "y": 4
+              }
             }
           ],
           "obstacles": [
@@ -78106,7 +78914,11 @@
               "targetRegion": "level_70",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_72_64"
+              "atlas_exit_id": "out_teleporter_72_64",
+              "arrivalTile": {
+                "x": 2,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_66__r9c8 -> level_65__r0c2",
@@ -78117,7 +78929,11 @@
               "targetRegion": "level_65__r0c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_144"
+              "atlas_exit_id": "out_teleporter_144_144",
+              "arrivalTile": {
+                "x": 1,
+                "y": 8
+              }
             }
           ],
           "obstacles": [
@@ -78301,7 +79117,11 @@
               "targetRegion": "level_59",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_224_112"
+              "atlas_exit_id": "out_teleporter_224_112",
+              "arrivalTile": {
+                "x": 1,
+                "y": 8
+              }
             }
           ],
           "obstacles": [],
@@ -78720,7 +79540,11 @@
               "targetRegion": "level_65__r4c11",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_16_80"
+              "atlas_exit_id": "out_teleporter_16_80",
+              "arrivalTile": {
+                "x": 11,
+                "y": 5
+              }
             }
           ],
           "obstacles": [
@@ -78970,7 +79794,11 @@
               "targetRegion": "level_36",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_lightbosscontroller_72_72"
+              "atlas_exit_id": "out_lightbosscontroller_72_72",
+              "arrivalTile": {
+                "x": 7,
+                "y": 6
+              }
             }
           ],
           "obstacles": [
@@ -79051,7 +79879,11 @@
               "targetRegion": "level_66__r5c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_64"
+              "atlas_exit_id": "out_teleporter_32_64",
+              "arrivalTile": {
+                "x": 4,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_70 -> level_69",
@@ -79062,7 +79894,11 @@
               "targetRegion": "level_69",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_3_8"
+              "atlas_exit_id": "out_pit_3_8",
+              "arrivalTile": {
+                "x": 3,
+                "y": 8
+              }
             }
           ],
           "obstacles": [
@@ -79137,7 +79973,11 @@
               "targetRegion": "level_85",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_16_304"
+              "atlas_exit_id": "out_teleporter_16_304",
+              "arrivalTile": {
+                "x": 5,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_71__r0c6 -> level_75__r13c3",
@@ -79148,7 +79988,11 @@
               "targetRegion": "level_75__r13c3",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_96_0"
+              "atlas_exit_id": "out_teleporter_96_0",
+              "arrivalTile": {
+                "x": 4,
+                "y": 13
+              }
             },
             {
               "exit_id": "level_71__r0c6 -> level_80__r0c2",
@@ -79159,7 +80003,11 @@
               "targetRegion": "level_80__r0c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_224_304"
+              "atlas_exit_id": "out_teleporter_224_304",
+              "arrivalTile": {
+                "x": 2,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_71__r0c6 -> level_72__r11c6",
@@ -79170,7 +80018,11 @@
               "targetRegion": "level_72__r11c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_96"
+              "atlas_exit_id": "out_teleporter_304_96",
+              "arrivalTile": {
+                "x": 1,
+                "y": 16
+              }
             },
             {
               "exit_id": "level_71__r16c19 -> level_76",
@@ -79181,7 +80033,11 @@
               "targetRegion": "level_76",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_256"
+              "atlas_exit_id": "out_teleporter_304_256",
+              "arrivalTile": {
+                "x": 1,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_71__r14c12 -> level_82",
@@ -79192,7 +80048,11 @@
               "targetRegion": "level_82",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_10_17"
+              "atlas_exit_id": "out_pit_10_17",
+              "arrivalTile": {
+                "x": 10,
+                "y": 17
+              }
             }
           ],
           "obstacles": [
@@ -80236,7 +81096,11 @@
               "targetRegion": "level_71__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_256"
+              "atlas_exit_id": "out_teleporter_0_256",
+              "arrivalTile": {
+                "x": 18,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_72__r0c11 -> level_73__r8c2",
@@ -80247,7 +81111,11 @@
               "targetRegion": "level_73__r8c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_176_0"
+              "atlas_exit_id": "out_teleporter_176_0",
+              "arrivalTile": {
+                "x": 2,
+                "y": 8
+              }
             }
           ],
           "obstacles": [
@@ -81857,7 +82725,11 @@
               "targetRegion": "level_72__r0c11",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_144"
+              "atlas_exit_id": "out_teleporter_32_144",
+              "arrivalTile": {
+                "x": 11,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_73__r0c4 -> level_74__r8c18",
@@ -81868,7 +82740,11 @@
               "targetRegion": "level_74__r8c18",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_0"
+              "atlas_exit_id": "out_teleporter_64_0",
+              "arrivalTile": {
+                "x": 18,
+                "y": 8
+              }
             }
           ],
           "obstacles": [
@@ -82463,7 +83339,11 @@
               "targetRegion": "level_75__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_16_144"
+              "atlas_exit_id": "out_teleporter_16_144",
+              "arrivalTile": {
+                "x": 4,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_74__r8c18 -> level_73__r0c4",
@@ -82474,7 +83354,11 @@
               "targetRegion": "level_73__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_288_144"
+              "atlas_exit_id": "out_teleporter_288_144",
+              "arrivalTile": {
+                "x": 4,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -83383,7 +84267,11 @@
               "targetRegion": "level_74__r2c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_0"
+              "atlas_exit_id": "out_teleporter_64_0",
+              "arrivalTile": {
+                "x": 1,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_75__r13c3 -> level_71__r0c6",
@@ -83394,7 +84282,11 @@
               "targetRegion": "level_71__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_224"
+              "atlas_exit_id": "out_teleporter_64_224",
+              "arrivalTile": {
+                "x": 6,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -84310,7 +85202,11 @@
               "targetRegion": "level_71__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_80"
+              "atlas_exit_id": "out_teleporter_0_80",
+              "arrivalTile": {
+                "x": 18,
+                "y": 16
+              }
             },
             {
               "exit_id": "level_76 -> level_77__r2c0",
@@ -84321,7 +85217,11 @@
               "targetRegion": "level_77__r2c0",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_112"
+              "atlas_exit_id": "out_teleporter_304_112",
+              "arrivalTile": {
+                "x": 1,
+                "y": 2
+              }
             }
           ],
           "obstacles": [],
@@ -84357,7 +85257,11 @@
               "targetRegion": "level_76",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_32"
+              "atlas_exit_id": "out_teleporter_0_32",
+              "arrivalTile": {
+                "x": 18,
+                "y": 7
+              }
             },
             {
               "exit_id": "level_77__r15c6 -> level_78__r0c16",
@@ -84368,7 +85272,11 @@
               "targetRegion": "level_78__r0c16",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_96_304"
+              "atlas_exit_id": "out_teleporter_96_304",
+              "arrivalTile": {
+                "x": 16,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -85861,7 +86769,11 @@
               "targetRegion": "level_79__r8c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_0"
+              "atlas_exit_id": "out_teleporter_32_0",
+              "arrivalTile": {
+                "x": 4,
+                "y": 13
+              }
             },
             {
               "exit_id": "level_78__r0c16 -> level_77__r15c6",
@@ -85872,7 +86784,11 @@
               "targetRegion": "level_77__r15c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_256_0"
+              "atlas_exit_id": "out_teleporter_256_0",
+              "arrivalTile": {
+                "x": 6,
+                "y": 18
+              }
             }
           ],
           "obstacles": [
@@ -87445,7 +88361,11 @@
               "targetRegion": "level_80__r16c1",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_0"
+              "atlas_exit_id": "out_teleporter_64_0",
+              "arrivalTile": {
+                "x": 2,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_79__r8c4 -> level_78__r0c2",
@@ -87456,7 +88376,11 @@
               "targetRegion": "level_78__r0c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_224"
+              "atlas_exit_id": "out_teleporter_64_224",
+              "arrivalTile": {
+                "x": 2,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -88053,7 +88977,11 @@
               "targetRegion": "level_71__r0c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_0"
+              "atlas_exit_id": "out_teleporter_32_0",
+              "arrivalTile": {
+                "x": 14,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_80__r16c1 -> level_79__r0c4",
@@ -88064,7 +88992,11 @@
               "targetRegion": "level_79__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_304"
+              "atlas_exit_id": "out_teleporter_32_304",
+              "arrivalTile": {
+                "x": 4,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_80__r16c1 -> level_79__r0c4 #2",
@@ -88075,7 +89007,11 @@
               "targetRegion": "level_79__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_304"
+              "atlas_exit_id": "out_teleporter_48_304",
+              "arrivalTile": {
+                "x": 4,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -89102,7 +90038,11 @@
               "targetRegion": "level_96",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_0"
+              "atlas_exit_id": "out_teleporter_144_0",
+              "arrivalTile": {
+                "x": 2,
+                "y": 3
+              }
             }
           ],
           "obstacles": [
@@ -90737,7 +91677,11 @@
               "targetRegion": "level_12__r42c28",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_64"
+              "atlas_exit_id": "out_teleporter_32_64",
+              "arrivalTile": {
+                "x": 2,
+                "y": 54
+              }
             },
             {
               "exit_id": "level_83 -> level_84__r2c4",
@@ -90748,7 +91692,11 @@
               "targetRegion": "level_84__r2c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_2_2"
+              "atlas_exit_id": "out_pit_2_2",
+              "arrivalTile": {
+                "x": 2,
+                "y": 2
+              }
             }
           ],
           "obstacles": [],
@@ -90784,7 +91732,11 @@
               "targetRegion": "level_85",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_2_3"
+              "atlas_exit_id": "out_pit_2_3",
+              "arrivalTile": {
+                "x": 2,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_84__r0c0 -> level_85 #2",
@@ -90795,7 +91747,11 @@
               "targetRegion": "level_85",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_3_3"
+              "atlas_exit_id": "out_pit_3_3",
+              "arrivalTile": {
+                "x": 3,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_84__r2c4 -> level_85",
@@ -90806,7 +91762,11 @@
               "targetRegion": "level_85",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_4_3"
+              "atlas_exit_id": "out_pit_4_3",
+              "arrivalTile": {
+                "x": 4,
+                "y": 3
+              }
             },
             {
               "exit_id": "level_84__r0c0 -> level_85 #3",
@@ -90817,7 +91777,11 @@
               "targetRegion": "level_85",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_2_4"
+              "atlas_exit_id": "out_pit_2_4",
+              "arrivalTile": {
+                "x": 2,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_84__r2c4 -> level_85 #2",
@@ -90828,7 +91792,11 @@
               "targetRegion": "level_85",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_3_4"
+              "atlas_exit_id": "out_pit_3_4",
+              "arrivalTile": {
+                "x": 3,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_84__r2c4 -> level_85 #3",
@@ -90839,7 +91807,11 @@
               "targetRegion": "level_85",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_4_4"
+              "atlas_exit_id": "out_pit_4_4",
+              "arrivalTile": {
+                "x": 4,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_84__r3c0 -> level_85",
@@ -90850,7 +91822,11 @@
               "targetRegion": "level_85",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_2_5"
+              "atlas_exit_id": "out_pit_2_5",
+              "arrivalTile": {
+                "x": 2,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_84__r3c0 -> level_85 #2",
@@ -90861,7 +91837,11 @@
               "targetRegion": "level_85",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_3_5"
+              "atlas_exit_id": "out_pit_3_5",
+              "arrivalTile": {
+                "x": 3,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_84__r2c4 -> level_85 #4",
@@ -90872,7 +91852,11 @@
               "targetRegion": "level_85",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_4_5"
+              "atlas_exit_id": "out_pit_4_5",
+              "arrivalTile": {
+                "x": 4,
+                "y": 5
+              }
             }
           ],
           "obstacles": [],
@@ -91019,7 +92003,11 @@
               "targetRegion": "level_71__r13c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_80_0"
+              "atlas_exit_id": "out_teleporter_80_0",
+              "arrivalTile": {
+                "x": 1,
+                "y": 18
+              }
             }
           ],
           "obstacles": [],
@@ -91054,7 +92042,11 @@
               "targetRegion": "level_0__r7c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_64"
+              "atlas_exit_id": "out_teleporter_48_64",
+              "arrivalTile": {
+                "x": 10,
+                "y": 18
+              }
             }
           ],
           "obstacles": [],
@@ -91097,7 +92089,11 @@
               "targetRegion": "level_89__r11c12",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_144"
+              "atlas_exit_id": "out_teleporter_0_144",
+              "arrivalTile": {
+                "x": 17,
+                "y": 15
+              }
             },
             {
               "exit_id": "level_87__r1c3 -> level_92__r7c17",
@@ -91108,7 +92104,11 @@
               "targetRegion": "level_92__r7c17",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_16_32"
+              "atlas_exit_id": "out_teleporter_16_32",
+              "arrivalTile": {
+                "x": 17,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_87__r1c3 -> level_88",
@@ -91119,7 +92119,11 @@
               "targetRegion": "level_88",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_272_304"
+              "atlas_exit_id": "out_teleporter_272_304",
+              "arrivalTile": {
+                "x": 2,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_87__r0c23 -> level_93__r14c7",
@@ -91130,7 +92134,11 @@
               "targetRegion": "level_93__r14c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_368_0"
+              "atlas_exit_id": "out_teleporter_368_0",
+              "arrivalTile": {
+                "x": 7,
+                "y": 16
+              }
             },
             {
               "exit_id": "level_87__r1c3 -> level_88 #2",
@@ -91141,7 +92149,11 @@
               "targetRegion": "level_88",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_432_304"
+              "atlas_exit_id": "out_teleporter_432_304",
+              "arrivalTile": {
+                "x": 12,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_87__r1c3 -> level_44__r4c2",
@@ -91152,7 +92164,11 @@
               "targetRegion": "level_44__r4c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_464_272"
+              "atlas_exit_id": "out_teleporter_464_272",
+              "arrivalTile": {
+                "x": 1,
+                "y": 5
+              }
             }
           ],
           "obstacles": [
@@ -91956,7 +92972,11 @@
               "targetRegion": "level_87__r1c3",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_0"
+              "atlas_exit_id": "out_teleporter_32_0",
+              "arrivalTile": {
+                "x": 17,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_88 -> level_12__r0c19",
@@ -91967,7 +92987,11 @@
               "targetRegion": "level_12__r0c19",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_96_304"
+              "atlas_exit_id": "out_teleporter_96_304",
+              "arrivalTile": {
+                "x": 19,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_88 -> level_87__r1c3 #2",
@@ -91978,7 +93002,11 @@
               "targetRegion": "level_87__r1c3",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_192_0"
+              "atlas_exit_id": "out_teleporter_192_0",
+              "arrivalTile": {
+                "x": 27,
+                "y": 19
+              }
             }
           ],
           "obstacles": [],
@@ -92040,7 +93068,11 @@
               "targetRegion": "level_0__r2c13",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_160_304"
+              "atlas_exit_id": "out_teleporter_160_304",
+              "arrivalTile": {
+                "x": 15,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_89__r1c10 -> level_91",
@@ -92051,7 +93083,11 @@
               "targetRegion": "level_91",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_208_0"
+              "atlas_exit_id": "out_teleporter_208_0",
+              "arrivalTile": {
+                "x": 1,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_89__r1c15 -> level_90",
@@ -92062,7 +93098,11 @@
               "targetRegion": "level_90",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_256_0"
+              "atlas_exit_id": "out_teleporter_256_0",
+              "arrivalTile": {
+                "x": 3,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_89__r11c12 -> level_87__r1c3",
@@ -92073,7 +93113,11 @@
               "targetRegion": "level_87__r1c3",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_288_240"
+              "atlas_exit_id": "out_teleporter_288_240",
+              "arrivalTile": {
+                "x": 1,
+                "y": 9
+              }
             }
           ],
           "obstacles": [
@@ -92703,7 +93747,11 @@
               "targetRegion": "level_89__r1c15",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_96"
+              "atlas_exit_id": "out_teleporter_48_96",
+              "arrivalTile": {
+                "x": 16,
+                "y": 1
+              }
             }
           ],
           "obstacles": [],
@@ -92745,7 +93793,11 @@
               "targetRegion": "level_89__r1c10",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_16_144"
+              "atlas_exit_id": "out_teleporter_16_144",
+              "arrivalTile": {
+                "x": 13,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_91 -> level_92__r4c2",
@@ -92756,7 +93808,11 @@
               "targetRegion": "level_92__r4c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_240_48"
+              "atlas_exit_id": "out_teleporter_240_48",
+              "arrivalTile": {
+                "x": 2,
+                "y": 8
+              }
             }
           ],
           "obstacles": [
@@ -92884,7 +93940,11 @@
               "targetRegion": "level_91",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_144"
+              "atlas_exit_id": "out_teleporter_32_144",
+              "arrivalTile": {
+                "x": 15,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_92__r7c17 -> level_87__r1c3",
@@ -92895,7 +93955,11 @@
               "targetRegion": "level_87__r1c3",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_272_144"
+              "atlas_exit_id": "out_teleporter_272_144",
+              "arrivalTile": {
+                "x": 1,
+                "y": 3
+              }
             }
           ],
           "obstacles": [
@@ -93899,7 +94963,11 @@
               "targetRegion": "level_98",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_80"
+              "atlas_exit_id": "out_teleporter_112_80",
+              "arrivalTile": {
+                "x": 7,
+                "y": 11
+              }
             },
             {
               "exit_id": "level_93__r14c7 -> level_87__r0c23",
@@ -93910,7 +94978,11 @@
               "targetRegion": "level_87__r0c23",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_272"
+              "atlas_exit_id": "out_teleporter_112_272",
+              "arrivalTile": {
+                "x": 23,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -94492,7 +95564,11 @@
               "targetRegion": "level_0__r7c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_160"
+              "atlas_exit_id": "out_teleporter_304_160",
+              "arrivalTile": {
+                "x": 1,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_94__r2c16 -> level_0__r7c6 #2",
@@ -94503,7 +95579,11 @@
               "targetRegion": "level_0__r7c6",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_176"
+              "atlas_exit_id": "out_teleporter_304_176",
+              "arrivalTile": {
+                "x": 1,
+                "y": 9
+              }
             },
             {
               "exit_id": "level_94__r2c16 -> level_94__r3c4",
@@ -94586,7 +95666,11 @@
               "targetRegion": "level_59",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_0"
+              "atlas_exit_id": "out_teleporter_32_0",
+              "arrivalTile": {
+                "x": 9,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_95 -> level_59 #2",
@@ -94597,7 +95681,11 @@
               "targetRegion": "level_59",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_48_0"
+              "atlas_exit_id": "out_teleporter_48_0",
+              "arrivalTile": {
+                "x": 10,
+                "y": 18
+              }
             },
             {
               "exit_id": "level_95 -> level_12__r0c19",
@@ -94608,7 +95696,11 @@
               "targetRegion": "level_12__r0c19",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_624_64"
+              "atlas_exit_id": "out_teleporter_624_64",
+              "arrivalTile": {
+                "x": 1,
+                "y": 22
+              }
             },
             {
               "exit_id": "level_95 -> level_12__r0c19 #2",
@@ -94619,7 +95711,11 @@
               "targetRegion": "level_12__r0c19",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_624_80"
+              "atlas_exit_id": "out_teleporter_624_80",
+              "arrivalTile": {
+                "x": 1,
+                "y": 23
+              }
             }
           ],
           "obstacles": [],
@@ -94733,7 +95829,11 @@
               "targetRegion": "level_97",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_32_32"
+              "atlas_exit_id": "out_stairsup_32_32",
+              "arrivalTile": {
+                "x": 2,
+                "y": 2
+              }
             },
             {
               "exit_id": "level_96 -> level_82",
@@ -94744,7 +95844,11 @@
               "targetRegion": "level_82",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_64"
+              "atlas_exit_id": "out_teleporter_32_64",
+              "arrivalTile": {
+                "x": 9,
+                "y": 1
+              }
             }
           ],
           "obstacles": [
@@ -94823,7 +95927,11 @@
               "targetRegion": "level_37__r9c36",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_32_16"
+              "atlas_exit_id": "out_stairsup_32_16",
+              "arrivalTile": {
+                "x": 36,
+                "y": 9
+              }
             },
             {
               "exit_id": "level_97 -> level_96",
@@ -94834,7 +95942,11 @@
               "targetRegion": "level_96",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_32_48"
+              "atlas_exit_id": "out_stairsdown_32_48",
+              "arrivalTile": {
+                "x": 2,
+                "y": 3
+              }
             }
           ],
           "obstacles": [],
@@ -94869,7 +95981,11 @@
               "targetRegion": "level_99__r7c5",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_112_112"
+              "atlas_exit_id": "out_stairsup_112_112",
+              "arrivalTile": {
+                "x": 6,
+                "y": 7
+              }
             },
             {
               "exit_id": "level_98 -> level_93__r5c7",
@@ -94880,7 +95996,11 @@
               "targetRegion": "level_93__r5c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_192"
+              "atlas_exit_id": "out_teleporter_112_192",
+              "arrivalTile": {
+                "x": 7,
+                "y": 6
+              }
             }
           ],
           "obstacles": [
@@ -94969,7 +96089,11 @@
               "targetRegion": "level_100__r2c3",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_48_96"
+              "atlas_exit_id": "out_stairsup_48_96",
+              "arrivalTile": {
+                "x": 2,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_99__r7c5 -> level_98",
@@ -94980,7 +96104,11 @@
               "targetRegion": "level_98",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_112_112"
+              "atlas_exit_id": "out_stairsdown_112_112",
+              "arrivalTile": {
+                "x": 6,
+                "y": 7
+              }
             }
           ],
           "obstacles": [
@@ -95401,7 +96529,11 @@
               "targetRegion": "level_99__r2c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_48_96"
+              "atlas_exit_id": "out_stairsdown_48_96",
+              "arrivalTile": {
+                "x": 2,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_100__r4c10 -> level_101__r4c2",
@@ -95412,7 +96544,11 @@
               "targetRegion": "level_101__r4c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_288_96"
+              "atlas_exit_id": "out_teleporter_288_96",
+              "arrivalTile": {
+                "x": 18,
+                "y": 15
+              }
             }
           ],
           "obstacles": [
@@ -95922,7 +97058,11 @@
               "targetRegion": "level_102__r5c3",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_48_96"
+              "atlas_exit_id": "out_stairsup_48_96",
+              "arrivalTile": {
+                "x": 3,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_101__r0c6 -> level_110",
@@ -95933,7 +97073,11 @@
               "targetRegion": "level_110",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_104_24"
+              "atlas_exit_id": "out_teleporter_104_24",
+              "arrivalTile": {
+                "x": 3,
+                "y": 7
+              }
             },
             {
               "exit_id": "level_101__r4c9 -> level_102__r5c9",
@@ -95944,7 +97088,11 @@
               "targetRegion": "level_102__r5c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsup_144_96"
+              "atlas_exit_id": "out_stairsup_144_96",
+              "arrivalTile": {
+                "x": 11,
+                "y": 6
+              }
             }
           ],
           "obstacles": [
@@ -96326,7 +97474,11 @@
               "targetRegion": "level_103",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_96"
+              "atlas_exit_id": "out_teleporter_0_96",
+              "arrivalTile": {
+                "x": 18,
+                "y": 9
+              }
             },
             {
               "exit_id": "level_102__r5c3 -> level_101__r4c2",
@@ -96337,7 +97489,11 @@
               "targetRegion": "level_101__r4c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_64_96"
+              "atlas_exit_id": "out_stairsdown_64_96",
+              "arrivalTile": {
+                "x": 2,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_102__r5c9 -> level_101__r4c9",
@@ -96348,7 +97504,11 @@
               "targetRegion": "level_101__r4c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_stairsdown_160_96"
+              "atlas_exit_id": "out_stairsdown_160_96",
+              "arrivalTile": {
+                "x": 9,
+                "y": 5
+              }
             },
             {
               "exit_id": "level_102__r5c9 -> level_107",
@@ -96359,7 +97519,11 @@
               "targetRegion": "level_107",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_224_96"
+              "atlas_exit_id": "out_teleporter_224_96",
+              "arrivalTile": {
+                "x": 1,
+                "y": 3
+              }
             }
           ],
           "obstacles": [
@@ -96464,7 +97628,11 @@
               "targetRegion": "level_104",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_64"
+              "atlas_exit_id": "out_teleporter_0_64",
+              "arrivalTile": {
+                "x": 8,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_103 -> level_102__r5c3",
@@ -96475,7 +97643,11 @@
               "targetRegion": "level_102__r5c3",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_144"
+              "atlas_exit_id": "out_teleporter_304_144",
+              "arrivalTile": {
+                "x": 1,
+                "y": 6
+              }
             }
           ],
           "obstacles": [],
@@ -96510,7 +97682,11 @@
               "targetRegion": "level_105",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_16"
+              "atlas_exit_id": "out_teleporter_0_16",
+              "arrivalTile": {
+                "x": 13,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_104 -> level_103",
@@ -96521,7 +97697,11 @@
               "targetRegion": "level_103",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_144_128"
+              "atlas_exit_id": "out_teleporter_144_128",
+              "arrivalTile": {
+                "x": 1,
+                "y": 4
+              }
             }
           ],
           "obstacles": [],
@@ -96556,7 +97736,11 @@
               "targetRegion": "level_106",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_80_144"
+              "atlas_exit_id": "out_teleporter_80_144",
+              "arrivalTile": {
+                "x": 16,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_105 -> level_104",
@@ -96567,7 +97751,11 @@
               "targetRegion": "level_104",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_224_64"
+              "atlas_exit_id": "out_teleporter_224_64",
+              "arrivalTile": {
+                "x": 1,
+                "y": 1
+              }
             }
           ],
           "obstacles": [],
@@ -96602,7 +97790,11 @@
               "targetRegion": "level_101__r4c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_48"
+              "atlas_exit_id": "out_teleporter_64_48",
+              "arrivalTile": {
+                "x": 18,
+                "y": 15
+              }
             },
             {
               "exit_id": "level_106 -> level_105",
@@ -96613,7 +97805,11 @@
               "targetRegion": "level_105",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_256_0"
+              "atlas_exit_id": "out_teleporter_256_0",
+              "arrivalTile": {
+                "x": 5,
+                "y": 8
+              }
             }
           ],
           "obstacles": [],
@@ -96655,7 +97851,11 @@
               "targetRegion": "level_102__r5c9",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_48"
+              "atlas_exit_id": "out_teleporter_0_48",
+              "arrivalTile": {
+                "x": 14,
+                "y": 6
+              }
             },
             {
               "exit_id": "level_107 -> level_108__r2c0",
@@ -96666,7 +97866,11 @@
               "targetRegion": "level_108__r2c0",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_176"
+              "atlas_exit_id": "out_teleporter_304_176",
+              "arrivalTile": {
+                "x": 1,
+                "y": 2
+              }
             }
           ],
           "obstacles": [],
@@ -96702,7 +97906,11 @@
               "targetRegion": "level_107",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_32"
+              "atlas_exit_id": "out_teleporter_0_32",
+              "arrivalTile": {
+                "x": 18,
+                "y": 11
+              }
             },
             {
               "exit_id": "level_108__r11c8 -> level_109",
@@ -96713,7 +97921,11 @@
               "targetRegion": "level_109",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_224_224"
+              "atlas_exit_id": "out_teleporter_224_224",
+              "arrivalTile": {
+                "x": 1,
+                "y": 7
+              }
             }
           ],
           "obstacles": [],
@@ -96903,7 +98115,11 @@
               "targetRegion": "level_108__r11c8",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_0_112"
+              "atlas_exit_id": "out_teleporter_0_112",
+              "arrivalTile": {
+                "x": 13,
+                "y": 14
+              }
             },
             {
               "exit_id": "level_109 -> level_101__r4c2",
@@ -96914,7 +98130,11 @@
               "targetRegion": "level_101__r4c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_160_48"
+              "atlas_exit_id": "out_teleporter_160_48",
+              "arrivalTile": {
+                "x": 18,
+                "y": 15
+              }
             }
           ],
           "obstacles": [],
@@ -96956,7 +98176,11 @@
               "targetRegion": "level_2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_pit_3_2"
+              "atlas_exit_id": "out_pit_3_2",
+              "arrivalTile": {
+                "x": 3,
+                "y": 2
+              }
             }
           ],
           "obstacles": [],
@@ -96991,7 +98215,11 @@
               "targetRegion": "level_112__r2c2",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_128_48"
+              "atlas_exit_id": "out_teleporter_128_48",
+              "arrivalTile": {
+                "x": 2,
+                "y": 13
+              }
             },
             {
               "exit_id": "level_111 -> level_3__r0c4",
@@ -97002,7 +98230,11 @@
               "targetRegion": "level_3__r0c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_304_176"
+              "atlas_exit_id": "out_teleporter_304_176",
+              "arrivalTile": {
+                "x": 1,
+                "y": 4
+              }
             }
           ],
           "obstacles": [],
@@ -97316,7 +98548,11 @@
               "targetRegion": "level_111",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_224"
+              "atlas_exit_id": "out_teleporter_32_224",
+              "arrivalTile": {
+                "x": 8,
+                "y": 4
+              }
             },
             {
               "exit_id": "level_112__r0c7 -> level_113",
@@ -97327,7 +98563,11 @@
               "targetRegion": "level_113",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_0"
+              "atlas_exit_id": "out_teleporter_112_0",
+              "arrivalTile": {
+                "x": 4,
+                "y": 8
+              }
             }
           ],
           "obstacles": [
@@ -97745,7 +98985,11 @@
               "targetRegion": "level_114",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_16_0"
+              "atlas_exit_id": "out_teleporter_16_0",
+              "arrivalTile": {
+                "x": 4,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_113 -> level_114 #2",
@@ -97756,7 +99000,11 @@
               "targetRegion": "level_114",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_32_0"
+              "atlas_exit_id": "out_teleporter_32_0",
+              "arrivalTile": {
+                "x": 5,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_113 -> level_112__r0c7",
@@ -97767,7 +99015,11 @@
               "targetRegion": "level_112__r0c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_144"
+              "atlas_exit_id": "out_teleporter_64_144",
+              "arrivalTile": {
+                "x": 7,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_113 -> level_112__r0c7 #2",
@@ -97778,7 +99030,11 @@
               "targetRegion": "level_112__r0c7",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_80_144"
+              "atlas_exit_id": "out_teleporter_80_144",
+              "arrivalTile": {
+                "x": 7,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_113 -> level_115__r9c4",
@@ -97789,7 +99045,11 @@
               "targetRegion": "level_115__r9c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_112_0"
+              "atlas_exit_id": "out_teleporter_112_0",
+              "arrivalTile": {
+                "x": 4,
+                "y": 8
+              }
             },
             {
               "exit_id": "level_113 -> level_115__r9c4 #2",
@@ -97800,7 +99060,11 @@
               "targetRegion": "level_115__r9c4",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_128_0"
+              "atlas_exit_id": "out_teleporter_128_0",
+              "arrivalTile": {
+                "x": 5,
+                "y": 8
+              }
             }
           ],
           "obstacles": [
@@ -97971,7 +99235,11 @@
               "targetRegion": "level_113",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_144"
+              "atlas_exit_id": "out_teleporter_64_144",
+              "arrivalTile": {
+                "x": 1,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_114 -> level_113 #2",
@@ -97982,7 +99250,11 @@
               "targetRegion": "level_113",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_80_144"
+              "atlas_exit_id": "out_teleporter_80_144",
+              "arrivalTile": {
+                "x": 2,
+                "y": 1
+              }
             }
           ],
           "obstacles": [],
@@ -98025,7 +99297,11 @@
               "targetRegion": "level_113",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_64_144"
+              "atlas_exit_id": "out_teleporter_64_144",
+              "arrivalTile": {
+                "x": 7,
+                "y": 1
+              }
             },
             {
               "exit_id": "level_115__r9c4 -> level_113 #2",
@@ -98036,7 +99312,11 @@
               "targetRegion": "level_113",
               "targetExitId": null,
               "isTeleporter": true,
-              "atlas_exit_id": "out_teleporter_80_144"
+              "atlas_exit_id": "out_teleporter_80_144",
+              "arrivalTile": {
+                "x": 8,
+                "y": 1
+              }
             }
           ],
           "obstacles": [

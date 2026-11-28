@@ -374,6 +374,19 @@ describe('a boundary exit', () => {
         });
     });
 
+    it('carries the compiler\'s arrivalTile (maze-arrival-spawns) when wiredExit names one, and nothing when it does not', () => {
+        const region = corridorRegion({
+            exits: [{
+                exit_id: 'south_gate', kind: 'edge', side: 'S', exit_tiles: [[3, 1]], entrance_tile: [3, 1], sub_region: 'r1c2',
+            }],
+            subgraph: { sub_regions: ['r1c0', 'r1c2'], internal_exits: [] },
+        });
+        const withArrival = { wiredExit: (r, e) => ({ ...wired.wiredExit(r, e), arrivalTile: { x: 5, y: 0 } }) };
+        expect(exitOf(project(region, CORRIDOR_ROWS, withArrival).sidecars.vault__r1c2.playable_payload, 'south_gate').arrivalTile)
+            .toEqual({ x: 5, y: 0 });
+        expect('arrivalTile' in exitOf(project(region, CORRIDOR_ROWS, wired).sidecars.vault__r1c2.playable_payload, 'south_gate')).toBe(false);
+    });
+
     it('is OMITTED entirely when the vanilla layout does not wire it', () => {
         const region = corridorRegion({
             exits: [{
@@ -839,6 +852,26 @@ describe('the real Seedling starter atlas as a maze world', () => {
                 expect(back.targetRegion).toBe(name);
             }
         }
+    });
+
+    it('every boundary exit\'s arrivalTile is the flash compile\'s target_spawn in tiles (maze-arrival-spawns)', () => {
+        const flash = compileRegionAtlas(clone(STARTER), { mapDoc: MAP_DOC }).rules.preset_sidecars['1'];
+        const spawn = new Map();
+        for (const sc of Object.values(flash)) {
+            const p = sc.playable_payload;
+            for (const e of p?.exits ?? []) if (e.target_spawn) spawn.set(`${p.atlas_region}/${e.exit_id}`, [e.target_spawn, p.tile_size]);
+        }
+        let n = 0;
+        for (const [name, sc] of Object.entries(sidecars)) {
+            const p = sc.playable_payload;
+            for (const e of p.exits) {
+                if (e.atlas_exit_id.startsWith('cross_')) { expect(e.arrivalTile, `${name}/${e.exit_id}`).toBeUndefined(); continue; }
+                const [s, ts] = spawn.get(`${p.atlas_region}/${e.atlas_exit_id}`);
+                expect(e.arrivalTile, `${name}/${e.exit_id}`).toEqual({ x: s.x / ts, y: s.y / ts });
+                n += 1;
+            }
+        }
+        expect(n).toBeGreaterThan(0);
     });
 
     it('every obstacle id resolves in its own payload\'s obstacleLib', () => {
