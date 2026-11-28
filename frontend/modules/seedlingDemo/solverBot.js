@@ -205,6 +205,8 @@ import { SPEAR_ARM_COUNTS, spearArmSlot, spearStrikeGeometry } from './spearArm.
 import { WALK_BLADE_ARM, WALK_BLADE_ARM_COUNTS, walkBladeArmSlot } from './walkBladeArm.js';
 // ⛓ hammer-phase ENTRY-38 SHOVE: a spear thrust waits out the gate that would swallow it (`SPEAR_PRESS_GATE_WAIT`, a family file, OFF).
 import { SPEAR_PRESS_GATE_WAIT, waitSpearPressGate } from './spearPressGateWait.js';
+// ⛓ hammer-phase ENTRY-38 STEP 2: a push chain's glide wait leans toward the next stance (`PRESS_GLIDE_FOLLOW`, a family file, OFF).
+import { PRESS_GLIDE_FOLLOW, blockSettledOn, pressGlideFollowHook } from './pressGlideFollow.js';
 import { STAGED_HUNT_SCAN_MEMO_COUNTS, newStagedHuntScanMemo, stagedScanEntry } from './stagedHuntScanMemo.js';
 import { OPP_PRESS_FALLBACK, OPP_PRESS_FALLBACK_COUNTS, oppPressFallbackSentence } from './oppPressFallback.js';
 import { auditOppFallbackRedo, oppFallbackHitsAudits, oppFallbackHitsSentence, playerHitsSince } from './oppFallbackHits.js';
@@ -12612,7 +12614,10 @@ function execRoute(run, perTick, resolved, ctx, what) {
             }
         } else if (step.verb === 'press') {
             last = execSpearPress(run, perTick, { blockId: blockRow(), dir: step.dir, to: step.to,
-                destroys: Boolean(step.destroys), slot: resolved.slot }, ctx, label);
+                destroys: Boolean(step.destroys), slot: resolved.slot,
+                // ⛓ hammer-phase ENTRY-38 STEP 2 (`PRESS_GLIDE_FOLLOW` ON only): the glide wait leans toward the next stance.
+                ...(PRESS_GLIDE_FOLLOW.enabled ? { glideFollow: pressGlideFollowHook({ route, i,
+                    rect: run.entities('pushables').get(blockRow())?.rect }) } : {}) }, ctx, label);
             const live = run.entities('pushables').get(blockRow());
             if (step.destroys ? !live?.removed
                 : (!live || live.removed || tileOf(live).tx !== step.to.tx
@@ -12731,7 +12736,11 @@ function execSpearPress(run, perTick, p, ctx, what) {
             settledAt = perTick.length;
             break;
         }
-        step(IDLE, 'the glide wait');
+        // ⛓ hammer-phase ENTRY-38 STEP 2 (`PRESS_GLIDE_FOLLOW` ON only; OFF `glideFollow` is absent): lean, or idle.
+        const lean = p.glideFollow?.keys({ live: l, slashInfo: run.progress('slashInfo'), t: perTick.length,
+            fork: ctx.fork, key: FACING_KEYS[facing], left: SPEAR_PRESS_BOUND - i,
+            settled: (r) => blockSettledOn(r, p.blockId, p.to, TILE_SIZE) });
+        step(lean ? new Set(lean) : IDLE, 'the glide wait');
     }
     if (settledAt === null) {
         const l = live();
