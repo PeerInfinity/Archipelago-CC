@@ -875,6 +875,15 @@ export async function testRegionGraphSubRegionMerged(testController) {
         && !!b.dataset.root && b.dataset.root !== b.textContent) && distinctLabels === boxEls.length
       && dir2?.floors?.numbered >= 1 && dir2?.floors?.ranged === 0 && dir2?.floors?.unreached === 0
       && dir2?.floors?.contradictions === 0);
+    // ⛓ region-graph-floor-stacking: the blocks are stacked by floor (higher floor above). The report's `floorOrder`
+    // counts every pair of blocks on strictly ordered floors and how many sit the wrong way up (0); the bands are on
+    // exactly when the blocks span 2+ numbered floors (seedling_atlas spans one, so its placement is the one before;
+    // the multi-floor order is pinned in floorStacking.test.js over the frozen seedling_playthrough).
+    const bands = dir2?.stats?.grouping?.bands ?? null;
+    const floorsSpanned = new Set((dir2?.floorBlockFloors ?? [])).size;
+    testController.reportCondition(`floor order: ${dir2?.floorOrder?.pairs} ordered pair(s), ${dir2?.floorOrder?.violations} the wrong way up; `
+      + `stacked ${dir2?.floorOrder?.stacked} (${bands ? bands.map((b) => `${b.band}:${b.blocks}`).join(' ') : 'no bands'}; ${floorsSpanned} floor(s) spanned)`,
+      !!dir2?.floorOrder && dir2.floorOrder.violations === 0 && dir2.floorOrder.stacked === (floorsSpanned >= 2));
     ui.currentLayoutPreset = layoutBefore;
     await ctx.setSetting(FLOOR_GROUPING_KEY, FLOOR_GROUPING_SCHEMA.default);
     const groupingOff = await testController.pollForCondition(() => ui.groupingSettings?.grouping === FLOOR_GROUPING_SCHEMA.default,
@@ -1449,7 +1458,7 @@ registerTest({
   category: 'Region Graph',
   testFunction: testRegionGraphSubRegionMerged,
   enabled: false, // runs where a roster enrols it (the substrates config)
-  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; then (region-graph-map-look) nodeLook = map (session-only) paints every node with a Region Map cell as that cell with no rebuild, and a pointer click on a location square runs the location click on it, once; then (region-graph-groups-c) subRegionView = collapsible draws every group closed with a + badge, a + press opens one group into its box and a − press closes it, neither running a click action, and a body tap runs it, and the stored nodeLook = map takes no effect there; (region-graph-direction-layout) in merged + map the Direction-aware layout runs once and ends with 0 overlaps between the drawn boxes, and the layout preset and the merged view\'s saved positions are restored; (region-graph-dungeon-groups) Floor grouping = twoStepBoxes draws one box per floor group of 2+ (an overlay, no element added) with 0 node / block overlaps, (region-graph-floors) each box labelled by its floor (numbered from the group of the start region, Floor 0) and (region-graph-floor-rename-letters) a letter, "Floor 0A" / "Floor −1B", no two boxes alike, with its root level kept on the box, and the setting goes back to its default; the settings are restored (nodeLook graph) and every region is its own node again'
+  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; then (region-graph-map-look) nodeLook = map (session-only) paints every node with a Region Map cell as that cell with no rebuild, and a pointer click on a location square runs the location click on it, once; then (region-graph-groups-c) subRegionView = collapsible draws every group closed with a + badge, a + press opens one group into its box and a − press closes it, neither running a click action, and a body tap runs it, and the stored nodeLook = map takes no effect there; (region-graph-direction-layout) in merged + map the Direction-aware layout runs once and ends with 0 overlaps between the drawn boxes, and the layout preset and the merged view\'s saved positions are restored; (region-graph-dungeon-groups) Floor grouping = twoStepBoxes draws one box per floor group of 2+ (an overlay, no element added) with 0 node / block overlaps, (region-graph-floors) each box labelled by its floor (numbered from the group of the start region, Floor 0) and (region-graph-floor-rename-letters) a letter, "Floor 0A" / "Floor −1B", no two boxes alike, with its root level kept on the box, (region-graph-floor-stacking) 0 block pairs on ordered floors the wrong way up, stacked by floor exactly when the blocks span 2+ floors, and the setting goes back to its default; the settings are restored (nodeLook graph) and every region is its own node again'
 });
 
 registerTest({

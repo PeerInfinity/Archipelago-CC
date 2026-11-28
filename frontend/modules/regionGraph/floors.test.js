@@ -224,7 +224,9 @@ describe('⛓ 3. the floor gap', () => {
     it('seedling_playthrough merged: the vertical links lengthen with the gap and keep their direction; the flat links inside a floor do not move', () => {
         const { lcm, ui } = build('seedling_playthrough', 'merged', { nodeLook: 'map' });
         const before = layout(lcm, 'twoStep', {}, { floorLinks: false }).report.floors;
-        const r = [0, 160, 320].map((floorGap) => layout(lcm, 'twoStep', { floorGap }).report);
+        // ⛓ region-graph-floor-stacking: the stair-direction placement this pins is the "before" of the stacking
+        // (`floorStacking: false`); the stacked layout's own gap and order pins are floorStacking.test.js.
+        const r = [0, 160, 320].map((floorGap) => layout(lcm, 'twoStep', { floorGap }, { floorStacking: false }).report);
         expect(r[0].floors.meanVerticalLength).toBeLessThan(r[1].floors.meanVerticalLength);
         expect(r[1].floors.meanVerticalLength).toBeLessThan(r[2].floors.meanVerticalLength);
         for (const x of r) {

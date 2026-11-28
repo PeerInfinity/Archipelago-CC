@@ -4,6 +4,8 @@
  * into a floor layout for the Region Graph's `twoStep` / `twoStepBoxes` values:
  *   · a VERTICAL link (a stair or a pit) gets a direction from where its tile sits in its level (option (a)), and the
  *     block step lays two floors joined by one out at a LONGER distance (the Floor gap), in that direction;
+ *     ⛓ region-graph-floor-stacking: the blocks are then stacked in floor bands (`floorGroups.js` `stackByFloor`),
+ *     that direction setting only their left-right order within a band, the Floor gap the gap between bands;
  *   · every group gets a FLOOR NUMBER, the start region's group the ground floor, and the boxes are labelled by it.
  *
  * ⚖ The user, session 84c8ab35: 2026-11-27T17:40:33.236Z "I want regions connected by a north south link to appear
@@ -46,8 +48,8 @@ export const FLOOR_GAP_KEY = 'moduleSettings.regionGraph.floorGap';
 export const FLOOR_GAP_SCHEMA = Object.freeze({
     type: 'number', default: 160, minimum: 0, maximum: 600,
     label: 'Floor gap',
-    description: 'Two-step values only: the gap (graph pixels) the layout aims for between two floors joined by stairs '
-        + 'or a pit, in place of the spacing. Flat links (walking from one region to the next) keep the spacing.',
+    description: 'Two-step values only: the gap (graph pixels) between two floors\' bands (higher floors above lower '
+        + 'ones). Flat links (walking from one region to the next) keep the spacing.',
 });
 
 /** The floor gap as the schema says it (out of range clamped; a wrong type reads as the default). */

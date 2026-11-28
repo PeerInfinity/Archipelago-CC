@@ -1,0 +1,531 @@
+{
+  "errors": {
+    "desktop": [],
+    "phone": [
+      "SecurityError: Failed to read a named property from 'Window': Blocked a frame with origin \"http://localhost:8146\" from accessing a cross-origin frame.",
+      "SecurityError: Failed to read a named property from 'Window': Blocked a frame with origin \"http://localhost:8146\" from accessing a cross-origin frame."
+    ]
+  },
+  "measure": {
+    "separate": {
+      "before": {
+        "grouping": "twoStep",
+        "floorGap": 160,
+        "floorLinks": true,
+        "flatMean": 17.7,
+        "flatP90": 35.7,
+        "flatN": 105,
+        "insideMean": 13.7,
+        "betweenMean": 35.5,
+        "betweenN": 19,
+        "vertMean": 47.7,
+        "vertP90": 119.1,
+        "vertN": 35,
+        "flatLen": 159.8,
+        "vertLen": 659.9,
+        "overlaps": 0,
+        "blockOverlaps": 0,
+        "intruders": 0,
+        "boxes": 0,
+        "boxesShown": 0,
+        "totalMs": 444.3,
+        "longestTaskMs": 505,
+        "nodes": 307,
+        "counts": {
+          "vertical": 87,
+          "withDirection": 82,
+          "centre": 5,
+          "without": 0,
+          "inGroup": 3
+        },
+        "numbered": 43,
+        "unreached": 0,
+        "floorRange": [
+          -5,
+          1
+        ],
+        "inert": false,
+        "labels": [],
+        "floorOrder": {
+          "pairs": 665,
+          "violations": 375,
+          "stacked": false
+        },
+        "bands": null,
+        "solveMs": 28.2
+      },
+      "after": {
+        "grouping": "twoStep",
+        "floorGap": 160,
+        "floorLinks": true,
+        "flatMean": 24.5,
+        "flatP90": 68.3,
+        "flatN": 105,
+        "insideMean": 13.7,
+        "betweenMean": 73.6,
+        "betweenN": 19,
+        "vertMean": 75,
+        "vertP90": 159.8,
+        "vertN": 35,
+        "flatLen": 195.4,
+        "vertLen": 1354.4,
+        "overlaps": 0,
+        "blockOverlaps": 0,
+        "intruders": 0,
+        "boxes": 0,
+        "boxesShown": 0,
+        "totalMs": 145.2,
+        "longestTaskMs": 208,
+        "nodes": 307,
+        "counts": {
+          "vertical": 87,
+          "withDirection": 82,
+          "centre": 5,
+          "without": 0,
+          "inGroup": 3
+        },
+        "numbered": 43,
+        "unreached": 0,
+        "floorRange": [
+          -5,
+          1
+        ],
+        "inert": false,
+        "labels": [],
+        "floorOrder": {
+          "pairs": 665,
+          "violations": 0,
+          "stacked": true
+        },
+        "bands": [
+          "1:4",
+          "0:20",
+          "-1:10",
+          "-2:6",
+          "-3:2",
+          "-4:1",
+          "-5:1"
+        ],
+        "solveMs": 5.2
+      },
+      "repeatSame": true
+    },
+    "merged": {
+      "before": {
+        "grouping": "twoStep",
+        "floorGap": 160,
+        "floorLinks": true,
+        "flatMean": 11.8,
+        "flatP90": 25.8,
+        "flatN": 97,
+        "insideMean": 8.9,
+        "betweenMean": 26.7,
+        "betweenN": 16,
+        "vertMean": 29.9,
+        "vertP90": 76.9,
+        "vertN": 28,
+        "flatLen": 240.8,
+        "vertLen": 473.1,
+        "overlaps": 0,
+        "blockOverlaps": 0,
+        "intruders": 0,
+        "boxes": 0,
+        "boxesShown": 0,
+        "totalMs": 30.8,
+        "longestTaskMs": 53,
+        "nodes": 116,
+        "counts": {
+          "vertical": 87,
+          "withDirection": 82,
+          "centre": 5,
+          "without": 0,
+          "inGroup": 3
+        },
+        "numbered": 43,
+        "unreached": 0,
+        "floorRange": [
+          -5,
+          1
+        ],
+        "inert": false,
+        "labels": [],
+        "floorOrder": {
+          "pairs": 665,
+          "violations": 411,
+          "stacked": false
+        },
+        "bands": null,
+        "solveMs": 2.7
+      },
+      "after": {
+        "grouping": "twoStep",
+        "floorGap": 160,
+        "floorLinks": true,
+        "flatMean": 19.3,
+        "flatP90": 67.6,
+        "flatN": 97,
+        "insideMean": 8.9,
+        "betweenMean": 72.1,
+        "betweenN": 16,
+        "vertMean": 74.9,
+        "vertP90": 135.6,
+        "vertN": 28,
+        "flatLen": 357.2,
+        "vertLen": 960.8,
+        "overlaps": 0,
+        "blockOverlaps": 0,
+        "intruders": 0,
+        "boxes": 0,
+        "boxesShown": 0,
+        "totalMs": 29.5,
+        "longestTaskMs": null,
+        "nodes": 116,
+        "counts": {
+          "vertical": 87,
+          "withDirection": 82,
+          "centre": 5,
+          "without": 0,
+          "inGroup": 3
+        },
+        "numbered": 43,
+        "unreached": 0,
+        "floorRange": [
+          -5,
+          1
+        ],
+        "inert": false,
+        "labels": [],
+        "floorOrder": {
+          "pairs": 665,
+          "violations": 0,
+          "stacked": true
+        },
+        "bands": [
+          "1:4",
+          "0:20",
+          "-1:10",
+          "-2:6",
+          "-3:2",
+          "-4:1",
+          "-5:1"
+        ],
+        "solveMs": 2.9
+      },
+      "repeatSame": true
+    }
+  },
+  "shots": {
+    "merged-map-before": {
+      "grouping": "twoStepBoxes",
+      "floorGap": 160,
+      "floorLinks": true,
+      "flatMean": 11.8,
+      "flatP90": 25.8,
+      "flatN": 97,
+      "insideMean": 8.9,
+      "betweenMean": 26.7,
+      "betweenN": 16,
+      "vertMean": 29.9,
+      "vertP90": 76.9,
+      "vertN": 28,
+      "flatLen": 240.8,
+      "vertLen": 473.1,
+      "overlaps": 0,
+      "blockOverlaps": 0,
+      "intruders": 0,
+      "boxes": 11,
+      "boxesShown": 11,
+      "totalMs": 27.1,
+      "longestTaskMs": 63,
+      "nodes": 116,
+      "counts": {
+        "vertical": 87,
+        "withDirection": 82,
+        "centre": 5,
+        "without": 0,
+        "inGroup": 3
+      },
+      "numbered": 43,
+      "unreached": 0,
+      "floorRange": [
+        -5,
+        1
+      ],
+      "inert": false,
+      "labels": [
+        [
+          "Floor 0A",
+          "level_0"
+        ],
+        [
+          "Floor +1D",
+          "level_102"
+        ],
+        [
+          "Floor −1G",
+          "level_112"
+        ],
+        [
+          "Floor −3B",
+          "level_19"
+        ],
+        [
+          "Floor −1B",
+          "level_2"
+        ],
+        [
+          "Floor −1C",
+          "level_21"
+        ],
+        [
+          "Floor 0H",
+          "level_48"
+        ],
+        [
+          "Floor −2A",
+          "level_5"
+        ],
+        [
+          "Floor −2D",
+          "level_8"
+        ],
+        [
+          "Floor −2F",
+          "level_82"
+        ],
+        [
+          "Floor −1J",
+          "level_85"
+        ]
+      ],
+      "floorOrder": {
+        "pairs": 665,
+        "violations": 411,
+        "stacked": false
+      },
+      "bands": null,
+      "solveMs": 3
+    },
+    "zoom-before": [
+      "Floor 0A",
+      "Floor 0H",
+      "Floor −1B",
+      "Floor −1C",
+      "Floor −1G",
+      "Floor −1J",
+      "Floor −2A",
+      "Floor −2D",
+      "Floor −2F"
+    ],
+    "merged-map-after": {
+      "grouping": "twoStepBoxes",
+      "floorGap": 160,
+      "floorLinks": true,
+      "flatMean": 19.3,
+      "flatP90": 67.6,
+      "flatN": 97,
+      "insideMean": 8.9,
+      "betweenMean": 72.1,
+      "betweenN": 16,
+      "vertMean": 74.9,
+      "vertP90": 135.6,
+      "vertN": 28,
+      "flatLen": 357.2,
+      "vertLen": 960.8,
+      "overlaps": 0,
+      "blockOverlaps": 0,
+      "intruders": 0,
+      "boxes": 11,
+      "boxesShown": 11,
+      "totalMs": 27.7,
+      "longestTaskMs": null,
+      "nodes": 116,
+      "counts": {
+        "vertical": 87,
+        "withDirection": 82,
+        "centre": 5,
+        "without": 0,
+        "inGroup": 3
+      },
+      "numbered": 43,
+      "unreached": 0,
+      "floorRange": [
+        -5,
+        1
+      ],
+      "inert": false,
+      "labels": [
+        [
+          "Floor 0A",
+          "level_0"
+        ],
+        [
+          "Floor +1D",
+          "level_102"
+        ],
+        [
+          "Floor −1G",
+          "level_112"
+        ],
+        [
+          "Floor −3B",
+          "level_19"
+        ],
+        [
+          "Floor −1B",
+          "level_2"
+        ],
+        [
+          "Floor −1C",
+          "level_21"
+        ],
+        [
+          "Floor 0H",
+          "level_48"
+        ],
+        [
+          "Floor −2A",
+          "level_5"
+        ],
+        [
+          "Floor −2D",
+          "level_8"
+        ],
+        [
+          "Floor −2F",
+          "level_82"
+        ],
+        [
+          "Floor −1J",
+          "level_85"
+        ]
+      ],
+      "floorOrder": {
+        "pairs": 665,
+        "violations": 0,
+        "stacked": true
+      },
+      "bands": [
+        "1:4",
+        "0:20",
+        "-1:10",
+        "-2:6",
+        "-3:2",
+        "-4:1",
+        "-5:1"
+      ],
+      "solveMs": 2.8
+    },
+    "zoom-after": [
+      "Floor 0A",
+      "Floor 0H",
+      "Floor −1B",
+      "Floor −1C",
+      "Floor −1G",
+      "Floor −1J",
+      "Floor −2A",
+      "Floor −2D",
+      "Floor −2F"
+    ]
+  },
+  "phone": {
+    "grouping": "twoStepBoxes",
+    "floorGap": 160,
+    "floorLinks": true,
+    "flatMean": 19.3,
+    "flatP90": 67.6,
+    "flatN": 97,
+    "insideMean": 8.9,
+    "betweenMean": 72.1,
+    "betweenN": 16,
+    "vertMean": 74.9,
+    "vertP90": 135.6,
+    "vertN": 28,
+    "flatLen": 357.2,
+    "vertLen": 960.8,
+    "overlaps": 0,
+    "blockOverlaps": 0,
+    "intruders": 0,
+    "boxes": 11,
+    "boxesShown": 11,
+    "totalMs": 152.2,
+    "longestTaskMs": 195,
+    "nodes": 116,
+    "counts": {
+      "vertical": 87,
+      "withDirection": 82,
+      "centre": 5,
+      "without": 0,
+      "inGroup": 3
+    },
+    "numbered": 43,
+    "unreached": 0,
+    "floorRange": [
+      -5,
+      1
+    ],
+    "inert": false,
+    "labels": [
+      [
+        "Floor 0A",
+        "level_0"
+      ],
+      [
+        "Floor +1D",
+        "level_102"
+      ],
+      [
+        "Floor −1G",
+        "level_112"
+      ],
+      [
+        "Floor −3B",
+        "level_19"
+      ],
+      [
+        "Floor −1B",
+        "level_2"
+      ],
+      [
+        "Floor −1C",
+        "level_21"
+      ],
+      [
+        "Floor 0H",
+        "level_48"
+      ],
+      [
+        "Floor −2A",
+        "level_5"
+      ],
+      [
+        "Floor −2D",
+        "level_8"
+      ],
+      [
+        "Floor −2F",
+        "level_82"
+      ],
+      [
+        "Floor −1J",
+        "level_85"
+      ]
+    ],
+    "floorOrder": {
+      "pairs": 665,
+      "violations": 0,
+      "stacked": true
+    },
+    "bands": [
+      "1:4",
+      "0:20",
+      "-1:10",
+      "-2:6",
+      "-3:2",
+      "-4:1",
+      "-5:1"
+    ],
+    "solveMs": 21,
+    "horizontalScroll": false
+  }
+}
