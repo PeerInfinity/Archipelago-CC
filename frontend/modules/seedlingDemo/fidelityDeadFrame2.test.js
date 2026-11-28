@@ -179,7 +179,8 @@ describe('DEADFRAME2 — the committed tapes the Pulser moves', () => {
             expect([p, moved]).toEqual([p, p.endsWith('r5-shaft-control.json') ? ['pulserHits', 'spinnerWrites'] : ['pulserHits']]);
         }
     });
-    it('r5-shaft-control: the spinner\'s pulse kill — the game writes (39,4) at 1643; OFF 1397, ON 1207 (both off: the spinner\'s pulse-kill path)', () => {
+    // ⛓ wave 72 (SPINNERPULSE): the 1643 witness runs the PATCHED vanilla L39 (no rope rock); on the atlas the game kills at 1396 and OFF stamps 1397, so OFF is the game. ON's 1207 is the rope rock's span stepped twice (`fidelitySpinnerPulse.test.js`).
+    it('r5-shaft-control: the spinner\'s pulse kill — the rockless-set game writes (39,4) at 1643; the atlas model OFF 1397 (the game\'s, wave 72), ON 1207 (the double-stepped rope-rock span)', () => {
         const g = readJson(`${W69}/d2/witness-shaft-control.json`).shapes[0].whole.ledger.find((l) => l.newCleared.includes('39:4'));
         const t = (over) => go('fixtures/tapes/r5-shaft-control.json', over).spinnerWrites.map((w) => [w.t, w.flag.tag]);
         expect([g.tick, t(OFF3), t({ ...OFF3, [PULSE]: true })]).toEqual([1643, [[1397, 4]], [[1207, 4]]]);
