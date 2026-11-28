@@ -1,0 +1,51 @@
+# box lock: TAKEN by npm test test-substrates batch=seedling-js (browser, pid 25573) — head 089c0ee09, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+[PROGRESS 1/45] seedling-js-runtime-generated-room PASSED 19.7s
+[PROGRESS 2/45] seedling-js-runtime-bot-completes-generated-room PASSED 27.4s
+[PROGRESS 3/45] seedling-js-runtime-atlas-room PASSED 3.1s
+[PROGRESS 4/45] seedling-js-runtime-graphics-pack-boots PASSED 2.2s
+[PROGRESS 5/45] seedling-js-runtime-graphics-enemies PASSED 1.2s
+[PROGRESS 6/45] seedling-js-runtime-graphics-room-bodies PASSED 1.1s
+[PROGRESS 7/45] seedling-js-runtime-graphics-hazards PASSED 1.1s
+[PROGRESS 8/45] seedling-js-runtime-graphics-effects PASSED 1.0s
+[PROGRESS 9/45] seedling-js-runtime-graphics-lights PASSED 0.9s
+[PROGRESS 10/45] seedling-js-runtime-bot-completes-atlas-location PASSED 5.6s
+[PROGRESS 11/45] seedling-js-runtime-bot-walks-atlas-rooms PASSED 18.0s
+[PROGRESS 12/45] seedling-panel-layout-sections PASSED 1.3s
+[PROGRESS 13/45] seedling-panel-layout-settings PASSED 1.4s
+[PROGRESS 14/45] seedling-panel-layout-narrow PASSED 1.4s
+[PROGRESS 15/45] seedling-js-runtime-loop-bot-block-walks-generated-room PASSED 19.7s
+[PROGRESS 16/45] seedling-js-runtime-generated-chestdoor-chest PASSED 5.6s
+[PROGRESS 17/45] seedling-js-runtime-loop-play-clock-drains-mana PASSED 9.5s
+[PROGRESS 18/45] seedling-js-runtime-loop-play-clock-mana-out PASSED 3.0s
+[PROGRESS 19/45] seedling-js-runtime-loop-bot-blocks-cross-atlas-rooms PASSED 6.2s
+[PROGRESS 20/45] seedling-js-runtime-graphics-effects-switch PASSED 1.9s
+[PROGRESS 21/45] seedling-js-runtime-graphics-puzzles PASSED 1.6s
+[PROGRESS 22/45] seedling-js-runtime-graphics-solids PASSED 1.1s
+[PROGRESS 23/45] seedling-js-runtime-graphics-rope PASSED 1.0s
+[PROGRESS 24/45] seedling-js-runtime-graphics-bridge PASSED 0.9s
+[PROGRESS 25/45] seedling-js-runtime-graphics-npcs PASSED 1.6s
+[PROGRESS 26/45] seedling-js-runtime-graphics-pickups PASSED 1.0s
+[PROGRESS 27/45] seedling-js-runtime-graphics-machines PASSED 1.4s
+[PROGRESS 28/45] seedling-js-runtime-game-speed PASSED 8.8s
+[PROGRESS 29/45] seedling-js-runtime-sound-start PASSED 7.0s
+[PROGRESS 30/45] seedling-js-runtime-sound-panel PASSED 1.5s
+[PROGRESS 31/45] seedling-js-runtime-touch-controls PASSED 10.9s
+[PROGRESS 32/45] seedling-js-runtime-graphics-one-fade-per-crossing PASSED 21.0s
+[PROGRESS 33/45] seedling-js-runtime-graphics-bosses PASSED 5.8s
+[PROGRESS 34/45] seedling-js-runtime-music PASSED 3.2s
+[PROGRESS 35/45] seedling-js-runtime-inventory-menu PASSED 1.7s
+[PROGRESS 36/45] seedling-js-runtime-tools-restart-teleport PASSED 11.3s
+[PROGRESS 37/45] seedling-js-runtime-click-teleport PASSED 10.2s
+[PROGRESS 38/45] seedling-js-runtime-same-wiring-switch-loads-new-rooms PASSED 10.2s
+[PROGRESS 39/45] seedling-js-runtime-custom-set-with-flash-panel-starts-no-game PASSED 2.0s
+[PROGRESS 40/45] seedling-js-runtime-custom-set-without-flash-panel-starts-no-game PASSED 1.8s
+[PROGRESS 41/45] seedling-js-runtime-held-custom-set-plays-its-rooms PASSED 3.3s
+[PROGRESS 42/45] seedling-js-runtime-held-custom-set-edit-opens-room-in-lab PASSED 4.6s
+[PROGRESS 43/45] seedling-js-runtime-lab-apworld-door-set-starts-no-game PASSED 6.2s
+[PROGRESS 44/45] seedling-js-runtime-lab-apworld-door-after-bundle-measured PASSED 37.3s
+[PROGRESS 45/45] seedling-js-runtime-lab-apworld-door-set-plays-held-rooms PASSED 3.6s
+PW DEBUG: ===== IN-APP RESULTS: 45 row(s) =====
+  totals: 45 run · 45 passed · 0 failed · 45 enabled · 0 not run
+  test files: 0 failed to import
+PW DEBUG: All Playwright assertions passed.
+  1 passed (4.9m)

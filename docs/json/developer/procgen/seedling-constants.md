@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**84 files, 7168 literals.** Class × position:
+**84 files, 7190 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 7 | 1720 | 610 | 2337 |
-| rule | 15 | 1200 | 593 | 1808 |
+| rule | 15 | 1200 | 597 | 1812 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 16 | 404 | 2527 | 2947 |
+| structural | 16 | 404 | 2545 | 2965 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 38 | 3386 | 3744 | 7168 |
+| total | 38 | 3386 | 3766 | 7190 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1813 | 0 | 97 | 123 | 4 | 300 | 2337 |
-| rule | 663 | 143 | 247 | 22 | 624 | 109 | 1808 |
+| rule | 663 | 146 | 247 | 22 | 625 | 109 | 1812 |
 
 Rows whose note starts `REVIEW:`: **116**.
 

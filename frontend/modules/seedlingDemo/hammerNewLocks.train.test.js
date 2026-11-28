@@ -4,7 +4,15 @@
  * `hammerNewLocks.test.js`; the legs and the solve are `hammerNewLocksLegs.js`.
  */
 
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { KILLLOCK_STANCE_AS_FORECAST as __SAF_HOLD } from './solverBot.js';
+
+// ⛓ `KILLLOCK_STANCE_AS_FORECAST` held OFF for this whole file: it ships ON since the ROCKLOCK + FADE flip took it in
+// (⚖ the user, 2026-11-22). ON, 910 under ALL is 785 t (was 799), still 0 hits / 0 deaths, with a 'forced-hit' verb in its plan. These rows pin other switches; held OFF they are byte for byte their
+// pre-flip selves. The flip's own effect is measured by its sweeps and survey.
+let __safWas;
+beforeAll(() => { __safWas = __SAF_HOLD.enabled; __SAF_HOLD.enabled = false; });
+afterAll(() => { __SAF_HOLD.enabled = __safWas; });
 
 import { ALL, LEG_910, NONE, solveLeg } from './hammerNewLocksLegs.js';
 

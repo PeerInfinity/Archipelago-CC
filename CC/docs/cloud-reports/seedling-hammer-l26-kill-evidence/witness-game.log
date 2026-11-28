@@ -1,0 +1,5 @@
+# box lock: TAKEN by witness-l26-kill.mjs (browser, pid 3930) — head fb51df0d5, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"arm":"on","ticks":508,"sampled":508,"model":{"survey":{"hits":[],"deaths":0,"level":28},"delivered":{"hits":[],"deaths":0,"level":28}},"game":{"hits":[],"endLevel":28},"firstParting":null}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"arm":"off-dashless","ticks":474,"sampled":474,"model":{"survey":{"hits":[],"deaths":0,"level":28},"delivered":{"hits":[],"deaths":0,"level":28}},"game":{"hits":[],"endLevel":28},"firstParting":null}

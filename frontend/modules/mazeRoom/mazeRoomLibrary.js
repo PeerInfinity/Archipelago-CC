@@ -43,6 +43,9 @@ import {
 import { getPanelInstance } from './index.js';
 import { describeMazeAction } from './mazeKeys.js';
 import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
+import {
+    mazeDisplayRegionOf, mazeLayoutGraph, mazeLocationTiles, mazeRegionExtent,
+} from './mazeRegionMapHooks.js';
 import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
 import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames, tileGridApExitNames } from './mazeSerializer.js';
 import { mazeCapacityAt } from './mazeLocationCapacity.js';
@@ -52,6 +55,8 @@ import {
 } from './mazeContent.js';
 import { thingsDeserializer, thingsRegionCore, thingsSerializer } from './mazeThings.js';
 import { tileKindsDeserializer } from './mazeTileKinds.js';
+import { tileKindsRegionCore, tileKindsSerializer } from './mazeTileKindsGen.js';
+import { MAZE_BIOME_KEY, MAZE_BIOME_SEED_KEY, TILE_KINDS_KEY, mazeBiomeRegionParams, regionBiomeOf } from './mazeRegionBiomes.js';
 import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
 import {
     DEFAULT_MAZE_PROCGEN_PARAMS,
@@ -235,8 +240,21 @@ export const substrateRegistryEntry = Object.freeze({
      * `loadable: true` in the generated capability matrix, so the painter lives
      * in `mazeCompositeMap.js` and takes `ctx` as a parameter. Nothing here
      * touches a DOM at module load.
+     *
+     * ⛓ region-map-maze-hooks — the Region Map's DATA hooks, as Seedling declares them (`mazeRegionMapHooks.js`, pure,
+     * reading the sidecar's JSON payload): `regionExtent` (the level's `width` × `height`), `locationTiles` (each
+     * item's `locationName` at its tile, each rope's event at its rope), `displayRegionOf` (a sub-region folds onto
+     * its level: `atlas_region`, else the sidecar's `shared_world`; ⚖ "Fold, no dimming", 2026-11-27T17:24:33.938Z)
+     * and `layoutGraph` (the exits, with the side each door is on). No `remoteLocationTiles`: a maze location is
+     * always a tile of its own level's payload.
      */
-    compositeMap: Object.freeze({ drawRegion: drawMazeCompositeRegion }),
+    compositeMap: Object.freeze({
+        drawRegion: drawMazeCompositeRegion,
+        regionExtent: mazeRegionExtent,
+        locationTiles: mazeLocationTiles,
+        displayRegionOf: mazeDisplayRegionOf,
+        layoutGraph: mazeLayoutGraph,
+    }),
 
     // Action labelling (Q-a A8). How the maze says one shared actionQueue
     // entry out loud — `move E`, `wait`, `check Sword Room`. The ONE owner of
@@ -285,12 +303,15 @@ export const substrateRegistryEntry = Object.freeze({
     // ⛓ CONTENT SETS R2 — the engine, then `mazeContent.js`'s presentation pass
     // (concept rows' looks from `params.contentSet`).
     // ⛓ CONTENT SETS S2 — and the region's THING recorded on the world, with no position yet (`mazeThings.js`).
-    generateRegionCore: thingsRegionCore(presentingRegionCore(spatialCore)),
+    // ⛓ CONTENT SETS GEN-1 — OUTERMOST: a region biome (`mazeRegionBiomes.js`) hands the engine its base and records
+    //   the tile kinds to place (`mazeTileKindsGen.js`); any other biome passes through untouched.
+    generateRegionCore: tileKindsRegionCore(thingsRegionCore(presentingRegionCore(spatialCore))),
     placeFromItems: itemBasedPlacer,
     placeFromRules: presentingPlaceFromRules(ruleGatePlacer),
     extractPathsAndObstacles: tileGridPathExtractor,
     // ⛓ CONTENT SETS S2 — the engine's serializer, then each thing given a free floor cell and written as `things`.
-    serializeWorld: thingsSerializer(tileGridSerializer),
+    // ⛓ CONTENT SETS GEN-1 — OUTERMOST: with a plan, the kinds placed under the law after the things are seated.
+    serializeWorld: tileKindsSerializer(thingsSerializer(tileGridSerializer)),
     // ⛓ PRESET SIDECARS D0 — what `serializeWorld` writes, declared beside the
     // serializer itself (`mazeSerializer.js`); `text_adventure` carries the
     // same object, and `check-sidecar-fields.mjs` holds the corpus to it.
@@ -358,6 +379,15 @@ export const substrateRegistryEntry = Object.freeze({
     defaultProcgenParams: DEFAULT_MAZE_PROCGEN_PARAMS,
     renderProcgenParams: renderMazeProcgenParams,
     buildLibraryRegionParams: buildMazeLibraryRegionParams,
+    // ⛓ CONTENT SETS GEN-1 (⚖ Robert 2026-11-22: "controlled by the biome, and the generation settings"; Q8 "A per-room
+    //   mix") — the world's maze biome (one id or a weighted list) and the tile numbers, each in regionParams ONLY when
+    //   not the default (refused by name at settings time); `regionBiomeOf` is the pipeline's hook for a region whose
+    //   spec names no biome (the mix picked by hash of the seed and the region id, no rng draw).
+    buildRegionParams: mazeBiomeRegionParams,
+    regionBiomeOf,
+    // The regionParams keys the drivers record in `procgen_metadata[p]` (`worldContent.recordedContentOf`); the mix's
+    // seed with it, so a rebuilt world (an append) picks every room as before.
+    recordedRegionParams: Object.freeze([MAZE_BIOME_KEY, MAZE_BIOME_SEED_KEY, TILE_KINDS_KEY]),
     renderLibraryProcgenParams: renderMazeLibraryProcgenParams,
 
     // --- Region-atlas content-source hook (region-atlas Phase 6) ---

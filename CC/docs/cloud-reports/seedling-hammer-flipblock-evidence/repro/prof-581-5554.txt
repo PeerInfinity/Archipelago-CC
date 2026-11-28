@@ -1,0 +1,167 @@
+PROFILE: request 581:0 () budget 640 seam.time 5554
+ANSWER: ok=true kind=null work=86 wall=131757 ms passes=[{"pass":"dashless","kind":null,"work":27,"ms":30715,"deadline":null,"limit":null},{"pass":"full","kind":null,"work":59,"ms":101042,"deadline":null,"limit":null}]
+SAMPLES: 116296 at 1000 µs; first sample -0.274 ms after start
+POINTS: 119 (88 at deadline sites)
+  per site: walk=67 preview=24 sword-dash=21 segment=2 goal=2 done=2 heartbeat=1
+  segment wasm-location-69 solved work={"shouldStop":27,"ticks":785,"previews":1,"previewStates":40,"searchStates":0,"expansions":0,"waypointsPlanned":1,"replans":0,"dashesPressed":0}
+  segment wasm-location-69 solved work={"shouldStop":59,"ticks":1147,"previews":23,"previewStates":660,"searchStates":0,"expansions":0,"waypointsPlanned":1,"replans":0,"dashesPressed":3}
+GAPS between deadline-site points (ms upper bound: count, total ms, share of wall):
+  <=1: 25 14 ms 0.0%
+  <=10: 60 193 ms 0.1%
+  <=100: 2 39 ms 0.0%
+  <=1000: 0 0 ms 0.0%
+  <=10000: 0 0 ms 0.0%
+  <=60000: 1 30618 ms 23.2%
+  <=Infinity: 1 100893 ms 76.6%
+LONG GAPS (> 1000 ms): 2, 131511 ms = 99.8% of the wall
+  walk -> walk: 2 gap(s), 131511 ms
+LONG-GAP FUNCTIONS (inclusive, of 116077 samples in long gaps):
+  93.3% 108250 ms execLights lightsVerb.js:303
+  93.3% 108250 ms execClearTag solverBot.js:35902
+  93.3% 108250 ms solveSegmentUnder solverBot.js:29732
+  93.3% 108250 ms (anonymous) solverBot.js:29682
+  93.3% 108250 ms refusingByName solverBot.js:517
+  93.3% 108250 ms withSolveDeadline solverBot.js:29701
+  93.3% 108250 ms solveSegmentDeadlined solverBot.js:29670
+  93.3% 108250 ms (anonymous) solverBot.js:29600
+  93.3% 108250 ms progressSegment solveProgress.js:625
+  93.3% 108250 ms solveSegment solverBot.js:29589
+  93.3% 108250 ms solveFromTape jsRuntimeSolver.js:1145
+  93.3% 108250 ms (anonymous) jsRuntimeSolver.js:673
+  93.3% 108250 ms settleSolve jsRuntimeSolver.js:1274
+  93.3% 108250 ms solveAnytime jsRuntimeSolver.js:565
+  93.3% 108250 ms (anonymous) profile-seedling-solve-wall.mjs:212
+  93.3% 108250 ms withSolveProgress solveProgress.js:89
+  93.3% 108250 ms main profile-seedling-solve-wall.mjs:157
+  93.2% 108237 ms (anonymous) lightsVerb.js:373
+  93.2% 108236 ms rolloutLightsFight lightsVerb.js:274
+  92.4% 107270 ms planLightsSortie lightsVerb.js:203
+  90.3% 104787 ms forecastPlan lightsVerb.js:176
+  85.9% 99677 ms forecastTick lightsVerb.js:111
+  47.5% 55133 ms step levelRun.js:19630
+  44.2% 51329 ms step playerPhysicsV2.js:870
+  16.7% 19421 ms step playerPhysicsV1.js:464
+  13.2% 15327 ms sweepAxis playerPhysicsV1.js:386
+  13.0% 15057 ms resolveTerrainState playerPhysicsV2.js:187
+  12.7% 14782 ms stepV1.collides playerPhysicsV2.js:1526
+  12.0% 13926 ms collidesSolid levelWorld.js:6436
+  12.0% 13885 ms nearestTileScan levelWorld.js:3915
+TOP 6 GAPS:
+  #54 100893 ms walk -> walk; count points inside: none
+      93% execLights lightsVerb.js:303
+      93% execClearTag solverBot.js:35902
+      93% solveSegmentUnder solverBot.js:29732
+      93% (anonymous) solverBot.js:29682
+      93% refusingByName solverBot.js:517
+      93% withSolveDeadline solverBot.js:29701
+      93% solveSegmentDeadlined solverBot.js:29670
+      93% (anonymous) solverBot.js:29600
+      93% progressSegment solveProgress.js:625
+      93% solveSegment solverBot.js:29589
+  #5 30618 ms walk -> walk; count points inside: none
+      94% execLights lightsVerb.js:303
+      94% execClearTag solverBot.js:35902
+      94% solveSegmentUnder solverBot.js:29732
+      94% (anonymous) solverBot.js:29682
+      94% refusingByName solverBot.js:517
+      94% withSolveDeadline solverBot.js:29701
+      94% solveSegmentDeadlined solverBot.js:29670
+      94% (anonymous) solverBot.js:29600
+      94% progressSegment solveProgress.js:625
+      94% solveSegment solverBot.js:29589
+  #0 23 ms (start) -> walk; count points inside: segment=1 goal=1
+      100% solveFromTape jsRuntimeSolver.js:1145
+      100% (anonymous) jsRuntimeSolver.js:673
+      100% settleSolve jsRuntimeSolver.js:1274
+      100% solveAnytime jsRuntimeSolver.js:565
+      100% (anonymous) profile-seedling-solve-wall.mjs:212
+      100% withSolveProgress solveProgress.js:89
+      100% main profile-seedling-solve-wall.mjs:157
+      52% (anonymous) solverBot.js:29682
+      52% refusingByName solverBot.js:517
+      52% withSolveDeadline solverBot.js:29701
+  #4 16 ms walk -> walk; count points inside: none
+      100% drive botDriverV2.js:5671
+      100% walkToUnder solverBot.js:34502
+      100% (anonymous) solverBot.js:35304
+      100% progressRun solveProgress.js:419
+      100% (anonymous) solverBot.js:35303
+      100% withCrossingFrame solverBot.js:3213
+      100% walkToRun solverBot.js:35303
+      100% walkTo solverBot.js:35382
+      100% execLights lightsVerb.js:303
+      100% execClearTag solverBot.js:35902
+  #82 10 ms walk -> walk; count points inside: none
+      89% execLights lightsVerb.js:303
+      89% execClearTag solverBot.js:35902
+      89% solveSegmentUnder solverBot.js:29732
+      89% (anonymous) solverBot.js:29682
+      89% refusingByName solverBot.js:517
+      89% withSolveDeadline solverBot.js:29701
+      89% solveSegmentDeadlined solverBot.js:29670
+      89% (anonymous) solverBot.js:29600
+      89% progressSegment solveProgress.js:625
+      89% solveSegment solverBot.js:29589
+  #71 9 ms walk -> walk; count points inside: none
+      100% execLights lightsVerb.js:303
+      100% execClearTag solverBot.js:35902
+      100% solveSegmentUnder solverBot.js:29732
+      100% (anonymous) solverBot.js:29682
+      100% refusingByName solverBot.js:517
+      100% withSolveDeadline solverBot.js:29701
+      100% solveSegmentDeadlined solverBot.js:29670
+      100% (anonymous) solverBot.js:29600
+      100% progressSegment solveProgress.js:625
+      100% solveSegment solverBot.js:29589
+WHOLE SOLVE, inclusive (of 116296 samples):
+  93.3% 108458 ms main profile-seedling-solve-wall.mjs:157
+  93.3% 108456 ms solveFromTape jsRuntimeSolver.js:1145
+  93.3% 108456 ms (anonymous) jsRuntimeSolver.js:673
+  93.3% 108456 ms settleSolve jsRuntimeSolver.js:1274
+  93.3% 108456 ms solveAnytime jsRuntimeSolver.js:565
+  93.3% 108456 ms (anonymous) profile-seedling-solve-wall.mjs:212
+  93.3% 108456 ms withSolveProgress solveProgress.js:89
+  93.2% 108445 ms progressSegment solveProgress.js:625
+  93.2% 108445 ms solveSegment solverBot.js:29589
+  93.2% 108444 ms (anonymous) solverBot.js:29682
+  93.2% 108444 ms refusingByName solverBot.js:517
+  93.2% 108444 ms withSolveDeadline solverBot.js:29701
+  93.2% 108444 ms solveSegmentDeadlined solverBot.js:29670
+  93.2% 108444 ms (anonymous) solverBot.js:29600
+  93.2% 108439 ms solveSegmentUnder solverBot.js:29732
+  93.2% 108437 ms execClearTag solverBot.js:35902
+  93.2% 108430 ms execLights lightsVerb.js:303
+  93.1% 108237 ms (anonymous) lightsVerb.js:373
+  93.1% 108236 ms rolloutLightsFight lightsVerb.js:274
+  92.2% 107270 ms planLightsSortie lightsVerb.js:203
+  90.1% 104787 ms forecastPlan lightsVerb.js:176
+  85.7% 99677 ms forecastTick lightsVerb.js:111
+  47.4% 55145 ms step levelRun.js:19630
+  44.2% 51350 ms step playerPhysicsV2.js:870
+  16.7% 19429 ms step playerPhysicsV1.js:464
+  13.2% 15333 ms sweepAxis playerPhysicsV1.js:386
+  13.0% 15063 ms resolveTerrainState playerPhysicsV2.js:187
+  12.7% 14786 ms stepV1.collides playerPhysicsV2.js:1526
+  12.0% 13928 ms collidesSolid levelWorld.js:6436
+  11.9% 13890 ms nearestTileScan levelWorld.js:3915
+WHOLE SOLVE, self:
+  12.3% 14315 ms forecastTick lightsVerb.js:111
+  11.7% 13605 ms step playerPhysicsV2.js:870
+  10.9% 12709 ms nearestTileScanIndexed levelWorld.js:3977
+  6.7% 7838 ms (garbage collector) 
+  6.2% 7248 ms stepLightBossShot lightBoss.js:466
+  5.5% 6360 ms assertNormalizedLiveOpts levelWorld.js:3891
+  3.4% 3970 ms solidCandidates levelWorld.js:4092
+  3.2% 3733 ms moveAxis lightBoss.js:299
+  3.2% 3673 ms step playerPhysicsV1.js:464
+  3.0% 3453 ms step levelRun.js:19630
+  2.5% 2961 ms collidesSolid levelWorld.js:6436
+  2.4% 2777 ms shieldBumpTouches bobBossFight.js:389
+  2.2% 2594 ms lightsShieldBump lightBoss.js:416
+  2.1% 2494 ms planLightsSortie lightsVerb.js:203
+  1.9% 2222 ms flyPattern lightBoss.js:221
+  1.7% 1998 ms remPio2 runtimeLibm.js:75
+  1.3% 1563 ms atan runtimeLibm.js:187
+  1.3% 1543 ms updateTeleporters playerPhysicsV2.js:577
+  1.3% 1522 ms sin runtimeLibm.js:161
+  1.3% 1475 ms stepLightBossFlier lightBoss.js:317

@@ -30,3 +30,7 @@
 [submodule "frontend/modules/swfRecompilerPanel/browser"]
 	path = frontend/modules/swfRecompilerPanel/browser
 	url = https://github.com/PeerInfinity/swfrecomp-browser.git
+[submodule "frontend/modules/mystery-clue-game"]
+	path = frontend/modules/mystery-clue-game
+	url = https://github.com/PeerInfinity/mystery-clue-game.git
+	branch = main

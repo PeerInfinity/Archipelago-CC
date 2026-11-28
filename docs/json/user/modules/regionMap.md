@@ -2,9 +2,9 @@
 
 The Region Map shows the loaded world as a flat map: each region is drawn as its own picture, laid out in groups. It has no node-and-edge graph. For Seedling worlds, each cell is the level as the game draws it. For any other world, each cell is a labelled box.
 
-**Opening it:** pick **Region Map** from the panel menu (*Analysis Panels*). It is not in any layout preset, so it appears only when you open it.
+**Opening it:** pick **Region Map** from the panel menu (*Analysis Panels*). It is not in any layout preset, so it appears only when you open it. On the mobile layout it has its own tab, right after the **Region Graph**'s.
 
-**Tutorial:** *Tracking: the Region Map* walks through it on Seedling Playthrough: open the app with `?tutorial=tracker-region-map`, or start it from the [Tutorial panel](tutorials.md). It is still in progress.
+**Tutorial:** *Tracking: the Region Map* walks through it on Seedling Playthrough: open the app with `?tutorial=tracker-region-map`, or start it from the [Tutorial panel](tutorials.md). Its [guide](../tutorials/tracker-region-map.md) is the same walk as text.
 
 ## What you see
 
@@ -19,8 +19,10 @@ The Region Map shows the loaded world as a flat map: each region is drawn as its
   | Grey (dimmed) | Already checked |
   | Light grey | Reachability is not shown (the accessibility colours are turned off, or the region is undiscovered) |
 
-  A square never gets smaller than the **minimum square size** setting, however far you zoom out.
-- **Links.** Thin arrows link two *groups*. Blue arrows go down stairs or a pit, orange arrows go up, and green dashed arrows are warps (doorways and teleporters). The legend in the toolbar names each colour. Neighbouring cells inside a group get no lines: being next to each other already says they connect.
+  A square on a tile is never larger than its tile. Zoomed in, it never gets smaller than the **minimum square size** setting; when you zoom out far enough that the tile itself is smaller than that, the square fills its tile, down to a 1-pixel dot, which stays visible however far you zoom out. Clicking and hovering follow the size drawn, so a zoomed-out square is a small target. In a region without tiles, a square never gets smaller than the minimum square size, however far you zoom out.
+
+  In a region the map has no tiles for (a classic world, such as A Link to the Past), the squares sit in a grid **below the region's name**, so the name never covers one, at any zoom. They are drawn twice as wide and tall as a square on a tile, and shrink only in a region with too many locations to fit at that size. A level that draws its own picture but has no tiles for its locations (a maze level) keeps the smaller squares, so they do not cover the picture.
+- **Links.** Thin arrows link two *groups*. Blue arrows go down stairs or a pit, orange arrows go up, and green dashed arrows are warps (doorways and teleporters). Where the world names the door a link uses, the line starts or ends **at that door tile**, running over the level's picture to it: a small ring marks the door (never wider than the door's tile, so when you zoom far out the ring disappears), and at the end an arrow points to, its head marks the door instead. Where it names none (a classic world, or a level the map has no size for), that end stops at the **edge of the level's picture** (not the outline of its cell, which can be much bigger), aimed at the picture's centre. Inside a group, the levels you walk between (an *edge transition*) are joined in yellow, with no arrowhead: when the two squares sit side by side, by a short thick yellow line across the gap between them, placed where you walk off; when they are not side by side, by a yellow line ending at the doors or the pictures' edges, as above. Two cells side by side that you cannot walk between get no line. The legend in the toolbar names each colour. On a world with no map of its own (a classic Archipelago world), every link between its regions is inside a group, so it is drawn as one of these yellow lines.
 - **Markers.** The region you are in has a white outline, and the regions on your current path have a thin blue one. A hovered cell gets a light outline and a clicked cell a yellow one.
 - **Not on map.** A location the map cannot place on a tile is listed in a yellow line above the map. It is never dropped silently.
 
@@ -29,6 +31,8 @@ Hover over a cell to see its name and its counts (checked, accessible and inacce
 ## Moving around
 
 - **Drag** to pan, and use the **mouse wheel** to zoom around the cursor.
+- **+** and **−** (beside **Fit all**) zoom in and out on the middle of the view; each press is about three notches of the wheel.
+- On a phone or a touch screen, drag with one finger to pan and **pinch** with two fingers to zoom. A pinch only moves the map: it never zooms the page and never counts as a click.
 - **Centre on start** goes to the start region. **Fit all** shows the whole map.
 - **Follow player** keeps your current region in the middle of the view: the view glides there whenever you move. Panning or zooming by hand turns it off, and the checkbox shows that. Tick it again to turn it back on.
 
@@ -60,10 +64,10 @@ With discovery mode on, regions you have not discovered are not drawn. A region 
 |---|---|---|---|
 | Follow player | `followPlayer` | on | Keep the current region centred |
 | Show undiscovered | `showUndiscovered` | on | Discovery mode: draw fog cells for regions you can reach next |
-| Links | `showLinks` | on | Draw the arrows between groups |
+| Links | `showLinks` | on | Draw the links: the arrows between groups and the yellow lines between neighbours |
 | Cells | `cellSize` | sized by level | **Sized by level**: one tile scale for every level, so a small level looks small. **Uniform**: every level scaled to fill the same square |
 | Grouping | `groupingRule` | R1 | How regions are grouped. **R1** groups everything joined by edge transitions |
-| — | `minSquarePx` | 6 | The smallest a location square gets on screen, in pixels |
+| — | `minSquarePx` | 6 | The smallest a location square gets on screen, in pixels (on a tile, never more than the tile) |
 | On click strip | `clickActions` | a copy of the Region Graph's, on first open | What a click on a cell or a location square runs (above) |
 
 The settings are under **Region Map** in the Settings panel (`moduleSettings.regionMap.*`).

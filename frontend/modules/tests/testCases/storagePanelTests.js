@@ -15,7 +15,7 @@
 import { registerTest } from '../testRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { formatChars } from '../../storagePanel/storageModel.js';
-import { CONTROLS, dialogs } from '../../storagePanel/storagePanelUI.js';
+import { CONTROLS, dialogs, librarySource, loadLibraryModules } from '../../storagePanel/storagePanelUI.js';
 import { openStoragePanel } from '../../storagePanel/index.js';
 import { hideQuotaNotice, quotaNoticeElement } from '../../storagePanel/quotaNotice.js';
 
@@ -283,6 +283,247 @@ async function settingsSaveQuotaErrorNotifies(testController) {
     return testController.getOverallResult();
 }
 
+/* ── the document library under "Your data" (lab arc B2) ──────────────────
+ *
+ * ⚖ Each row uses its OWN database (`librarySource.dbName`, the panel's seam,
+ * set for the row's length and restored to null), asserts at its start that no
+ * database of that name exists, and deletes it at its end (`blocked` logged).
+ * The person's library is never read or cleared. The library's modules are
+ * reached by the panel's own document-relative loader, so this works on both
+ * boots.
+ */
+
+const DAY_MS = 24 * 60 * 60_000;
+const rowDbName = (rowId) => `archipelago-cc-document-library-test-${rowId}`;
+const LIBRARY_OWNER = 'procgenLabPanel';
+
+/** An id-less document member (the library hashes it under NO_ID_KEY). */
+const plainMembers = (tag) => [{ role: 'set', idKey: null, doc: { rows: [tag, `${tag}-room`], size: tag.length } }];
+
+function saveReq(lineageId, tag, { draft = false, tab = 'row-tab', label = null } = {}) {
+    return {
+        lineageId, parent: null, draft, savedBecause: draft ? 'draft' : 'report', substrate: 'in-app-test',
+        source: { page: 'in-app-test', tab_id: tab }, label, members: plainMembers(tag),
+    };
+}
+
+function libraryNode(root) {
+    return root.querySelector(`.${CONTROLS.library}[data-owner="${LIBRARY_OWNER}"]`);
+}
+function lineageRow(root, lineageId) {
+    return [...(libraryNode(root)?.querySelectorAll(`.${CONTROLS.libraryRow}`) ?? [])].find((tr) => tr.dataset.lineage === lineageId) ?? null;
+}
+const noteText = (root) => libraryNode(root)?.querySelector(`.${CONTROLS.libraryNote}`)?.textContent ?? '';
+const statusText = (root) => libraryNode(root)?.querySelector(`.${CONTROLS.libraryStatus}`)?.textContent ?? '';
+
+/** Press Refresh and wait until the library block has drawn past "Reading…" and `ready(root)` holds. */
+async function redrawLibrary(testController, root, ready, what) {
+    root.querySelector(`.${CONTROLS.refresh}`).click();
+    return testController.pollForCondition(
+        () => { const t = statusText(root); return t !== '' && t !== 'Reading…' && ready(root); },
+        what, TIMEOUT_MS, POLL_MS,
+    );
+}
+
+/**
+ * Run `body({mods, dbName, lib, libAt, backends})` on this row's own database;
+ * the start and end assertions and the cleanup are here.
+ */
+async function withRowLibrary(testController, rowId, body) {
+    const restoreTab = rememberActiveTab();
+    const realConfirm = dialogs.confirm;
+    const dbName = rowDbName(rowId);
+    const backends = [];
+    let mods = null;
+    try {
+        mods = await loadLibraryModules();
+        testController.log(`boot: ${window.__BUNDLED_TEST_CASES__ ? 'bundled' : 'unbundled'}; database ${dbName}`);
+        const existed = await mods.idb.libraryDatabaseExists(dbName);
+        testController.reportCondition('the browser lists its databases (indexedDB.databases)', existed !== null);
+        testController.reportCondition("at the start, the row's database does not exist", existed === false);
+        librarySource.dbName = dbName;
+        /** A library on this row's database whose clock is `offsetMs` from now (a draft saved "8 days ago"). */
+        const libAt = (offsetMs = 0) => {
+            const backend = mods.idb.createIdbBackend({ dbName });
+            backends.push(backend);
+            return mods.core.createDocumentLibrary({ backend, now: () => Date.now() + offsetMs });
+        };
+        await body({ mods, dbName, lib: libAt(0), libAt, backends });
+    } catch (error) {
+        testController.log(`ERROR: ${error?.stack ?? error}`);
+        testController.reportCondition(`${rowId} error-free`, false);
+    } finally {
+        dialogs.confirm = realConfirm;
+        librarySource.dbName = null;
+        for (const b of backends) { try { await b.close(); } catch { /* best effort */ } }
+        if (mods) {
+            try {
+                const del = await mods.idb.deleteLibraryDatabase(dbName);
+                if (del.blocked) testController.log('the delete was blocked for a while by an open connection');
+                testController.reportCondition("at the end, the row's database is deleted", del.status === 'deleted');
+                testController.reportCondition('…and the browser no longer lists it', (await mods.idb.libraryDatabaseExists(dbName)) === false);
+            } catch (e) {
+                testController.log(`delete failed: ${e?.name}: ${e?.message}`);
+                testController.reportCondition("at the end, the row's database is deleted", false);
+            }
+        }
+        // Redraw on the person's library again, so the panel never shows a deleted test database.
+        document.querySelector('.storage-panel')?.querySelector(`.${CONTROLS.refresh}`)?.click();
+        restoreTab();
+    }
+    return testController.getOverallResult();
+}
+
+async function storagePanelDocumentLibraryRow(testController) {
+    return withRowLibrary(testController, 'storage-panel-document-library-row', async ({ lib, libAt }) => {
+        const a = await lib.saveVersion(saveReq(null, 'a1', { label: 'Row set A' }));
+        const b = await lib.saveVersion(saveReq(null, 'b1', { label: 'Row set B' }));
+        const hold = await lib.hold(b.entry_id, { kind: 'game', tab_id: 'this-page', what: 'row hold' });
+        const young = await libAt(-6 * DAY_MS).saveVersion(saveReq(b.lineage_id, 'b-draft-6d', { draft: true, tab: 'closed-tab-6d' }));
+        testController.reportCondition('two lineages saved, one held, a 6-day-old draft saved',
+            a.status === 'saved' && b.status === 'saved' && hold.status === 'held' && young.status === 'saved');
+
+        const root = await openPanel(testController);
+        if (!root) return;
+        // ⛓ A panel open with nothing old deletes nothing.
+        const drew = await redrawLibrary(testController, root, (r) => !!lineageRow(r, a.lineage_id) && !!lineageRow(r, b.lineage_id),
+            'the library rows to be drawn');
+        testController.reportCondition('the library is listed under Your data, in its owner\'s group, with both lineages', drew
+            && libraryNode(root)?.closest(`.${CONTROLS.section}`)?.dataset.section === 'user');
+        const counts0 = (await lib.estimate()).counts;
+        testController.assertEqual('a panel open with nothing old deletes nothing (entries: 2 versions + 1 draft)', 3, counts0.entries);
+        testController.assertEqual('…and says it auto-cleared nothing', '', noteText(root));
+        const bytesOf = (lid) => Number((lineageRow(root, lid)?.querySelector('.sp-chars')?.textContent ?? '').replace(/[^\d]/g, ''));
+        const inv = (await lib.inventory()).lineages;
+        testController.assertEqual("row A's size is its lineage's distinct body bytes", inv.find((l) => l.lineage_id === a.lineage_id).bytes, bytesOf(a.lineage_id));
+        testController.reportCondition('both rows show a size', bytesOf(a.lineage_id) > 0 && bytesOf(b.lineage_id) > 0);
+        testController.reportCondition('the status names the database, its saved bytes, the site estimate and persistence',
+            /Database archipelago-cc-document-library-test-.* — 2 sets, [\d,]+ bytes of saved documents .*persistence: (granted|best-effort|unknown)/.test(statusText(root)));
+        testController.reportCondition('the held row says why, by name', (lineageRow(root, b.lineage_id)?.textContent ?? '').includes('In use: game in tab this-page (row hold)'));
+
+        // ⚖ Q2: a draft saved 8 days ago goes when the panel draws; the 6-day-old one stays.
+        const old = await libAt(-8 * DAY_MS).saveVersion(saveReq(a.lineage_id, 'a-draft-8d', { draft: true, tab: 'closed-tab-8d' }));
+        testController.reportCondition('a draft is saved with its clock 8 days back', old.status === 'saved');
+        const swept = await redrawLibrary(testController, root, (r) => /Auto-cleared 1 leftover draft older than 7 days/.test(noteText(r)),
+            'the panel-open cleanup to report the old draft');
+        testController.reportCondition('the panel open auto-clears the 8-day-old draft and says so', swept);
+        testController.assertEqual('the 8-day-old draft is gone', 'absent', (await lib.getEntry(old.entry_id)).status);
+        testController.assertEqual('the 6-day-old draft stays', 'held', (await lib.getEntry(young.entry_id)).status);
+
+        // K1: every Clear asks first; Cancel deletes nothing.
+        const asked = [];
+        const entriesBefore = (await lib.estimate()).counts;
+        dialogs.confirm = (m) => { asked.push(m); return false; };
+        lineageRow(root, a.lineage_id)?.querySelector(`.${CONTROLS.libraryClear}`)?.click();
+        await testController.pollForCondition(() => asked.length === 1, 'the confirm to be asked', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('Clear asks first, naming the set and what it removes',
+            /^Clear "Row set A": remove 1 saved version and 0 drafts \([\d,]+ bytes\) from this site's document library\? This cannot be undone\./.test(asked[0] ?? ''));
+        await new Promise((r) => setTimeout(r, 300)); // give a (wrong) delete time to land
+        testController.assertEqual('Cancel deletes nothing (every store count unchanged)', JSON.stringify(entriesBefore), JSON.stringify((await lib.estimate()).counts));
+        testController.assertEqual('…and lineage A is still there', 'held', (await lib.getEntry(a.entry_id)).status);
+
+        dialogs.confirm = (m) => { asked.push(m); return true; };
+        lineageRow(root, a.lineage_id)?.querySelector(`.${CONTROLS.libraryClear}`)?.click();
+        const gone = await testController.pollForCondition(() => lineageRow(root, a.lineage_id) === null && noteText(root).startsWith('Cleared "Row set A"'),
+            'row A to be cleared', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('Clear on the unheld lineage removes it and its row', gone);
+        testController.assertEqual('…in the library too', 'absent', (await lib.getEntry(a.entry_id)).status);
+
+        lineageRow(root, b.lineage_id)?.querySelector(`.${CONTROLS.libraryClear}`)?.click();
+        const refused = await testController.pollForCondition(() => noteText(root).startsWith('Not cleared: "Row set B" is in use (game in tab this-page (row hold))'),
+            'the held lineage to be refused by name', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('Clear on the held lineage is refused by name', refused);
+        testController.assertEqual('…and it is still in the library', 'held', (await lib.getEntry(b.entry_id)).status);
+
+        // "Clear leftover drafts" (⚖ Q2 by hand), confirmed.
+        const draftsBtn = libraryNode(root)?.querySelector(`.${CONTROLS.libraryDrafts}`);
+        testController.assertEqual('the drafts button counts the drafts', 'Clear leftover drafts (1)', draftsBtn?.textContent);
+        draftsBtn?.click();
+        const draftsGone = await testController.pollForCondition(() => noteText(root).startsWith('Cleared 1 draft'), 'the drafts to be cleared', TIMEOUT_MS, POLL_MS);
+        testController.reportCondition('Clear leftover drafts removes the unheld draft', draftsGone);
+        testController.assertEqual('the 6-day-old draft is gone now', 'absent', (await lib.getEntry(young.entry_id)).status);
+        testController.reportCondition('it asked first, in the same wording', /^Clear leftover drafts: remove 1 draft from this site's document library\? This cannot be undone\./.test(asked.at(-1) ?? ''));
+        await lib.release(hold.hold_id);
+    });
+}
+
+/** Page A: a same-origin frame with its own document, module realm and IndexedDB connection. */
+function pageASource({ coreUrl, idbUrl, dbName, nonce }) {
+    const cfg = JSON.stringify({ coreUrl, idbUrl, dbName, nonce, day: DAY_MS });
+    return `<!doctype html><meta charset="utf-8"><title>page A</title><script type="module">
+const cfg = ${cfg};
+const [core, idb] = await Promise.all([import(cfg.coreUrl), import(cfg.idbUrl)]);
+const backends = [];
+const libAt = (off) => { const b = idb.createIdbBackend({ dbName: cfg.dbName }); backends.push(b); return core.createDocumentLibrary({ backend: b, now: () => Date.now() + off }); };
+const tag = (t) => [{ role: 'set', idKey: null, doc: { rows: [t, t + '-room'], size: t.length } }];
+const req = (lineageId, t, draft, label) => ({ lineageId, parent: null, draft, savedBecause: draft ? 'draft' : 'report', substrate: 'in-app-test', source: { page: 'page-A', tab_id: 'page-A' }, label, members: tag(t) });
+try {
+    const lib = libAt(0);
+    const x = await lib.saveVersion(req(null, 'x1', false, 'Held by page A'));
+    const oldDraft = await libAt(-8 * cfg.day).saveVersion(req(x.lineage_id, 'x-draft-8d', true, null));
+    const y = await lib.saveVersion(req(null, 'y1', false, 'Not held'));
+    const unheldOld = await libAt(-8 * cfg.day).saveVersion(req(y.lineage_id, 'y-draft-8d', true, null));
+    const h1 = await lib.hold(x.entry_id, { kind: 'game', tab_id: 'page-A', what: 'page A game' });
+    const h2 = await lib.hold(oldDraft.entry_id, { kind: 'game', tab_id: 'page-A', what: 'page A draft' });
+    for (const b of backends) await b.close();
+    parent.postMessage({ nonce: cfg.nonce, ok: true, x, oldDraft, y, unheldOld, holds: [h1.status, h2.status] }, '*');
+} catch (e) {
+    parent.postMessage({ nonce: cfg.nonce, ok: false, error: String(e && e.stack || e) }, '*');
+}
+<\/script>`;
+}
+
+async function storagePanelDocumentLibraryOtherTabHold(testController) {
+    let frame = null;
+    const result = await withRowLibrary(testController, 'storage-panel-document-library-other-tab-hold', async ({ dbName, lib }) => {
+        const nonce = `pageA-${Date.now()}-${Math.random()}`;
+        const fromA = new Promise((resolve) => {
+            const onMessage = (ev) => {
+                // about:srcdoc reports origin "null" to its own location, so it posts to '*'; the answer is authenticated here
+                if (ev.source !== frame?.contentWindow || ev.data?.nonce !== nonce) return;
+                window.removeEventListener('message', onMessage);
+                resolve(ev.data);
+            };
+            window.addEventListener('message', onMessage);
+            setTimeout(() => resolve({ ok: false, error: 'page A never answered' }), TIMEOUT_MS);
+        });
+        frame = document.createElement('iframe');
+        frame.style.display = 'none';
+        frame.srcdoc = pageASource({
+            coreUrl: new URL('./modules/procgenCore/documentLibrary.js', document.baseURI).href,
+            idbUrl: new URL('./modules/procgenCore/documentLibraryIdb.js', document.baseURI).href,
+            dbName, nonce,
+        });
+        document.body.appendChild(frame);
+        const a = await fromA;
+        if (!a.ok) testController.log(`page A: ${a.error}`);
+        testController.reportCondition('page A (its own document and connection) saved two sets, two 8-day-old drafts, and holds one set and one draft',
+            a.ok && a.holds.join(',') === 'held,held');
+        if (!a.ok) return;
+
+        const root = await openPanel(testController);
+        if (!root) return;
+        const drew = await redrawLibrary(testController, root, (r) => !!lineageRow(r, a.x.lineage_id) && !!lineageRow(r, a.y.lineage_id),
+            'both of page A\'s lineages to be drawn on this page');
+        testController.reportCondition("this page's panel lists page A's sets", drew);
+        testController.reportCondition("the held row names page A's tab", (lineageRow(root, a.x.lineage_id)?.textContent ?? '').includes('In use: game in tab page-A (page A game)'));
+        // The panel-open cleanup ran (the unheld old draft is gone) and spared what page A holds.
+        testController.assertEqual("the panel-open cleanup removed the UNHELD 8-day-old draft (so it ran)", 'absent', (await lib.getEntry(a.unheldOld.entry_id)).status);
+        testController.assertEqual("…and kept page A's HELD 8-day-old draft", 'held', (await lib.getEntry(a.oldDraft.entry_id)).status);
+        testController.assertEqual("…and page A's held set", 'held', (await lib.getEntry(a.x.entry_id)).status);
+
+        dialogs.confirm = () => true;
+        lineageRow(root, a.x.lineage_id)?.querySelector(`.${CONTROLS.libraryClear}`)?.click();
+        const refused = await testController.pollForCondition(
+            () => noteText(root).startsWith('Not cleared: "Held by page A" is in use (game in tab page-A (page A game); game in tab page-A (page A draft))'),
+            "this page's Clear to be refused naming page A", TIMEOUT_MS, POLL_MS);
+        testController.reportCondition("this page's Clear on page A's held lineage is refused by name, exactly as for this page's own hold", refused);
+        testController.assertEqual('…and nothing of it was deleted', 2, (await lib.entriesOf(a.x.lineage_id)).entries.length);
+    });
+    frame?.remove();
+    return result;
+}
+
 const TESTS = [
     ['storage-panel-lists-every-key-with-owner-and-size', 'Storage panel: every key with its owner and size',
         'The Storage tab follows JSON; the sections are Unknown, user, state, cache in that order; an undeclared '
@@ -300,6 +541,15 @@ const TESTS = [
         'Fills the origin with one scratch key (evicting nothing), changes a setting so its save needs more room: the '
         + 'banner names the mode blob\'s key and offers the Storage panel. Leaves the origin as it found it.',
         settingsSaveQuotaErrorNotifies],
+    ['storage-panel-document-library-row', 'Storage panel: the document library, its sizes, Clear and the 7-day draft cleanup',
+        'Its own database: two lineages (one held) listed under Your data with sizes; a panel open with nothing old deletes '
+        + 'nothing; a draft 8 days old is auto-cleared on open, a 6-day one stays; Clear asks first and Cancel deletes nothing; '
+        + 'Clear removes the unheld lineage and refuses the held one by name; Clear leftover drafts.',
+        storagePanelDocumentLibraryRow],
+    ['storage-panel-document-library-other-tab-hold', 'Storage panel: a hold from another page refuses the Clear',
+        "Page A (a same-origin frame, its own connection) holds a set and an 8-day-old draft; this page's panel refuses "
+        + "Clear on that set naming page A's tab, and its panel-open cleanup removes an unheld old draft but keeps A's held one.",
+        storagePanelDocumentLibraryOtherTabHold],
 ];
 
 for (const [id, name, description, testFunction] of TESTS) {

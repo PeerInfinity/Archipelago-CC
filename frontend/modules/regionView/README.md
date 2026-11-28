@@ -6,11 +6,12 @@ Report: `CC/docs/region-map/step2-view-model.md`.
 
 | File | What | Who uses it |
 |------|------|-------------|
-| `regionViewModel.js` | Pure functions of (snapshot, staticData, discovery context): `isRegionReachable`, `locationState`, `locationCounts`, `regionInteriorState`, `regionColorState`, `exitState`, `regionDiscovery` / `locationDiscovery` / `exitDiscovery` (the ONE hide/placeholder decision), `displayGroupsOf` + `aggregateCounts` / `aggregateVisibility` | Region Graph (`graphDataManager.js`), `regionViewState.js` |
+| `regionViewModel.js` | Pure functions of (snapshot, staticData, discovery context): `isRegionReachable`, `locationState`, `locationCounts`, `regionInteriorState`, `regionColorState`, `exitState`, `regionDiscovery` / `locationDiscovery` / `exitDiscovery` (the ONE hide/placeholder decision), `displayGroupsOf` + `aggregateCounts` / `aggregateVisibility` | Region Graph (`graphDataManager.js`), `regionViewState.js`; `isRegionReachable` also replaces the inline region-reachability tests in Exits (`exitUI.js`), Regions (`regions/index.js`, `navigationManager.js`, `regionBlockBuilder.js`) and `commonUI.js`'s region and location links (region-view-dedup, `CC/docs/region-map/dedup.md`) |
 | `regionViewState.js` | `createRegionViewState(handles)`: subscribes to the Region Graph's triggers, recomputes at most once per animation frame, `get()` a frozen view, `subscribe`, `refresh`, `dispose` | Region Map (step 3b). The Region Graph keeps its own wiring |
 | `regionActions.js` | Moves (`planDirectMove` + `publishRegionMove`, the ⛓ restart step), path edits (add, overwrite; always all the way), location checks (single, bulk), select/show publishes. Explicit handles in, a result out (`{ ok: false, reason: 'no-path' }`). The one-step moves and option left in CA-S3 with their last caller | `clickActions.js`; Region Graph (`navigationManager.js`, `graphInteractionManager.js`); Region Map (`regionMap/regionMapClickActions.js`) |
 | `clickActions.js` | The click-action registry: which named actions a click on a region or a location RUNS, per panel. `registerClickAction` / `unregisterClickAction` / `listClickActions` / `getClickAction` / `onClickActionsChanged`, `runClickActions`, the built-in path actions, `routeStatusText` / `clickStatusOf`, `migrateRegionGraphClickKeys` / `defaultClickActions` | Region Graph (CA-S2: `graphInteractionManager.js`); Region Map (CA-S3: `regionMap/regionMapClickActions.js`); the panel-owned actions (CA-S4: Regions, Flash, Discovery, the two centre actions; see below); apcalc and vibeCodingSim (the generic event) |
 | `clickActionsUI.js` | The shared "On click" strip: `mountClickActionsStrip({ panelId, container, getSettings, saveSettings })`. Renders the registry generically, edits a panel's `clickActions` | Region Graph (CA-S2); Region Map (CA-S3) |
+| `goToPicker.js` | The "Go to a region / location" picker's wiring, one copy for both maps: `pickerSelectors(prefix)`, `fillList(list, names)` (sorted `<option>`s), `setupGoToPicker({ root, selectors, lists, regions, locations, goRegion, goLocation })` → `{ refresh, say }` (refresh on open and on a box's focus; a trimmed, non-blank name goes to `goRegion` / `goLocation`). Each panel keeps its own markup, lists, actions and status wording | Region Graph (`regionGraph/nodePicker.js`, `rg-pick*`); Region Map (`regionMap/regionMapPicker.js`, `region-map-pick*`) |
 
 ## Rules
 
@@ -161,7 +162,8 @@ setExpanded, isExpanded, destroy }`. The host keeps its `clickActions` in memory
 `regionViewModel.test.js`, `regionViewState.test.js`, `clickActions.test.js`, `clickActions.equivalence.test.js`,
 `panelClickActions.test.js` and `panelClickActions.equivalence.test.js` (CA-S4: the panel-owned actions, and base vs tip
 with the four old listeners kept verbatim in `legacyNodeSelectedListeners.testkit.js`),
-`clickActionsUI.test.js` (the strip, on `procgenCore/fakeEditorDom.testkit.js`), `regionActions.test.js` (it carries
+`reachabilityCopies.equivalence.test.js` (region-view-dedup: each replaced inline reachability test, kept verbatim in
+`legacyReachabilityCopies.testkit.js`, against `isRegionReachable`), `clickActionsUI.test.js` (the strip, on `procgenCore/fakeEditorDom.testkit.js`), `regionActions.test.js` (it carries
 `regionGraph/navigationManager.restart.test.js`'s restart cases too), and `regionGraph/regionGraphDispatch.test.js`
 (the Region Graph's adopted handlers still dispatch through its own `moduleDispatcher`, with its originators).
 In-app equivalence: `node scripts/dev/region-graph-class-snapshot.mjs --port=<port> --out=<dir>`, then `diff -r`

@@ -1,0 +1,4922 @@
+{
+  "schema_version": 3,
+  "game_name": "Procgen Maze",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 3,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "WhiteCastlePreVaultPeek": {
+        "name": "WhiteCastlePreVaultPeek",
+        "exits": [
+          {
+            "name": "WhiteCastleFromPeek",
+            "connected_region": "WhiteCastle",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Red Maze Vault Entrance",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ],
+        "hint_text": "White Castle Secret Peek"
+      },
+      "WhiteCastleVault": {
+        "name": "WhiteCastleVault",
+        "exits": [
+          {
+            "name": "WhiteCastleReturnPassage",
+            "connected_region": "WhiteCastle",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Red Maze Vault",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Slay Grundle",
+            "id": 1002,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
+            },
+            "item": {
+              "name": "Yellow Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ],
+        "hint_text": "White Castle Vault"
+      },
+      "WhiteCastle": {
+        "name": "WhiteCastle",
+        "exits": [
+          {
+            "name": "WhiteCastleExit",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "WhiteCastleSecretPassage",
+            "connected_region": "WhiteCastleVault",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Bridge"
+              }
+            }
+          },
+          {
+            "name": "WhiteCastlePeekPassage",
+            "connected_region": "WhiteCastlePreVaultPeek",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "RedMaze0",
+            "id": 1003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "RedMaze1",
+            "id": 1004,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ],
+        "hint_text": "White Castle"
+      },
+      "CreditsRoom": {
+        "name": "CreditsRoom",
+        "exits": [
+          {
+            "name": "CreditsExit",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "CreditsToFarSide",
+            "connected_region": "CreditsRoomFarSide",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Magnet"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Credits Left Side",
+            "id": 1005,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ],
+        "hint_text": "Credits Room"
+      },
+      "Overworld": {
+        "name": "Overworld",
+        "exits": [
+          {
+            "name": "YellowCastlePort",
+            "connected_region": "YellowCastle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Yellow Key"
+              }
+            }
+          },
+          {
+            "name": "WhiteCastlePort",
+            "connected_region": "WhiteCastle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "White Key"
+              }
+            }
+          },
+          {
+            "name": "BlackCastlePort",
+            "connected_region": "BlackCastle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Black Key"
+              }
+            }
+          },
+          {
+            "name": "CreditsWall",
+            "connected_region": "CreditsRoom",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "Black Key",
+                  "Bridge"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Blue Labyrinth 0",
+            "id": 1006,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Left Difficulty Switch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Blue Labyrinth 1",
+            "id": 1007,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Slow Yorgle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Catacombs",
+            "id": 1008,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Adjacent to Catacombs",
+            "id": 1009,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Slow Grundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Southwest of Catacombs",
+            "id": 1010,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "White Castle Gate",
+            "id": 1011,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Black Castle Gate",
+            "id": 1012,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Black Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Yellow Castle Gate",
+            "id": 1013,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Northeast of Catacombs",
+            "id": 1014,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Southeast of Catacombs",
+            "id": 1015,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Slay Yorgle",
+            "id": 1016,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "YellowCastle": {
+        "name": "YellowCastle",
+        "exits": [
+          {
+            "name": "YellowCastleExit",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Inside Yellow Castle",
+            "id": 1017,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Magnet",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Chalice Home",
+            "id": null,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "Chalice",
+                  "Yellow Key"
+                ]
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ],
+        "hint_text": "Yellow Castle"
+      },
+      "CreditsRoomFarSide": {
+        "name": "CreditsRoomFarSide",
+        "exits": [
+          {
+            "name": "CreditsFromFarSide",
+            "connected_region": "CreditsRoom",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Credits Right Side",
+            "id": 1018,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Chalice",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ],
+        "hint_text": "Credits Far Side"
+      },
+      "BlackCastle": {
+        "name": "BlackCastle",
+        "exits": [
+          {
+            "name": "BlackCastleExit",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "BlackCastleVaultEntrance",
+            "connected_region": "BlackCastleVault",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Dungeon0",
+            "id": 1019,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Dungeon1",
+            "id": 1020,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Right Difficulty Switch",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Black Castle Foyer",
+            "id": 1021,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Bridge",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Slay Rhindle",
+            "id": 1022,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
+            },
+            "item": {
+              "name": "Slow Rhindle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ],
+        "hint_text": "Black Castle"
+      },
+      "BlackCastleVault": {
+        "name": "BlackCastleVault",
+        "exits": [
+          {
+            "name": "BlackCastleReturnPassage",
+            "connected_region": "BlackCastle",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Dungeon Vault",
+            "id": 1023,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "White Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ],
+        "hint_text": "Black Castle Vault"
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Freeincarnate": {
+        "name": "Freeincarnate",
+        "id": 1,
+        "classification": "filler",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Yellow Key": {
+        "name": "Yellow Key",
+        "id": 2,
+        "classification": "progression_skip_balancing",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Left Difficulty Switch": {
+        "name": "Left Difficulty Switch",
+        "id": 3,
+        "classification": "filler",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Slow Yorgle": {
+        "name": "Slow Yorgle",
+        "id": 4,
+        "classification": "filler",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Sword": {
+        "name": "Sword",
+        "id": 5,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Slow Grundle": {
+        "name": "Slow Grundle",
+        "id": 6,
+        "classification": "filler",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Black Key": {
+        "name": "Black Key",
+        "id": 7,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Magnet": {
+        "name": "Magnet",
+        "id": 8,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Chalice": {
+        "name": "Chalice",
+        "id": 9,
+        "classification": "progression_skip_balancing",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Right Difficulty Switch": {
+        "name": "Right Difficulty Switch",
+        "id": 10,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Bridge": {
+        "name": "Bridge",
+        "id": 11,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Slow Rhindle": {
+        "name": "Slow Rhindle",
+        "id": 12,
+        "classification": "filler",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "White Key": {
+        "name": "White Key",
+        "id": 13,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Freeincarnate": 12,
+      "Yellow Key": 1,
+      "Left Difficulty Switch": 1,
+      "Slow Yorgle": 1,
+      "Sword": 1,
+      "Slow Grundle": 1,
+      "Black Key": 1,
+      "Magnet": 1,
+      "Victory": 1,
+      "Chalice": 1,
+      "Right Difficulty Switch": 1,
+      "Bridge": 1,
+      "Slow Rhindle": 1,
+      "White Key": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Procgen Maze",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {
+        "accessibility": 0,
+        "bat_logic": 1,
+        "connector_multi_slot": false,
+        "death_link": false,
+        "difficulty_switch_a": 2,
+        "difficulty_switch_b": 2,
+        "dragon_rando_type": 1,
+        "dragon_slay_check": true,
+        "exclude_locations": [],
+        "freeincarnate_max": 17,
+        "grundle_min_speed": 1,
+        "grundle_speed": 2,
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "rhindle_min_speed": 2,
+        "rhindle_speed": 3,
+        "start_castle": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "yorgle_min_speed": 1,
+        "yorgle_speed": 2
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "bat_logic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "cannot_break",
+            "1": "can_break",
+            "2": "use_logic"
+          },
+          "default": 1,
+          "display_name": "Bat Logic"
+        },
+        "connector_multi_slot": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Connector Multi-Slot"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Death Link"
+        },
+        "difficulty_switch_a": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "locked_hard",
+            "2": "hard_with_unlock_item"
+          },
+          "default": 2,
+          "display_name": "Left Difficulty Switch"
+        },
+        "difficulty_switch_b": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "locked_hard",
+            "2": "hard_with_unlock_item"
+          },
+          "default": 2,
+          "display_name": "Right Difficulty Switch"
+        },
+        "dragon_rando_type": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "shuffle",
+            "2": "overworldplus",
+            "3": "randomized"
+          },
+          "default": 1,
+          "display_name": "Dragon Randomization"
+        },
+        "dragon_slay_check": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Slay Dragon Checks"
+        },
+        "freeincarnate_max": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 17,
+          "default": 17,
+          "display_name": "Freeincarnate Maximum"
+        },
+        "grundle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 1,
+          "display_name": "Grundle Min Speed"
+        },
+        "grundle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Grundle MaxSpeed"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "rhindle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Rhindle Min Speed"
+        },
+        "rhindle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 3,
+          "display_name": "Rhindle MaxSpeed"
+        },
+        "start_castle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "yellow",
+            "1": "black",
+            "2": "white"
+          },
+          "default": 0,
+          "display_name": "Start Castle"
+        },
+        "yorgle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 1,
+          "display_name": "Yorgle Min Speed"
+        },
+        "yorgle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Yorgle MaxSpeed"
+        }
+      },
+      "dragon_rooms": [
+        4,
+        25,
+        20
+      ],
+      "dragon_slay_check": 1,
+      "connector_multi_slot": 0,
+      "dragon_rando_type": 1,
+      "yorgle_speed": 2,
+      "yorgle_min_speed": 1,
+      "grundle_speed": 2,
+      "grundle_min_speed": 1,
+      "rhindle_speed": 3,
+      "rhindle_min_speed": 2,
+      "difficulty_switch_a": 2,
+      "difficulty_switch_b": 2,
+      "start_castle": 0,
+      "dragon_speed_reducer_info": {
+        "118000259": [
+          1
+        ],
+        "118000260": [
+          1
+        ],
+        "118000261": [
+          2
+        ]
+      },
+      "created_items": 24,
+      "world_description": "Adventure for the Atari 2600 is an early graphical adventure game.\nFind the enchanted chalice and return it to the yellow castle,\nusing magic items to enter hidden rooms, retrieve out of\nreach items, or defeat the three dragons.  Beware the bat\nwho likes to steal your equipment!",
+      "web": {
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Adventure for MultiWorld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "JusticePS"
+            ]
+          },
+          {
+            "name": "Guide de configuration Multimonde",
+            "description": "Un guide pour configurer Adventure MultiWorld",
+            "language": "Français",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "TheLynk"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "constant",
+        "value": true
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
+  "canonical_placements": {
+    "1": {
+      "Red Maze Vault Entrance": "Freeincarnate",
+      "Red Maze Vault": "Freeincarnate",
+      "Slay Grundle": "Yellow Key",
+      "RedMaze0": "Freeincarnate",
+      "RedMaze1": "Freeincarnate",
+      "Credits Left Side": "Freeincarnate",
+      "Blue Labyrinth 0": "Left Difficulty Switch",
+      "Blue Labyrinth 1": "Slow Yorgle",
+      "Catacombs": "Sword",
+      "Adjacent to Catacombs": "Slow Grundle",
+      "Southwest of Catacombs": "Freeincarnate",
+      "White Castle Gate": "Freeincarnate",
+      "Black Castle Gate": "Black Key",
+      "Yellow Castle Gate": "Freeincarnate",
+      "Northeast of Catacombs": "Freeincarnate",
+      "Southeast of Catacombs": "Freeincarnate",
+      "Slay Yorgle": "Freeincarnate",
+      "Inside Yellow Castle": "Magnet",
+      "Credits Right Side": "Chalice",
+      "Dungeon0": "Freeincarnate",
+      "Dungeon1": "Right Difficulty Switch",
+      "Black Castle Foyer": "Bridge",
+      "Slay Rhindle": "Slow Rhindle",
+      "Dungeon Vault": "White Key"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "preset_sidecars": {
+    "1": {
+      "Overworld": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 2
+        },
+        "playable_payload": {
+          "width": 16,
+          "height": 12,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 8,
+            "y": 6
+          },
+          "exits": [
+            {
+              "exit_id": "YellowCastlePort",
+              "x": 15,
+              "y": 4,
+              "side": "E",
+              "exitName": "YellowCastlePort",
+              "targetRegion": "YellowCastle",
+              "targetExitId": "YellowCastleExit",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "WhiteCastlePort",
+              "x": 7,
+              "y": 0,
+              "side": "N",
+              "exitName": "WhiteCastlePort",
+              "targetRegion": "WhiteCastle",
+              "targetExitId": "WhiteCastleExit",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "BlackCastlePort",
+              "x": 5,
+              "y": 11,
+              "side": "S",
+              "exitName": "BlackCastlePort",
+              "targetRegion": "BlackCastle",
+              "targetExitId": "BlackCastleExit",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "CreditsWall",
+              "x": 0,
+              "y": 5,
+              "side": "W",
+              "exitName": "CreditsWall",
+              "targetRegion": "CreditsRoom",
+              "targetExitId": "CreditsExit",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 15,
+              "y": 4,
+              "id": "logic_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "id": "logic_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 11,
+              "id": "logic_gate_2"
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "id": "logic_gate_3"
+            },
+            {
+              "x": 15,
+              "y": 7,
+              "id": "logic_gate_4"
+            }
+          ],
+          "items": [
+            {
+              "x": 0,
+              "y": 6,
+              "id": "Left Difficulty Switch",
+              "locationName": "Blue Labyrinth 0"
+            },
+            {
+              "x": 7,
+              "y": 8,
+              "id": "Slow Yorgle",
+              "locationName": "Blue Labyrinth 1"
+            },
+            {
+              "x": 8,
+              "y": 2,
+              "id": "Sword",
+              "locationName": "Catacombs"
+            },
+            {
+              "x": 2,
+              "y": 6,
+              "id": "Slow Grundle",
+              "locationName": "Adjacent to Catacombs"
+            },
+            {
+              "x": 14,
+              "y": 0,
+              "id": "Freeincarnate",
+              "locationName": "Southwest of Catacombs"
+            },
+            {
+              "x": 0,
+              "y": 4,
+              "id": "Freeincarnate",
+              "locationName": "White Castle Gate"
+            },
+            {
+              "x": 12,
+              "y": 3,
+              "id": "Black Key",
+              "locationName": "Black Castle Gate"
+            },
+            {
+              "x": 3,
+              "y": 10,
+              "id": "Freeincarnate",
+              "locationName": "Yellow Castle Gate"
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "id": "Freeincarnate",
+              "locationName": "Northeast of Catacombs"
+            },
+            {
+              "x": 6,
+              "y": 5,
+              "id": "Freeincarnate",
+              "locationName": "Southeast of Catacombs"
+            },
+            {
+              "x": 15,
+              "y": 7,
+              "id": "Freeincarnate",
+              "locationName": "Slay Yorgle"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Yellow Key"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_1": {
+              "name": "Logic Gate",
+              "id": "logic_gate_1",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "White Key"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_2": {
+              "name": "Logic Gate",
+              "id": "logic_gate_2",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Black Key"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_3": {
+              "name": "Logic Gate",
+              "id": "logic_gate_3",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "HasAll",
+                "args": {
+                  "item_names": [
+                    "Black Key",
+                    "Bridge"
+                  ]
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_4": {
+              "name": "Logic Gate",
+              "id": "logic_gate_4",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "HasAll",
+                "args": {
+                  "item_names": [
+                    "Right Difficulty Switch",
+                    "Sword"
+                  ]
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 17,
+          "tileKinds": [
+            {
+              "x": 5,
+              "y": 2,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 3,
+              "y": 9,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 7,
+              "y": 9,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 4,
+              "y": 10,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 9,
+              "y": 11,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 11,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "W",
+              "gate": null
+            }
+          ],
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "scattered"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 16,
+            "height": 12
+          },
+          "final_size": {
+            "width": 16,
+            "height": 12
+          },
+          "grow_attempts": 0
+        }
+      },
+      "YellowCastle": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 2
+        },
+        "playable_payload": {
+          "width": 16,
+          "height": 12,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 0,
+            "y": 4
+          },
+          "exits": [
+            {
+              "exit_id": "YellowCastleExit",
+              "x": 0,
+              "y": 4,
+              "side": "W",
+              "exitName": "YellowCastleExit",
+              "targetRegion": "Overworld",
+              "targetExitId": "YellowCastlePort",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 8,
+              "y": 3,
+              "id": "logic_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 14,
+              "y": 5,
+              "id": "Magnet",
+              "locationName": "Inside Yellow Castle"
+            },
+            {
+              "x": 8,
+              "y": 3,
+              "id": "Victory",
+              "locationName": "Chalice Home"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "HasAll",
+                "args": {
+                  "item_names": [
+                    "Chalice",
+                    "Yellow Key"
+                  ]
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 16,
+            "height": 12
+          },
+          "final_size": {
+            "width": 16,
+            "height": 12
+          },
+          "grow_attempts": 0
+        }
+      },
+      "WhiteCastle": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 1
+        },
+        "playable_payload": {
+          "width": 16,
+          "height": 12,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 7,
+            "y": 11
+          },
+          "exits": [
+            {
+              "exit_id": "WhiteCastleExit",
+              "x": 7,
+              "y": 11,
+              "side": "S",
+              "exitName": "WhiteCastleExit",
+              "targetRegion": "Overworld",
+              "targetExitId": "WhiteCastlePort",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "WhiteCastleSecretPassage",
+              "x": 0,
+              "y": 4,
+              "side": "W",
+              "exitName": "WhiteCastleSecretPassage",
+              "targetRegion": "WhiteCastleVault",
+              "targetExitId": "WhiteCastleReturnPassage",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "WhiteCastlePeekPassage",
+              "x": 14,
+              "y": 0,
+              "side": "N",
+              "exitName": "WhiteCastlePeekPassage",
+              "targetRegion": "WhiteCastlePreVaultPeek",
+              "targetExitId": "WhiteCastleFromPeek",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 0,
+              "y": 4,
+              "id": "logic_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 0,
+              "id": "logic_gate_1"
+            }
+          ],
+          "items": [
+            {
+              "x": 10,
+              "y": 5,
+              "id": "Freeincarnate",
+              "locationName": "RedMaze0"
+            },
+            {
+              "x": 7,
+              "y": 8,
+              "id": "Freeincarnate",
+              "locationName": "RedMaze1"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Bridge"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_1": {
+              "name": "Logic Gate",
+              "id": "logic_gate_1",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "HasAny",
+                "args": {
+                  "item_names": [
+                    "Bridge",
+                    "Magnet"
+                  ]
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 18,
+          "tileKinds": [
+            {
+              "x": 11,
+              "y": 0,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 4,
+              "y": 5,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 5,
+              "y": 5,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 0,
+              "y": 8,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 2,
+              "y": 9,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 4,
+              "y": 10,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 0,
+              "y": 8,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 8,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 8,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 10,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 10,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 4,
+              "y": 10,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 9,
+              "dir": "W",
+              "gate": null
+            }
+          ],
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "scattered"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 16,
+            "height": 12
+          },
+          "final_size": {
+            "width": 16,
+            "height": 12
+          },
+          "grow_attempts": 0
+        }
+      },
+      "BlackCastle": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 3
+        },
+        "playable_payload": {
+          "width": 16,
+          "height": 12,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 5,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "BlackCastleExit",
+              "x": 5,
+              "y": 0,
+              "side": "N",
+              "exitName": "BlackCastleExit",
+              "targetRegion": "Overworld",
+              "targetExitId": "BlackCastlePort",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "BlackCastleVaultEntrance",
+              "x": 15,
+              "y": 6,
+              "side": "E",
+              "exitName": "BlackCastleVaultEntrance",
+              "targetRegion": "BlackCastleVault",
+              "targetExitId": "BlackCastleReturnPassage",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 15,
+              "y": 6,
+              "id": "logic_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "id": "logic_gate_1"
+            }
+          ],
+          "items": [
+            {
+              "x": 7,
+              "y": 11,
+              "id": "Freeincarnate",
+              "locationName": "Dungeon0"
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "id": "Right Difficulty Switch",
+              "locationName": "Dungeon1"
+            },
+            {
+              "x": 15,
+              "y": 1,
+              "id": "Bridge",
+              "locationName": "Black Castle Foyer"
+            },
+            {
+              "x": 11,
+              "y": 7,
+              "id": "Slow Rhindle",
+              "locationName": "Slay Rhindle"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "HasAny",
+                "args": {
+                  "item_names": [
+                    "Bridge",
+                    "Magnet"
+                  ]
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            },
+            "logic_gate_1": {
+              "name": "Logic Gate",
+              "id": "logic_gate_1",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "HasAll",
+                "args": {
+                  "item_names": [
+                    "Right Difficulty Switch",
+                    "Sword"
+                  ]
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 16,
+          "tileKinds": [
+            {
+              "x": 6,
+              "y": 6,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 15,
+              "y": 7,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 1,
+              "y": 9,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 15,
+              "y": 9,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 9,
+              "y": 11,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 11,
+              "y": 11,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 13,
+              "y": 11,
+              "kind": "furniture:terrain/rug"
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 5,
+              "y": 8,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 9,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 9,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 9,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 11,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 11,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 11,
+              "y": 11,
+              "dir": "W",
+              "gate": null
+            }
+          ],
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "scattered"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 16,
+            "height": 12
+          },
+          "final_size": {
+            "width": 16,
+            "height": 12
+          },
+          "grow_attempts": 0
+        }
+      },
+      "CreditsRoom": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 2
+        },
+        "playable_payload": {
+          "width": 16,
+          "height": 12,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 15,
+            "y": 5
+          },
+          "exits": [
+            {
+              "exit_id": "CreditsExit",
+              "x": 15,
+              "y": 5,
+              "side": "E",
+              "exitName": "CreditsExit",
+              "targetRegion": "Overworld",
+              "targetExitId": "CreditsWall",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "CreditsToFarSide",
+              "x": 4,
+              "y": 11,
+              "side": "S",
+              "exitName": "CreditsToFarSide",
+              "targetRegion": "CreditsRoomFarSide",
+              "targetExitId": "CreditsFromFarSide",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 4,
+              "y": 11,
+              "id": "logic_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 0,
+              "y": 8,
+              "id": "Freeincarnate",
+              "locationName": "Credits Left Side"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Magnet"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 17,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 16,
+            "height": 12
+          },
+          "final_size": {
+            "width": 16,
+            "height": 12
+          },
+          "grow_attempts": 0
+        }
+      },
+      "WhiteCastleVault": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 1
+        },
+        "playable_payload": {
+          "width": 16,
+          "height": 12,
+          "tiles": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 15,
+            "y": 4
+          },
+          "exits": [
+            {
+              "exit_id": "WhiteCastleReturnPassage",
+              "x": 15,
+              "y": 4,
+              "side": "E",
+              "exitName": "WhiteCastleReturnPassage",
+              "targetRegion": "WhiteCastle",
+              "targetExitId": "WhiteCastleSecretPassage",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 8,
+              "y": 8,
+              "id": "logic_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 14,
+              "y": 4,
+              "id": "Freeincarnate",
+              "locationName": "Red Maze Vault"
+            },
+            {
+              "x": 8,
+              "y": 8,
+              "id": "Yellow Key",
+              "locationName": "Slay Grundle"
+            }
+          ],
+          "obstacleLib": {
+            "logic_gate_0": {
+              "name": "Logic Gate",
+              "id": "logic_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "HasAll",
+                "args": {
+                  "item_names": [
+                    "Right Difficulty Switch",
+                    "Sword"
+                  ]
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate"
+            }
+          },
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "tileKinds": [
+            {
+              "x": 2,
+              "y": 0,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 4,
+              "y": 6,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 2,
+              "y": 8,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 12,
+              "y": 10,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 11,
+              "y": 11,
+              "kind": "furniture:terrain/rug"
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 8,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 8,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 0,
+              "y": 5,
+              "dir": "W",
+              "gate": null
+            }
+          ],
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "scattered"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 16,
+            "height": 12
+          },
+          "final_size": {
+            "width": 16,
+            "height": 12
+          },
+          "grow_attempts": 0
+        }
+      },
+      "WhiteCastlePreVaultPeek": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 0
+        },
+        "playable_payload": {
+          "width": 16,
+          "height": 12,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 14,
+            "y": 11
+          },
+          "exits": [
+            {
+              "exit_id": "WhiteCastleFromPeek",
+              "x": 14,
+              "y": 11,
+              "side": "S",
+              "exitName": "WhiteCastleFromPeek",
+              "targetRegion": "WhiteCastle",
+              "targetExitId": "WhiteCastlePeekPassage",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 7,
+              "y": 11,
+              "id": "Freeincarnate",
+              "locationName": "Red Maze Vault Entrance"
+            }
+          ],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "tileKinds": [
+            {
+              "x": 1,
+              "y": 2,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 3,
+              "y": 7,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 11,
+              "y": 8,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 9,
+              "y": 9,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 7,
+              "y": 10,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 14,
+              "y": 10,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 3,
+              "y": 11,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 14,
+              "y": 10,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 10,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 14,
+              "y": 10,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 10,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 10,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 7,
+              "y": 10,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 4,
+              "dir": "W",
+              "gate": null
+            }
+          ],
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "scattered"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 16,
+            "height": 12
+          },
+          "final_size": {
+            "width": 16,
+            "height": 12
+          },
+          "grow_attempts": 0
+        }
+      },
+      "BlackCastleVault": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 3,
+          "gy": 3
+        },
+        "playable_payload": {
+          "width": 16,
+          "height": 12,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 0,
+            "y": 6
+          },
+          "exits": [
+            {
+              "exit_id": "BlackCastleReturnPassage",
+              "x": 0,
+              "y": 6,
+              "side": "W",
+              "exitName": "BlackCastleReturnPassage",
+              "targetRegion": "BlackCastle",
+              "targetExitId": "BlackCastleVaultEntrance",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 1,
+              "y": 1,
+              "id": "White Key",
+              "locationName": "Dungeon Vault"
+            }
+          ],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 16,
+            "height": 12
+          },
+          "final_size": {
+            "width": 16,
+            "height": 12
+          },
+          "grow_attempts": 0
+        }
+      },
+      "CreditsRoomFarSide": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 3
+        },
+        "playable_payload": {
+          "width": 16,
+          "height": 12,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 4,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "CreditsFromFarSide",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "CreditsFromFarSide",
+              "targetRegion": "CreditsRoom",
+              "targetExitId": "CreditsToFarSide",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 5,
+              "y": 9,
+              "id": "Chalice",
+              "locationName": "Credits Right Side"
+            }
+          ],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "tileKinds": [
+            {
+              "x": 13,
+              "y": 1,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 15,
+              "y": 4,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 15,
+              "y": 6,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "kind": "ledges:terrain/ledge",
+              "pass": "one-way",
+              "dirs": [
+                "S"
+              ]
+            },
+            {
+              "x": 3,
+              "y": 8,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 5,
+              "y": 8,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            },
+            {
+              "x": 3,
+              "y": 9,
+              "kind": "furniture:terrain/rug"
+            },
+            {
+              "x": 8,
+              "y": 10,
+              "kind": "furniture:terrain/pillar",
+              "pass": "blocked"
+            }
+          ],
+          "entry_gates": [
+            {
+              "x": 15,
+              "y": 4,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 15,
+              "y": 4,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 15,
+              "y": 4,
+              "dir": "W",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "dir": "N",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "dir": "E",
+              "gate": null
+            },
+            {
+              "x": 1,
+              "y": 7,
+              "dir": "W",
+              "gate": null
+            }
+          ],
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "scattered"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 16,
+            "height": 12
+          },
+          "final_size": {
+            "width": 16,
+            "height": 12
+          },
+          "grow_attempts": 0
+        }
+      }
+    }
+  },
+  "procgen_metadata": {
+    "1": {
+      "driver": "top-down-sphere",
+      "source_game": "Adventure",
+      "source_counts": {
+        "regions": 9,
+        "locations": 25,
+        "exits": 16,
+        "logic_gates": 12
+      },
+      "stop_reason": "all_placed",
+      "sphere_tree": {
+        "nodes": [
+          {
+            "index": 0,
+            "wave": 0,
+            "parent": null,
+            "side": null,
+            "cell": {
+              "gx": 2,
+              "gy": 2
+            },
+            "region_id": "Overworld",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "N",
+              "S",
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 1,
+            "wave": 4,
+            "parent": 0,
+            "side": "E",
+            "cell": {
+              "gx": 3,
+              "gy": 2
+            },
+            "region_id": "YellowCastle",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 2,
+            "wave": 3,
+            "parent": 0,
+            "side": "N",
+            "cell": {
+              "gx": 2,
+              "gy": 1
+            },
+            "region_id": "WhiteCastle",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "W",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 3,
+            "wave": 1,
+            "parent": 0,
+            "side": "S",
+            "cell": {
+              "gx": 2,
+              "gy": 3
+            },
+            "region_id": "BlackCastle",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 4,
+            "wave": 2,
+            "parent": 0,
+            "side": "W",
+            "cell": {
+              "gx": 1,
+              "gy": 2
+            },
+            "region_id": "CreditsRoom",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 5,
+            "wave": 3,
+            "parent": 2,
+            "side": "W",
+            "cell": {
+              "gx": 1,
+              "gy": 1
+            },
+            "region_id": "WhiteCastleVault",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 6,
+            "wave": 3,
+            "parent": 2,
+            "side": "N",
+            "cell": {
+              "gx": 2,
+              "gy": 0
+            },
+            "region_id": "WhiteCastlePreVaultPeek",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 7,
+            "wave": 2,
+            "parent": 3,
+            "side": "E",
+            "cell": {
+              "gx": 3,
+              "gy": 3
+            },
+            "region_id": "BlackCastleVault",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 8,
+            "wave": 5,
+            "parent": 4,
+            "side": "S",
+            "cell": {
+              "gx": 1,
+              "gy": 3
+            },
+            "region_id": "CreditsRoomFarSide",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          }
+        ],
+        "substrateCounts": {
+          "maze": 9
+        },
+        "quotaFallbacks": 0
+      },
+      "sphere_plan": {
+        "seed": 3,
+        "spheres": [
+          {
+            "sphere": 1,
+            "items": [
+              "Black Key",
+              "Sword"
+            ]
+          },
+          {
+            "sphere": 2,
+            "items": [
+              "Bridge",
+              "Right Difficulty Switch"
+            ]
+          },
+          {
+            "sphere": 3,
+            "items": [
+              "White Key"
+            ]
+          },
+          {
+            "sphere": 4,
+            "items": [
+              "Yellow Key"
+            ]
+          },
+          {
+            "sphere": 5,
+            "items": [
+              "Magnet"
+            ]
+          },
+          {
+            "sphere": 6,
+            "items": [
+              "Chalice"
+            ]
+          },
+          {
+            "sphere": 7,
+            "items": [
+              "Victory"
+            ]
+          }
+        ]
+      },
+      "exists": [
+        "furniture",
+        "ledges"
+      ],
+      "mazeBiome": [
+        {
+          "id": "scattered",
+          "weight": 2
+        },
+        {
+          "id": "classic",
+          "weight": 1
+        }
+      ],
+      "mazeBiomeSeed": 3,
+      "region_count": 9,
+      "grid_dims": {
+        "width": 4,
+        "height": 4
+      }
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 3,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "Adjacent to Catacombs",
+            "Black Castle Gate",
+            "Blue Labyrinth 0",
+            "Blue Labyrinth 1",
+            "Catacombs",
+            "Northeast of Catacombs",
+            "Southeast of Catacombs",
+            "Southwest of Catacombs",
+            "White Castle Gate",
+            "Yellow Castle Gate"
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "Overworld"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Black Key": 1
+            },
+            "resolved_items": {
+              "Black Key": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Black Castle Foyer",
+            "Dungeon0",
+            "Dungeon1"
+          ],
+          "new_accessible_regions": [
+            "BlackCastle"
+          ],
+          "sphere_locations": [
+            "Black Castle Gate"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Sword": 1
+            },
+            "resolved_items": {
+              "Sword": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Catacombs"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Bridge": 1
+            },
+            "resolved_items": {
+              "Bridge": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Credits Left Side",
+            "Dungeon Vault"
+          ],
+          "new_accessible_regions": [
+            "BlackCastleVault",
+            "CreditsRoom"
+          ],
+          "sphere_locations": [
+            "Black Castle Foyer"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Right Difficulty Switch": 1
+            },
+            "resolved_items": {
+              "Right Difficulty Switch": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Slay Rhindle",
+            "Slay Yorgle"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Dungeon1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "White Key": 1
+            },
+            "resolved_items": {
+              "White Key": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Red Maze Vault",
+            "Red Maze Vault Entrance",
+            "RedMaze0",
+            "RedMaze1",
+            "Slay Grundle"
+          ],
+          "new_accessible_regions": [
+            "WhiteCastle",
+            "WhiteCastlePreVaultPeek",
+            "WhiteCastleVault"
+          ],
+          "sphere_locations": [
+            "Dungeon Vault"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Yellow Key": 1
+            },
+            "resolved_items": {
+              "Yellow Key": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Inside Yellow Castle"
+          ],
+          "new_accessible_regions": [
+            "YellowCastle"
+          ],
+          "sphere_locations": [
+            "Slay Grundle"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Magnet": 1
+            },
+            "resolved_items": {
+              "Magnet": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Credits Right Side"
+          ],
+          "new_accessible_regions": [
+            "CreditsRoomFarSide"
+          ],
+          "sphere_locations": [
+            "Inside Yellow Castle"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "5.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Chalice": 1
+            },
+            "resolved_items": {
+              "Chalice": 1
+            }
+          },
+          "new_accessible_locations": [
+            "Chalice Home"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Credits Right Side"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "6.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Victory": 1
+            },
+            "resolved_items": {
+              "Victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Chalice Home"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+LEG 395 goal=exit door=1 idle=0 ok=false ms=129138 ticks=null
+  message=solverBot(kt-leg) reach-exit (944,96)->L41 -> keylock stance (bosslock@480,352) -> kill (iceturret@472,400): no approach to iceturret@472,400 from the staging point (488,561) is hitless — 504 fork(s), {"approach-body":2,"approach-hit":10,"wait-hit":480}: up corridor, wait 0: hit t502 by iceturret:iceturret@472,400 at (470.4,443.5) | up via (466,445), wait 0: hit t458 by blast:iceturret@472,400#1.1 at (466.0,493.5) | up via (510,445), wait 0: hit t458 by blast:iceturret@472,400#1.0 at (510.0,493.5)
+  KEYLOCK_TURRET_COUNTS={"stances":[],"kills":[]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[]}
+  TURRET_APPROACH_COUNTS={"approaches":[{"turret":"iceturret@472,400","t":400,"side":null,"forks":504,"tally":{"approach-body":2,"approach-hit":10,"wait-hit":480}}]}
+  ICETURRET_STATIC_KILL_COUNTS={"handed":[{"id":"iceturret@472,400","t":100,"via":"chooser"}],"kills":[{"id":"iceturret@472,400","t":100,"dead":false,"ticks":300,"why":"solverBot(kt-leg) reach-exit (944,96)->L41 -> keylock stance (bosslock@480,352) -> kill (iceturret@472,400): no approach to iceturret@472,400 from the staging point (488,561) is hitless — 504 fork(s), {\"approach-body\":2,\"approach-hit\":10,\"w"}]}

@@ -450,6 +450,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The maze substrate (frontend/modules/mazeRoom/, substrate id maze) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and…"
     },
     {
+        "path": "docs/json/developer/procgen/mystery.md",
+        "title": "Mystery Substrate",
+        "section": "developer/procgen",
+        "summary": "The mystery substrate (frontend/modules/mysteryArchipelago/mysterySubstrateLibrary.js, id mystery) makes one case of the mystery clue game a procgen region: the office. The game is the git submodule…"
+    },
+    {
         "path": "docs/json/developer/procgen/noiz2sa.md",
         "title": "Noiz2sa Substrate",
         "section": "developer/procgen",
@@ -918,6 +924,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Modules panel shows all loaded frontend modules and lets you enable or disable them at runtime."
     },
     {
+        "path": "docs/json/user/modules/mysteryArchipelago.md",
+        "title": "Mystery Game",
+        "section": "user/modules",
+        "summary": "The Mystery Game panel opens the mystery clue game for the world you have loaded, and connects it to Archipelago. The game itself is a separate page from the repository mystery-clue-game. This app…"
+    },
+    {
         "path": "docs/json/user/modules/noiz2sa.md",
         "title": "Noiz2sa Panel",
         "section": "user/modules",
@@ -1110,6 +1122,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "MetaMath is an Archipelago game like any other: its .apworld is released with this project, and its proofs can be shuffled with other games."
     },
     {
+        "path": "docs/json/user/tutorials/mystery-multiworld.md",
+        "title": "Mystery: a case in a multiworld",
+        "section": "user/tutorials",
+        "summary": "A mystery case is an Archipelago world in this project's repository (worlds/mystery_custom_house_fire): each question of the case is a location, and each paper is an item. The game itself is a page…"
+    },
+    {
         "path": "docs/json/user/tutorials/procgen-bounce-region-editor.md",
         "title": "Procgen: editing a bounce region",
         "section": "user/tutorials",
@@ -1206,6 +1224,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "*Seedling* is a Flash game. Flash is gone from browsers, so this project recompiles the game: SWFRecomp turns its SWF into C, and the C into WebAssembly, which any browser runs. The builds the app…"
     },
     {
+        "path": "docs/json/user/tutorials/tracker-region-map.md",
+        "title": "Tracking: the Region Map",
+        "section": "user/tutorials",
+        "summary": "The Region Map draws a world as a map: one cell per level, laid out the way you walk between them, with each location as a square on its own tile. It is the map beside the Region Graph: the same…"
+    },
+    {
         "path": "docs/json/user/tutorials/tracker-track-a-game.md",
         "title": "Track a game",
         "section": "user/tutorials",
@@ -1248,6 +1272,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/mazeRoom.md",
             "docs/json/user/modules/metaGamePanel.md",
             "docs/json/user/modules/modules.md",
+            "docs/json/user/modules/mysteryArchipelago.md",
             "docs/json/user/modules/noiz2sa.md",
             "docs/json/user/modules/pathAnalyzerPanel.md",
             "docs/json/user/modules/playbackBot.md",
@@ -1309,6 +1334,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/depgraph-extras.md",
                     "docs/json/user/tutorials/depgraph-multiworld.md",
                     "docs/json/user/tutorials/metamath-multiworld.md",
+                    "docs/json/user/tutorials/mystery-multiworld.md",
                     "docs/json/user/tutorials/procgen-bounce-region-editor.md",
                     "docs/json/user/tutorials/procgen-cloudberry.md",
                     "docs/json/user/tutorials/procgen-grid-growth.md",
@@ -1325,6 +1351,7 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/user/tutorials/seedling-bot.md",
                     "docs/json/user/tutorials/seedling-multiworld.md",
                     "docs/json/user/tutorials/seedling-recompile.md",
+                    "docs/json/user/tutorials/tracker-region-map.md",
                     "docs/json/user/tutorials/tracker-track-a-game.md"
                 ],
                 "single": false
@@ -1682,6 +1709,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/loop-recording.md",
             "docs/json/developer/procgen/maze-lab.md",
             "docs/json/developer/procgen/maze.md",
+            "docs/json/developer/procgen/mystery.md",
             "docs/json/developer/procgen/noiz2sa.md",
             "docs/json/developer/procgen/omsi.md",
             "docs/json/developer/procgen/paths-and-obstacles.md",

@@ -1,0 +1,4 @@
+unarmed stalled    walks 1904 states 761600 median distinct positions 20 median last move 19 presses 0
+unarmed arrived    walks 1356 states 165068 median distinct positions 135 median last move 134 presses 0
+armed stalled      walks 1840 states 736000 median distinct positions 20 median last move 19 presses 3370
+armed arrived      walks 1350 states 165836 median distinct positions 128 median last move 127 presses 3736

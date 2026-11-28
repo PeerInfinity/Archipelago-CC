@@ -1,0 +1,7 @@
+LEGA 412 goal=cleartag door=1 idle=150 env[SEEDLING_KEYLOCK_TURRET_EDGE_BAIT=1] ok=true work=641 ticks=699 ms=30181
+  passes=[{"pass":"dashless","ok":true,"kind":null,"ticks":699,"work":499,"modelHits":{"hits":0,"deaths":0}},{"pass":"full","ok":false,"kind":"refusal","ticks":null,"work":142,"deadline":"crusher-fork","limit":"budget"}]
+  FRESH hits=[] deaths=0 open=true dead=true transition=null
+  KEYLOCK_TURRET_COUNTS={"stances":[{"lock":"bosslock@480,352","t":150,"turrets":["iceturret@472,400"],"live":["iceturret@472,400"],"stance":{"x":488,"y":376}},{"lock":"bosslock@480,352","t":150,"turrets":["iceturret@472,400"],"live":["iceturret@472,400"],"stance":{"x":488,"y":376}}],"kills":[{"lock":"bosslock@480,352","turret":"iceturret@472,400","t":150,"dead":true,"ticks":544,"side":"right","wait":0,"forks":29},{"lock":"bosslock@480,352","turret":"iceturret@472,400","t":150,"dead":false,"ticks":148,"why":"solverBot(kt-leg) clear-tag {40,8} bosslock@480,352 -> keylock -> kill (iceturret@472,400): deadline at the `crusher-fork` site after 6 approach tr(ies)"}]}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS={"asked":[]}
+  TURRET_APPROACH_COUNTS={"approaches":[{"turret":"iceturret@472,400","t":694,"side":"right","via":{"x":467,"y":446},"wait":0,"forks":29,"order":"volley","anchor":null,"rank":0,"bait":true}]}
+  ICETURRET_STATIC_KILL_COUNTS={"handed":[],"kills":[]}

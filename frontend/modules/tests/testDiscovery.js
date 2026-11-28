@@ -70,6 +70,7 @@ export const TEST_CASE_FILES = [
   './testCases/seedlingJsRuntimeTests.js',
   './testCases/taswBlockModeTests.js',
   './testCases/actionNodesTests.js',
+  './testCases/actionNodesMysteryTests.js',
   './testCases/apworldEditorTests.js',
   './testCases/substrateRegistryPanelTests.js',
   './testCases/procgenPipelineTests.js',
@@ -78,6 +79,9 @@ export const TEST_CASE_FILES = [
   './testCases/tutorialTests.js',
   './testCases/storagePanelTests.js',
   './testCases/ruleConverterTests.js',
+  './testCases/mysteryBridgeTests.js',
+  './testCases/mysteryPlaybackBotTests.js',
+  './testCases/documentLibraryTests.js',
   // ⛓ lab-apworld-door-map: LAST on purpose. Its play rows leave a Flash game running (the held set), and a row
   // registered after them inherited that panel (CI 44950948937: seedling-js-runtime-generated-room). Last in the list
   // = last in every batch it shares, so it cannot change the state an existing row starts from.

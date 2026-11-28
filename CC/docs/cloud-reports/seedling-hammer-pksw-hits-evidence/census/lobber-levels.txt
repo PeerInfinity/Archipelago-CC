@@ -1,0 +1,2 @@
+[{"level":40,"bombpusherMentions":1,"spinnerMentions":5,"legs":50}]
+legs in lobber levels: 50 of 915

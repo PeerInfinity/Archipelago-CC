@@ -1,0 +1,62 @@
+{
+  "kind": "action-graph",
+  "schema_version": 1,
+  "graph_id": "omsi-first-town",
+  "name": "Beginnersville",
+  "provenance": {
+    "sources": {
+      "omsi": {"type": "game", "name": "Idle Loops (omsi-loops)", "repo": "PeerInfinity/omsi-loops", "commit": "a636e9a410", "files": ["data/actionList.xml", "actionList.js"], "note": "action names, town-0 structure and the numbers the rules below scale"},
+      "an-omsi-d": {"type": "model", "model": "claude-opus-5-5", "date": "2026-11-24", "session": "an-omsi-design", "note": "omsi-loops town 0 (Beginnersville) mapped to 20 nodes by the AN-OMSI-D design: time = ceil(omsi level-0 mana / 20) with a 100-mana loop; each item +10 starting mana; multipart actions are one performance per segment; a stated limit is kept, a growing limit flattened (Smash Pots 3, Pick Locks 2, Short Quest 2, Long Quest 2), an unstated one capped at 3 (Haggle 2), progress actions 1; gold / 10; every-Nth rewards given every time. The first step of each progress bar (Wander, Met, Secrets) is `after` (done this loop); later steps are boost items. Combat + Magic >= 35 is Combat 2 and Magic 2: a Training item gives +1 every loop, a Lesson +1 within the loop. Every action except the start and the goal is a check (18), with 10 Soulstones as filler. Trained stats (Str, Dex, ...), talents, skill exp and story texts are not modelled.", "approved": {"by": "Robert", "date": "2026-11-24", "ruling": "Q1-Q6 as recommended (the town numbers; commit the preset)"}},
+      "left-out": {"type": "model", "model": "claude-opus-5-5", "date": "2026-11-24", "session": "an-omsi-design", "note": "LEFT OUT of town 0 (six omsi actions): Open Rift (Dark and Spatiomancy, later-town skills); AssassinZ0 (Assassin, a town-7 skill); SurveyZ0, Hitch Ride and Map (explore progress, whose first map comes from town 7's Explorers Guild); Found Glasses (never startable, a display row). Also dropped: the glasses' Wander x4 (Wander progress is a boost here), Throw Party's Met +3200 (nothing after the party reads Met), Small Dungeon's soulstones and the multiparts' skill exp, and the segments' rising cost curve."},
+      "buy-supplies-6": {"type": "model", "model": "claude-opus-5-5", "date": "2026-11-24", "session": "an-omsi-design", "note": "Buy Supplies costs 6 gold, not omsi's 300 / 10 = 30: one loop holds at most 12 gold with every item, and the goal is refused at 10", "approved": {"by": "Robert", "date": "2026-11-24", "ruling": "Q5: 6 gold"}},
+      "haggle-folded": {"type": "model", "model": "claude-opus-5-5", "date": "2026-11-24", "session": "an-omsi-design", "note": "Haggle's -20 gold on Buy Supplies' price is folded into Gold +2 per Haggle (the same for the one purchase a loop makes)"}
+    },
+    "default": "an-omsi-d"
+  },
+  "loop": {"mana": 100},
+  "stats": {
+    "wander": {"name": "Wander"},
+    "met": {"name": "Met"},
+    "secrets": {"name": "Secrets"},
+    "combat": {"name": "Combat"},
+    "magic": {"name": "Magic"}
+  },
+  "resources": {
+    "gold": {"name": "Gold"},
+    "reputation": {"name": "Reputation"},
+    "supplies": {"name": "Supplies"}
+  },
+  "boons": {
+    "wander-progress": {"name": "Wander Progress", "count": 1, "gives": {"stats": {"wander": 1}, "mana": 10}},
+    "met-progress": {"name": "Met Progress", "count": 1, "gives": {"stats": {"met": 1}, "mana": 10}},
+    "secrets-progress": {"name": "Secrets Progress", "count": 2, "gives": {"stats": {"secrets": 1}, "mana": 10}},
+    "combat-training": {"name": "Combat Training", "count": 2, "gives": {"stats": {"combat": 1}, "mana": 10}},
+    "magic-training": {"name": "Magic Training", "count": 2, "gives": {"stats": {"magic": 1}, "mana": 10}},
+    "soulstone": {"name": "Soulstone", "count": 10, "gives": {"mana": 10}}
+  },
+  "filler": "soulstone",
+  "start": "beginnersville",
+  "settings": {"xpGainScale": 1, "xpEffect": "cost"},
+  "nodes": {
+    "beginnersville": {"name": "Beginnersville", "kind": "start", "time": 0, "limit": 1},
+    "wander": {"name": "Wander", "kind": "check", "time": 13, "limit": 1, "after": [["beginnersville"]]},
+    "smash-pots": {"name": "Smash Pots", "kind": "check", "time": 3, "limit": 3, "results": {"mana": 5}, "after": [["beginnersville"]]},
+    "pick-locks": {"name": "Pick Locks", "kind": "check", "time": 20, "limit": 2, "results": {"resources": {"gold": 1}}, "after": [["wander"]]},
+    "buy-glasses": {"name": "Buy Glasses", "kind": "check", "time": 3, "limit": 1, "requires": {"resources": {"gold": 1}}, "results": {"resources": {"gold": -1}}, "after": [["wander"]]},
+    "buy-mana": {"name": "Buy Mana", "kind": "check", "time": 5, "limit": 3, "requires": {"resources": {"gold": 1}}, "results": {"resources": {"gold": -1}, "mana": 25}, "after": [["wander"]]},
+    "meet-people": {"name": "Meet People", "kind": "check", "time": 40, "limit": 1, "requires": {"stats": {"wander": 1}}, "after": [["wander"]]},
+    "train-strength": {"name": "Train Strength", "kind": "check", "time": 100, "limit": 1, "after": [["meet-people"]]},
+    "short-quest": {"name": "Short Quest", "kind": "check", "time": 30, "limit": 2, "results": {"resources": {"gold": 2}}, "after": [["meet-people"]]},
+    "investigate": {"name": "Investigate", "kind": "check", "time": 50, "limit": 1, "requires": {"stats": {"met": 1}}, "after": [["meet-people"]]},
+    "long-quest": {"name": "Long Quest", "kind": "check", "time": 75, "limit": 2, "results": {"resources": {"gold": 3, "reputation": 1}}, "after": [["investigate"]]},
+    "throw-party": {"name": "Throw Party", "kind": "check", "time": 80, "limit": 1, "requires": {"stats": {"secrets": 2}, "resources": {"reputation": 2}}, "results": {"resources": {"reputation": -2}}, "after": [["investigate"]]},
+    "warrior-lessons": {"name": "Warrior Lessons", "kind": "check", "time": 50, "limit": 1, "requires": {"stats": {"secrets": 1}, "resources": {"reputation": 2}}, "results": {"stats": {"combat": 1}}, "after": [["investigate"]]},
+    "mage-lessons": {"name": "Mage Lessons", "kind": "check", "time": 50, "limit": 1, "requires": {"stats": {"secrets": 1}, "resources": {"reputation": 2}}, "results": {"stats": {"magic": 1}}, "after": [["investigate"]]},
+    "fight-monsters": {"name": "Fight Monsters", "kind": "check", "time": 34, "limit": 2, "requires": {"stats": {"combat": 1}, "resources": {"reputation": 2}}, "results": {"resources": {"gold": 2}}, "after": [["beginnersville"]]},
+    "heal-the-sick": {"name": "Heal The Sick", "kind": "check", "time": 42, "limit": 2, "requires": {"stats": {"magic": 1}, "resources": {"reputation": 1}}, "results": {"resources": {"reputation": 1}}, "after": [["beginnersville"]]},
+    "small-dungeon": {"name": "Small Dungeon", "kind": "check", "time": 15, "limit": 1, "requires": {"stats": {"combat": 2, "magic": 2}, "resources": {"reputation": 2}}, "after": [["beginnersville"]]},
+    "haggle": {"name": "Haggle", "kind": "check", "time": 5, "limit": 2, "requires": {"stats": {"combat": 2, "magic": 2}, "resources": {"reputation": 1}}, "results": {"resources": {"reputation": -1, "gold": 2}}, "after": [["beginnersville"]], "src": "haggle-folded"},
+    "buy-supplies": {"name": "Buy Supplies", "kind": "check", "time": 10, "limit": 1, "requires": {"stats": {"combat": 2, "magic": 2}, "resources": {"gold": 6}}, "results": {"resources": {"gold": -6, "supplies": 1}}, "after": [["beginnersville"]], "src": "buy-supplies-6"},
+    "start-journey": {"name": "Start Journey", "kind": "goal", "time": 50, "limit": 1, "requires": {"stats": {"combat": 2, "magic": 2}, "resources": {"supplies": 1}}, "results": {"resources": {"supplies": -1}}, "after": [["buy-supplies"]]}
+  }
+}

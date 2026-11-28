@@ -1,8 +1,47 @@
 import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';
 import { pickerHTML, setupNodePicker } from './nodePicker.js';
+import { startLayout } from './layoutRun.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { isRegionGroupNode, SUB_REGION_VIEW_KEY, SUB_REGION_VIEW_SCHEMA, SUB_REGION_VIEW_LABELS } from './subRegionGroups.js';
+import { NODE_LOOK_KEY, NODE_LOOK_SCHEMA, NODE_LOOK_LABELS, NODE_LOOK_HINT, syncNodeLookControl } from './nodeLook.js';
+import { exitTileOf } from '../regionMap/regionMapModel.js';
+import {
+  DIRECTION_STRENGTH_KEY, DIRECTION_SPACING_KEY, DIRECTION_EXITS_KEY, DIRECTION_STRENGTH_SCHEMA, DIRECTION_SPACING_SCHEMA,
+  DIRECTION_EXITS_SCHEMA, DIRECTION_EXITS_LABELS, DIRECTION_LAYOUT_PRESET, normaliseDirectionSettings, exitDirections,
+  edgePreferences, directionLayout, overlapCount, angleErrors,
+} from './directionLayout.js';
+import {
+  DUNGEON_GROUPING_KEY, DUNGEON_GROUP_STRENGTH_KEY, DUNGEON_GROUPING_SCHEMA, DUNGEON_GROUPING_LABELS,
+  DUNGEON_GROUP_STRENGTH_SCHEMA, normaliseGroupingSettings, groupedDirectionLayout, dungeonReader, dungeonsOf,
+  mixingCount, blockCheck, blockPad, groupingDrawsBoxes,
+} from './dungeonGroups.js';
+import {
+  FLOOR_GAP_KEY, FLOOR_GAP_SCHEMA, normaliseFloorGap, verticalExits, verticalEdges,
+} from './floors.js';
+import { solveFloors, floorLabels } from './floorSolver.js';
+
+const nowMs = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+
+/** The three Direction-aware settings' keys, by field. */
+export const DIRECTION_SETTING_KEYS = Object.freeze({
+  strength: DIRECTION_STRENGTH_KEY, spacing: DIRECTION_SPACING_KEY, exits: DIRECTION_EXITS_KEY,
+});
+/** ⛓ region-graph-dungeon-groups: the dungeon grouping's two settings' keys, by field. */
+export const GROUPING_SETTING_KEYS = Object.freeze({
+  grouping: DUNGEON_GROUPING_KEY, groupStrength: DUNGEON_GROUP_STRENGTH_KEY,
+  // ⛓ region-graph-floors: the two-step values' floor gap.
+  floorGap: FLOOR_GAP_KEY,
+});
+/** ⛓ region-graph-floors: do the floors (vertical links, the floor gap, the floor labels) apply to `grouping`? */
+export const groupingUsesFloors = (grouping) => grouping === 'twoStep' || grouping === 'twoStepBoxes';
+const DIRECTION_KEY_SET = new Set([...Object.values(DIRECTION_SETTING_KEYS), ...Object.values(GROUPING_SETTING_KEYS)]);
+/**
+ * Is `key` one of the Direction-aware layout's settings, its dungeon grouping's included (a write re-runs that layout
+ * if it is the one drawn, never rebuilds the graph)?
+ */
+export const isDirectionSettingKey = (key) => DIRECTION_KEY_SET.has(key);
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -26,6 +65,42 @@ export class LayoutControlsManager {
         </div>
         ${pickerHTML()}
         <div id="layoutEditorContainer"></div>
+        <details class="rg-direction-layout" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Direction-aware layout:</summary>
+          <div style="margin: 0 0 4px 0; font-size: 11px; color: #aaa;">Places each neighbour on the side of the exit that leads to it, as near as it can.</div>
+          <label style="display: block; margin: 3px 0;" title="${DIRECTION_STRENGTH_SCHEMA.description}">
+            <span style="margin-right: 5px;">Strength:</span>
+            <input type="range" id="directionStrength" min="${DIRECTION_STRENGTH_SCHEMA.minimum}" max="${DIRECTION_STRENGTH_SCHEMA.maximum}" step="0.05" value="${DIRECTION_STRENGTH_SCHEMA.default}" style="width: 90px; vertical-align: middle;">
+            <span id="directionStrengthValue" style="font-size: 11px;">${DIRECTION_STRENGTH_SCHEMA.default}</span>
+          </label>
+          <label style="display: block; margin: 3px 0;" title="${DIRECTION_SPACING_SCHEMA.description}">
+            <span style="margin-right: 5px;">Spacing (px):</span>
+            <input type="number" id="directionSpacing" min="${DIRECTION_SPACING_SCHEMA.minimum}" max="${DIRECTION_SPACING_SCHEMA.maximum}" step="5" value="${DIRECTION_SPACING_SCHEMA.default}" style="width: 60px; padding: 2px;">
+          </label>
+          <label style="display: block; margin: 3px 0;" title="${DIRECTION_EXITS_SCHEMA.description}">
+            <span style="margin-right: 5px;">Exits used:</span>
+            <select id="directionExits" style="padding: 2px;">
+              ${Object.entries(DIRECTION_EXITS_LABELS).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+            </select>
+          </label>
+          <label style="display: block; margin: 3px 0;" title="${DUNGEON_GROUPING_SCHEMA.description}">
+            <span style="margin-right: 5px;">Dungeon grouping:</span>
+            <select id="dungeonGrouping" style="padding: 2px;">
+              ${Object.entries(DUNGEON_GROUPING_LABELS).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+            </select>
+          </label>
+          <label style="display: block; margin: 3px 0;" title="${DUNGEON_GROUP_STRENGTH_SCHEMA.description}">
+            <span style="margin-right: 5px;">Dungeon pull:</span>
+            <input type="range" id="dungeonGroupStrength" min="${DUNGEON_GROUP_STRENGTH_SCHEMA.minimum}" max="${DUNGEON_GROUP_STRENGTH_SCHEMA.maximum}" step="0.05" value="${DUNGEON_GROUP_STRENGTH_SCHEMA.default}" style="width: 90px; vertical-align: middle;">
+            <span id="dungeonGroupStrengthValue" style="font-size: 11px;">${DUNGEON_GROUP_STRENGTH_SCHEMA.default}</span>
+          </label>
+          <label style="display: block; margin: 3px 0;" title="${FLOOR_GAP_SCHEMA.description}">
+            <span style="margin-right: 5px;">Floor gap (px):</span>
+            <input type="number" id="floorGap" min="${FLOOR_GAP_SCHEMA.minimum}" max="${FLOOR_GAP_SCHEMA.maximum}" step="10" value="${FLOOR_GAP_SCHEMA.default}" style="width: 60px; padding: 2px;">
+          </label>
+          <button id="runDirectionLayout" style="margin: 2px; padding: 4px 8px;">Run Direction-aware layout</button>
+          <div id="directionLayoutStatus" style="margin: 2px 0; font-size: 11px; color: #aaa;"></div>
+        </details>
         <div id="discoveryControls" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <div style="font-weight: bold; margin-bottom: 5px;">Discovery Mode:</div>
           <label style="display: block; margin: 3px 0; cursor: pointer;">
@@ -43,6 +118,22 @@ export class LayoutControlsManager {
             <span style="margin-right: 5px;">Scroll zoom sensitivity:</span>
             <input type="number" id="wheelSensitivity" min="0.1" max="5" step="0.1" value="1" style="width: 60px; padding: 2px;">
           </label>
+        </details>
+        <details open class="rg-sub-regions" style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+          <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Sub-regions:</summary>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Draw as:</span>
+            <select id="subRegionView" style="padding: 2px;">
+              ${SUB_REGION_VIEW_SCHEMA.enum.map((v) => `<option value="${v}">${SUB_REGION_VIEW_LABELS[v] ?? v}</option>`).join('')}
+            </select>
+          </label>
+          <label style="display: block; margin: 3px 0;">
+            <span style="margin-right: 5px;">Node look:</span>
+            <select id="nodeLook" style="padding: 2px;">
+              ${NODE_LOOK_SCHEMA.enum.map((v) => `<option value="${v}">${NODE_LOOK_LABELS[v] ?? v}</option>`).join('')}
+            </select>
+          </label>
+          <div id="nodeLookHint" style="display: none; margin: 0 0 3px 0; font-size: 11px; color: #aaa;">${NODE_LOOK_HINT}</div>
         </details>
         <details open style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
           <summary style="font-weight: bold; margin-bottom: 5px; cursor: pointer; user-select: none;">Location Visibility:</summary>
@@ -190,6 +281,34 @@ export class LayoutControlsManager {
     const forceHideEdgeLabelsEl = this.ui.controlPanel.querySelector('#forceHideEdgeLabels');
     this.ui.edgeLabelsHidden = !!forceHideEdgeLabelsEl?.checked;
 
+    // ⛓ Sub-regions (region-graph-groups-a): the select writes the setting; the panel's settings:changed handler
+    // reloads it and REBUILDS the graph (`RegionGraphUI` rebuilds on any moduleSettings.regionGraph.* write).
+    const subRegionSelect = this.ui.controlPanel.querySelector('#subRegionView');
+    if (subRegionSelect) {
+      if (this.ui.subRegionView) subRegionSelect.value = this.ui.subRegionView;
+      subRegionSelect.addEventListener('change', async (e) => {
+        try {
+          await settingsManager.updateSetting(SUB_REGION_VIEW_KEY, e.target.value);
+        } catch (error) {
+          logger.warn(`Failed to save setting ${SUB_REGION_VIEW_KEY}:`, error);
+        }
+      });
+    }
+
+    // ⛓ Node look (region-graph-map-look): the select writes the setting; the panel's settings:changed handler reloads
+    // it and turns the map look on or off WITHOUT a rebuild. Disabled (with a hint) unless Draw as is merged.
+    const nodeLookSelect = this.ui.controlPanel.querySelector('#nodeLook');
+    if (nodeLookSelect) {
+      syncNodeLookControl(this.ui);
+      nodeLookSelect.addEventListener('change', async (e) => {
+        try {
+          await settingsManager.updateSetting(NODE_LOOK_KEY, e.target.value);
+        } catch (error) {
+          logger.warn(`Failed to save setting ${NODE_LOOK_KEY}:`, error);
+        }
+      });
+    }
+
     // Setup change handler for discovery checkbox to trigger graph rebuild
     const showUndiscoveredCheckbox = this.ui.controlPanel.querySelector('#graph-show-undiscovered');
     if (showUndiscoveredCheckbox) {
@@ -249,8 +368,272 @@ export class LayoutControlsManager {
       });
     }
 
+    // ⛓ region-graph-direction-layout: the three settings (schema defaults only) and the Run button.
+    await this.loadDirectionSettings();
+    this.setupDirectionControls();
+
     // Update discovery controls visibility based on current mode
     this.updateDiscoveryControlsVisibility();
+  }
+
+  /* ── ⛓ region-graph-direction-layout ─────────────────────────────────────────────────────────────────────────── */
+
+  /** Read the Direction-aware settings into `ui.directionSettings` (no call-site default: the schema's is the only one). */
+  async loadDirectionSettings() {
+    const raw = {};
+    for (const [field, key] of Object.entries(DIRECTION_SETTING_KEYS)) {
+      try {
+        raw[field] = await settingsManager.getSetting(key);
+      } catch (error) {
+        logger.warn(`Could not load ${key}; using the schema default:`, error);
+      }
+    }
+    this.ui.directionSettings = normaliseDirectionSettings(raw);
+    await this.loadGroupingSettings();
+    this.syncDirectionControls();
+    return this.ui.directionSettings;
+  }
+
+  /** ⛓ region-graph-dungeon-groups: read the grouping settings into `ui.groupingSettings` (schema defaults only). */
+  async loadGroupingSettings() {
+    const raw = {};
+    for (const [field, key] of Object.entries(GROUPING_SETTING_KEYS)) {
+      try {
+        raw[field] = await settingsManager.getSetting(key);
+      } catch (error) {
+        logger.warn(`Could not load ${key}; using the schema default:`, error);
+      }
+    }
+    this.ui.groupingSettings = { ...normaliseGroupingSettings(raw), floorGap: normaliseFloorGap(raw.floorGap) };
+    return this.ui.groupingSettings;
+  }
+
+  /** Show `ui.directionSettings` in the controls. */
+  syncDirectionControls() {
+    const panel = this.ui.controlPanel;
+    const s = this.ui.directionSettings ?? normaliseDirectionSettings();
+    const strength = panel?.querySelector?.('#directionStrength');
+    if (strength) strength.value = String(s.strength);
+    const strengthValue = panel?.querySelector?.('#directionStrengthValue');
+    if (strengthValue) strengthValue.textContent = String(s.strength);
+    const spacing = panel?.querySelector?.('#directionSpacing');
+    if (spacing) spacing.value = String(s.spacing);
+    const exits = panel?.querySelector?.('#directionExits');
+    if (exits) exits.value = s.exits;
+    const g = this.ui.groupingSettings ?? normaliseGroupingSettings();
+    const grouping = panel?.querySelector?.('#dungeonGrouping');
+    if (grouping) grouping.value = g.grouping;
+    const gs = panel?.querySelector?.('#dungeonGroupStrength');
+    if (gs) gs.value = String(g.groupStrength);
+    const gsValue = panel?.querySelector?.('#dungeonGroupStrengthValue');
+    if (gsValue) gsValue.textContent = String(g.groupStrength);
+    const fg = panel?.querySelector?.('#floorGap');
+    if (fg) fg.value = String(g.floorGap ?? normaliseFloorGap());
+  }
+
+  /** The controls write the settings; the panel's settings:changed handler re-runs the layout if it is the one drawn. */
+  setupDirectionControls() {
+    const panel = this.ui.controlPanel;
+    if (!panel?.querySelector || this._directionControlsBound) return;
+    this._directionControlsBound = true;
+    const save = async (key, value) => {
+      try {
+        await settingsManager.updateSetting(key, value);
+      } catch (error) {
+        logger.warn(`Failed to save setting ${key}:`, error);
+      }
+    };
+    const strength = panel.querySelector('#directionStrength');
+    strength?.addEventListener('input', (e) => {
+      const v = panel.querySelector('#directionStrengthValue');
+      if (v) v.textContent = String(e.target.value);
+    });
+    strength?.addEventListener('change', (e) => save(DIRECTION_STRENGTH_KEY, parseFloat(e.target.value)));
+    panel.querySelector('#directionSpacing')?.addEventListener('change', (e) => save(DIRECTION_SPACING_KEY, parseFloat(e.target.value)));
+    panel.querySelector('#directionExits')?.addEventListener('change', (e) => save(DIRECTION_EXITS_KEY, e.target.value));
+    panel.querySelector('#dungeonGrouping')?.addEventListener('change', (e) => save(DUNGEON_GROUPING_KEY, e.target.value));
+    const gs = panel.querySelector('#dungeonGroupStrength');
+    gs?.addEventListener('input', (e) => {
+      const v = panel.querySelector('#dungeonGroupStrengthValue');
+      if (v) v.textContent = String(e.target.value);
+    });
+    gs?.addEventListener('change', (e) => save(DUNGEON_GROUP_STRENGTH_KEY, parseFloat(e.target.value)));
+    panel.querySelector('#floorGap')?.addEventListener('change', (e) => save(FLOOR_GAP_KEY, parseFloat(e.target.value)));
+    panel.querySelector('#runDirectionLayout')?.addEventListener('click', () => this.runDirectionLayout());
+  }
+
+  /** A Direction-aware setting changed: reload it, and re-run the layout if it is the one the graph shows. */
+  async onDirectionSettingChanged() {
+    await this.loadDirectionSettings();
+    if (this.ui.currentLayoutPreset === DIRECTION_LAYOUT_PRESET && this.ui.cy && this.ui.graphInitialized) {
+      this.runDirectionLayout();
+    }
+  }
+
+  /**
+   * The layout's inputs from the graph AS DRAWN → `{ nodes, edges, prefs, counts }`. Laid-out nodes: every node but the
+   * player, location nodes and a `nested` box (a box is placed by its members; its members carry `group` = the box, so
+   * they stay together). A node's size is its drawn size (`outerWidth` × `outerHeight`: the map look's rectangle in
+   * merged + map, the ellipse's box elsewhere). A merged node stands for its `members`.
+   */
+  directionLayoutInputs(settings = this.ui.directionSettings ?? normaliseDirectionSettings()) {
+    const cy = this.ui.cy;
+    const laid = cy.nodes().filter((n) => !n.hasClass('player') && !n.hasClass('location-node') && !isRegionGroupNode(n, 'box'));
+    const got = this.ui.mapLook?.regionMapModel?.() ?? null;
+    // ⛓ region-graph-dungeon-groups: each node's dungeon = its DISPLAY region's Region Map group (`model.groupOf`).
+    const dungeonOf = this.dungeonOfNode(got?.model ?? null);
+    const ids = new Set();
+    const nodes = [];
+    laid.forEach((n) => {
+      const w = n.outerWidth?.();
+      const h = n.outerHeight?.();
+      const parent = n.data('parent');
+      const members = isRegionGroupNode(n, 'merged') ? (n.data('members') ?? []) : [n.data('regionName') ?? n.id()];
+      ids.add(n.id());
+      nodes.push({ id: n.id(), w: w > 0 ? w : 64, h: h > 0 ? h : 49, members, group: parent ?? null, dungeon: dungeonOf(n) });
+    });
+    const edges = [];
+    cy.edges().forEach((e) => {
+      const s = e.data('source');
+      const t = e.data('target');
+      if (ids.has(s) && ids.has(t) && s !== t) edges.push({ id: e.id(), source: s, target: t });
+    });
+    const sidecars = got?.rules?.preset_sidecars?.[got.playerId] ?? null;
+    let directions = [];
+    let counts = null;
+    if (got?.model && sidecars) {
+      ({ directions, counts } = exitDirections({ sidecars, model: got.model, tileOf: exitTileOf, exits: settings.exits }));
+    }
+    const prefs = edgePreferences(nodes, edges, directions);
+    return { nodes, edges, prefs, counts, model: got?.model ?? null, sidecars };
+  }
+
+  /**
+   * ⛓ region-graph-floors: the floors of the graph as drawn, over the Region Map `model` → `{ exits, counts, vertical:
+   * Map<edgeId, {pref, exits}>, numbering, labels: Map<group, label> }` (`floors.js`). No model: no vertical link.
+   */
+  floorsOf(model, sidecars, nodes, edges) {
+    const { exits, counts } = model && sidecars
+      ? verticalExits({ sidecars, model, tileOf: exitTileOf })
+      : { exits: [], counts: { vertical: 0, withDirection: 0, centre: 0, without: 0, inGroup: 0 } };
+    // ⛓ region-graph-floor-solver: the numbering is the constraint solve over every link between groups.
+    const t0 = nowMs();
+    const numbering = model ? solveFloors(model) : solveFloors(null);
+    const solveMs = nowMs() - t0;
+    return { exits, counts, vertical: verticalEdges(nodes, edges, exits), numbering, labels: floorLabels(numbering), solveMs };
+  }
+
+  /**
+   * ⛓ region-graph-dungeon-groups: the dungeon reader for drawn nodes over a Region Map `model` → `(node) → group id |
+   * null`. A merged / collapsed node by its `groupKey` (a display key); a region node (a sub-region in separate, a
+   * nested / open box's member) by its rules region's display region. No model, or a node the model does not place
+   * (the Menu node): null.
+   */
+  dungeonOfNode(model) {
+    if (!model) return () => null;
+    const r = dungeonReader(model);
+    return (n) => {
+      if (isRegionGroupNode(n, 'merged')) return r.ofKey(n.data('groupKey'));
+      return r.ofRegion(n.data('regionName') ?? n.id());
+    };
+  }
+
+  /**
+   * Compute the Direction-aware positions for the graph as drawn → `{ options, report }`: `options` a Cytoscape
+   * `preset` layout (animated, fit, as the other layouts), `report` the timing and the measures (in
+   * `ui.lastDirectionLayout` too). Nodes it does not lay out keep their position (location nodes are re-seated by
+   * the layoutstop handler, as after any layout).
+   */
+  buildDirectionLayout(settings = this.ui.directionSettings ?? normaliseDirectionSettings(),
+    grouping = this.ui.groupingSettings ?? normaliseGroupingSettings(), { floorLinks = true } = {}) {
+    const t0 = nowMs();
+    const { nodes, edges, prefs, counts, model, sidecars } = this.directionLayoutInputs(settings);
+    // ⛓ region-graph-floors: in the two-step values, an edge carrying a stair / pit between two groups is a FLOOR
+    // link (`vertical`). `floorLinks: false` (the shots' "before" column only) leaves them unmarked: the two-step
+    // layout exactly as region-graph-dungeon-groups built it.
+    const usesFloors = groupingUsesFloors(grouping.grouping);
+    const floors = usesFloors ? this.floorsOf(model, sidecars, nodes, edges) : null;
+    const t1 = nowMs();
+    const withPrefs = edges.map((e) => {
+      const v = floors && floorLinks ? floors.vertical.get(e.id) : undefined;
+      return v ? { ...e, pref: prefs.get(e.id), vertical: v } : { ...e, pref: prefs.get(e.id) };
+    });
+    // ⛓ region-graph-dungeon-groups: `none` is the very same `directionLayout` call as before (groupedDirectionLayout).
+    const { positions, stats, blocks } = groupedDirectionLayout(nodes, withPrefs, { ...settings, ...grouping });
+    const t2 = nowMs();
+    const errors = angleErrors(edges, prefs, positions);
+    const dungeons = dungeonsOf(nodes);
+    const check = blocks ? blockCheck(nodes, positions, blockPad(settings.spacing)) : null;
+    const report = {
+      settings: { ...settings }, grouping: { ...grouping }, view: this.ui.subRegionView ?? null, nodeLook: this.ui.nodeLook ?? null,
+      nodes: nodes.length, edges: edges.length, preferredEdges: prefs.size,
+      inputsMs: t1 - t0, layoutMs: t2 - t1, totalMs: t2 - t0,
+      overlaps: overlapCount(nodes, positions), meanAngleError: errors.mean, p90AngleError: errors.p90,
+      dungeons: dungeons.filter((d) => d.dungeon != null).length,
+      dungeonSizes: dungeons.filter((d) => d.dungeon != null).map((d) => d.members.length).sort((a, b) => b - a),
+      ungrouped: dungeons.filter((d) => d.dungeon == null).length,
+      mixing: mixingCount(nodes, positions),
+      blockOverlaps: check ? check.blockOverlaps : null, intruders: check ? check.intruders : null,
+      counts: counts ? { ...counts, twoOnOneSide: counts.twoOnOneSide.length, twoOnOneSideLevels: counts.twoOnOneSideLevels.length } : null,
+      floors: floors ? floorReport(floors, nodes, edges, prefs, positions, floorLinks) : null,
+      stats,
+    };
+    this.ui.lastDirectionLayout = report;
+    return {
+      report,
+      positions,
+      // ⛓ the boxes to draw (twoStepBoxes): each dungeon of 2+ drawn nodes, its label the group's id.
+      boxes: groupingDrawsBoxes(grouping.grouping) && blocks
+        ? dungeons.filter((d) => d.dungeon != null && d.members.length >= 2).map((d) => ({
+          dungeon: d.dungeon,
+          // ⛓ region-graph-floors: the FLOOR's label; the group's root level id stays in `root` (the box's tooltip).
+          label: floors?.labels.get(d.dungeon) ?? String(d.dungeon),
+          root: String(d.dungeon),
+          members: d.members,
+        }))
+        : [],
+      options: {
+        name: 'preset',
+        positions: (node) => positions.get(node.id()) ?? node.position(),
+        animate: true,
+        animationDuration: 1000,
+        fit: true,
+        padding: 50,
+      },
+    };
+  }
+
+  /**
+   * Run the Direction-aware layout on the graph as drawn (positions saved when the run settles, as every layout's).
+   * `animate: false` (the in-app row) places the nodes at once instead of over the 1 s animation.
+   */
+  runDirectionLayout({ animate = true } = {}) {
+    if (!this.ui.cy) return null;
+    const built = this.buildDirectionLayout();
+    const { report } = built;
+    const options = animate ? built.options : { ...built.options, animate: false };
+    this.ui.currentLayoutPreset = DIRECTION_LAYOUT_PRESET;
+    const select = this.ui.controlPanel?.querySelector?.('#layoutPreset');
+    if (select) select.value = DIRECTION_LAYOUT_PRESET;
+    const status = this.ui.controlPanel?.querySelector?.('#directionLayoutStatus');
+    if (status) {
+      const err = report.meanAngleError == null ? 'no exit directions in this world' : `mean direction error ${report.meanAngleError.toFixed(0)}°`;
+      const mix = report.grouping.grouping === 'none' ? '' : `, ${report.mixing.mixed}/${report.mixing.eligible} nodes mixed`;
+      status.textContent = `${report.nodes} nodes in ${Math.round(report.totalMs)} ms, ${report.overlaps} overlaps, ${err}${mix}`;
+    }
+    this.ui.updateStatus?.('Running Direction-aware layout...');
+    // The player marker is a LOCKED node (no layout moves it): re-seat it on its region once the nodes have landed.
+    startLayout(this.ui, options, {
+      beforeSettle: () => {
+        const region = this.ui.getCurrentPlayerLocation?.();
+        if (region && this.ui.cy.getElementById('player').length) this.ui.updatePlayerLocation?.(region);
+      },
+    });
+    // ⛓ region-graph-dungeon-groups: the boxes belong to THIS run (set after its `layoutstart`, which clears the old
+    // ones); any later layout's start, or a rebuild, clears them. Empty unless grouping = twoStepBoxes.
+    this.ui.dungeonBoxes?.show?.(built.boxes);
+    report.boxes = built.boxes.length;
+    return report;
   }
 
   /**
@@ -364,11 +747,13 @@ export class LayoutControlsManager {
       return;
     }
 
-    const savedPositions = !force && this.ui.nodePositions.size > 0;
+    // ⛓ merged (region-graph-groups-b) lays out from, and saves to, its own store: `separate`'s is never read here.
+    const store = this.positionStore();
+    const savedPositions = !force && store.size > 0;
 
     if (savedPositions) {
       this.ui.cy.nodes().forEach(node => {
-        const pos = this.ui.nodePositions.get(node.id());
+        const pos = store.get(node.id());
         if (pos) {
           node.position(pos);
         }
@@ -391,7 +776,6 @@ export class LayoutControlsManager {
       return;
     }
 
-    this.ui.isLayoutRunning = true;
     this.ui.updateStatus('Running layout...');
 
     // Pre-size nodes for overlays so layout spaces them correctly
@@ -407,9 +791,9 @@ export class LayoutControlsManager {
       if (gridOptions) {
         const layoutPresetSelect = this.ui.controlPanel?.querySelector('#layoutPreset');
         if (layoutPresetSelect) layoutPresetSelect.value = 'procgen-grid';
+        this.ui.currentLayoutPreset = 'procgen-grid';
         logger.debug(`Applying procgen grid layout (${this.ui.gridLayout.size} regions)`);
-        this.ui.currentLayout = this.ui.cy.layout(gridOptions);
-        this.ui.currentLayout.run();
+        startLayout(this.ui, gridOptions);
         return;
       }
     }
@@ -453,9 +837,9 @@ export class LayoutControlsManager {
     if (layoutPresetSelect) {
       layoutPresetSelect.value = selectedPreset;
     }
+    this.ui.currentLayoutPreset = selectedPreset;
 
-    this.ui.currentLayout = this.ui.cy.layout(layoutOptions);
-    this.ui.currentLayout.run();
+    startLayout(this.ui, layoutOptions);
   }
 
   /**
@@ -476,7 +860,15 @@ export class LayoutControlsManager {
     const layout = this.ui.gridLayout;
     if (!layout || layout.size === 0) return null;
 
-    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+    // A group box is sized by its members and placed by them: it takes no grid cell. A merged group node
+    // (subRegionView = merged) takes the mean of its members' cells.
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player') && !isRegionGroupNode(n, 'box'));
+    const cellOf = (node) => {
+      if (!isRegionGroupNode(node, 'merged')) return layout.get(node.id());
+      const cells = (node.data('members') ?? []).map((m) => layout.get(m)).filter(Boolean);
+      if (cells.length === 0) return null;
+      return { gx: cells.reduce((a, c) => a + c.gx, 0) / cells.length, gy: cells.reduce((a, c) => a + c.gy, 0) / cells.length };
+    };
     const avgNodeWidth = nodes.reduce((sum, n) => {
       const bb = n.boundingBox({ includeLabels: true });
       return sum + bb.w;
@@ -503,7 +895,7 @@ export class LayoutControlsManager {
     return {
       name: 'preset',
       positions: (node) => {
-        const cell = layout.get(node.id());
+        const cell = cellOf(node);
         if (!cell) return { x: 0, y: 0 };
         return {
           x: (cell.gx - minGx) * cellWidth,
@@ -523,7 +915,9 @@ export class LayoutControlsManager {
    * with computed positions that guarantee no edge connects same-row nodes.
    */
   buildHierarchyLayout() {
-    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player'));
+    // A group box has no depth of its own (its members do): it takes no row slot. A merged group node has its
+    // shallowest member's depth, and takes one.
+    const nodes = this.ui.cy.nodes().filter(n => !n.hasClass('player') && !isRegionGroupNode(n, 'box'));
 
     // Group nodes by depth
     const depthGroups = new Map();
@@ -610,7 +1004,7 @@ export class LayoutControlsManager {
     const adjList = new Map();
 
     // Initialize all nodes
-    this.ui.cy.nodes().filter(n => !n.hasClass('hidden') && !n.hasClass('player')).forEach(node => {
+    this.ui.cy.nodes().filter(n => !n.hasClass('hidden') && !n.hasClass('player') && !isRegionGroupNode(n, 'box')).forEach(node => {
       const id = node.id();
       inDegree.set(id, 0);
       adjList.set(id, []);
@@ -660,11 +1054,48 @@ export class LayoutControlsManager {
     return { isDAG };
   }
 
+  /**
+   * The saved-position store for the view the graph draws: `separate` and `nested` share `ui.nodePositions` (region
+   * positions); `merged` has its own, `ui.mergedNodePositions` (its group nodes and the regions drawn beside them), so
+   * a `merged` layout never writes over `separate`'s saved one. ⛓ `collapsible` (region-graph-groups-c) has its own
+   * too, `ui.collapsibleNodePositions` (closed group nodes, open members and the regions beside them). None is
+   * persisted.
+   */
+  positionStore() {
+    if (this.ui.subRegionView === 'collapsible') {
+      if (!this.ui.collapsibleNodePositions) this.ui.collapsibleNodePositions = new Map();
+      return this.ui.collapsibleNodePositions;
+    }
+    if (this.ui.subRegionView !== 'merged') return this.ui.nodePositions;
+    if (!this.ui.mergedNodePositions) this.ui.mergedNodePositions = new Map();
+    return this.ui.mergedNodePositions;
+  }
+
   saveNodePositions() {
+    if (this.ui.subRegionView === 'collapsible') {
+      // ⛓ collapsible: every drawn node but an open group's box, location nodes and the player, into its own store.
+      // Not cleared first: a closed group keeps its members' last arrangement for the next open.
+      const store = this.positionStore();
+      this.ui.cy.nodes().not('.location-node').filter((n) => !n.hasClass('player') && !isRegionGroupNode(n, 'box')).forEach((node) => {
+        store.set(node.id(), { x: node.position('x'), y: node.position('y') });
+      });
+      return;
+    }
+    if (this.ui.subRegionView === 'merged') {
+      // ⛓ merged: every drawn node but location nodes and the player, into merged's own store.
+      const store = this.positionStore();
+      store.clear();
+      this.ui.cy.nodes().not('.location-node').filter((n) => !n.hasClass('player')).forEach((node) => {
+        store.set(node.id(), { x: node.position('x'), y: node.position('y') });
+      });
+      return;
+    }
     this.ui.nodePositions.clear();
     // Location nodes are drawn around their region, never laid out; saving
-    // them would make the next rebuild's size check re-run the layout.
-    this.ui.cy.nodes().not('.location-node').forEach(node => {
+    // them would make the next rebuild's size check re-run the layout. A
+    // group box (subRegionView = nested) is placed by its members: saving it
+    // would leak a position no `separate` graph has.
+    this.ui.cy.nodes().not('.location-node').filter(n => !isRegionGroupNode(n)).forEach(node => {
       this.ui.nodePositions.set(node.id(), {
         x: node.position('x'),
         y: node.position('y')
@@ -674,7 +1105,7 @@ export class LayoutControlsManager {
 
   exportNodePositions() {
     const positions = {};
-    this.ui.cy.nodes().forEach(node => {
+    this.ui.cy.nodes().filter(n => !isRegionGroupNode(n)).forEach(node => {
       positions[node.id()] = {
         x: Math.round(node.position('x')),
         y: Math.round(node.position('y'))
@@ -692,4 +1123,41 @@ export class LayoutControlsManager {
 
     this.ui.updateStatus('Positions exported to file');
   }
+}
+/**
+ * ⛓ region-graph-floors: the floors' measures for a report: the counts, the numbering (numbered / ranged / unreached /
+ * contradictions, the spans: region-graph-floor-solver), and, at `positions`, the angle error of the FLAT edges (with a preference, no vertical link; split into
+ * those inside one dungeon and those between two — a warp) and of the VERTICAL ones (their vertical direction), with
+ * the flat and vertical mean centre-to-centre lengths.
+ */
+function floorReport(floors, nodes, edges, prefs, positions, floorLinks) {
+  const flat = edges.filter((e) => !floors.vertical.has(e.id));
+  const dungeonOf = new Map(nodes.map((n) => [String(n.id), n.dungeon ?? null]));
+  const inside = (e) => dungeonOf.get(String(e.source)) != null && dungeonOf.get(String(e.source)) === dungeonOf.get(String(e.target));
+  const fin = angleErrors(flat.filter(inside), prefs, positions);
+  const fx = angleErrors(flat.filter((e) => !inside(e)), prefs, positions);
+  const vert = edges.filter((e) => floors.vertical.has(e.id));
+  const vprefs = new Map([...floors.vertical].filter(([, v]) => v.pref).map(([id, v]) => [id, v.pref]));
+  const len = (list) => {
+    let sum = 0; let n = 0;
+    for (const e of list) {
+      const a = positions.get(String(e.source)); const b = positions.get(String(e.target));
+      if (!a || !b) continue;
+      sum += Math.hypot(b.x - a.x, b.y - a.y); n += 1;
+    }
+    return n ? sum / n : null;
+  };
+  const fe = angleErrors(flat, prefs, positions);
+  const ve = angleErrors(vert, vprefs, positions);
+  const n = floors.numbering;
+  return {
+    floorLinks, counts: { ...floors.counts }, verticalEdges: vert.length, verticalEdgesWithDirection: vprefs.size,
+    // ⛓ region-graph-floor-solver: picked / ranged (a contradiction's groups) / unreached, the spans, the solve's cost.
+    numbered: n.floorOf.size, ranged: n.ranged.size, unreached: n.unreached.length, contradictions: n.contradictions.length,
+    floorRange: n.floorOf.size ? [Math.min(...n.floorOf.values()), Math.max(...n.floorOf.values())] : null,
+    spans: { ...n.spans }, stretch: n.stretch, exact: n.exact, solveOps: n.ops, solveMs: floors.solveMs,
+    flatError: { mean: fe.mean, p90: fe.p90, n: fe.n }, verticalError: { mean: ve.mean, p90: ve.p90, n: ve.n },
+    flatInsideError: { mean: fin.mean, p90: fin.p90, n: fin.n }, flatBetweenError: { mean: fx.mean, p90: fx.p90, n: fx.n },
+    meanFlatLength: len(flat), meanVerticalLength: len(vert),
+  };
 }

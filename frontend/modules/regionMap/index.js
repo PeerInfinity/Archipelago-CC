@@ -16,7 +16,8 @@
  * the `regionMap*Check` originators. Every click also publishes the generic `regionView:regionClicked` /
  * `regionView:locationClicked` (design §4.3).
  *
- * Open it from the panel menu ("Region Map"); it is in no layout preset.
+ * Open it from the panel menu ("Region Map"); it is in no layout preset. On the MOBILE layout its tab sits right after
+ * the Region Graph's (`mobileAfter`, read by `app/core/mobileLayoutManager.js`; region-map-link-ends).
  */
 import { RegionMapUI } from './regionMapUI.js';
 import { REGION_MAP_SETTINGS_SCHEMA, moduleHandles, panelInstances } from './regionMapSettings.js';
@@ -32,6 +33,8 @@ export const moduleInfo = {
     docs: 'docs/json/user/modules/regionMap.md',
     icon: '🗺️',
     column: 2,
+    // ⛓ region-map-link-ends (⚖ the user 2026-11-22T21:55Z, "Yes, add it"): the mobile tab beside the Region Graph's.
+    mobileAfter: 'regionGraphPanel',
     category: 'Analysis Panels',
     description: 'The loaded world\'s regions as a flat map of their rendered levels, grouped, with location squares coloured by accessibility.',
     requires: ['stateManager', 'gameState'],

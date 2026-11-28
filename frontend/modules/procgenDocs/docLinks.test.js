@@ -381,15 +381,23 @@ describe('the corpus census — printed, then pinned', () => {
          *              337); its own § Staleness link (`same-doc` 42 → 43).
          *   446 → 448  ActionNodes AN-3b (2026-11-20): action-nodes.md's opening paragraph now names what slice 3
          *              added → its own § The node states and the node card and § The bot planner (`same-doc` 43 → 45).
+         *   448 → 450  content sets GEN-1 (2026-11-22): maze.md's tile-kind paragraph → its own new § Region biomes
+         *              (`same-doc` 45 → 46), and substrate-registry.md's new `regionBiomeOf` row → it (`doc` 337 → 338).
+         *   450 → 452  document library B3 (2026-11-23): editing-core.md § The document library → seedling-editor.md
+         *              § Saving to the library, and that section → editing-core.md § The document library (`doc` 338 → 340).
+         *   452 → 453  ActionNodes AN-OMSI-2 (2026-11-24): action-nodes.md's fill-retry measurement → its own new
+         *              § The omsi town (`same-doc` 46 → 47).
+         *   453 → 456  mystery substrate (2026-11-25/26): the new mystery.md → architecture.md, the generated README index's row for mystery.md, and substrate-registry.md's `ownContentOnly` → mystery.md (`doc` 340 → 343).
+         *   456 → 459  AN-MYST-1 mystery link (2026-11-27): action-nodes.md's `mystery` field row → § The mystery link (`same-doc` 47 → 48), that section → mystery.md#at-play, and mystery.md's `loop` bullet → action-nodes.md#the-mystery-link (`doc` 343 → 345).
          */
         expect(by).toEqual({
-            'same-doc': 45,
-            doc: 337,
+            'same-doc': 48,
+            doc: 345,
             external: 22,
             repo: 44,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(448);
+        expect(CORPUS.length).toBe(459);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -405,7 +413,11 @@ describe('the corpus census — printed, then pinned', () => {
         //   playback-and-debugging.md § The playback bot (3 doc).
         //   332 → 337: rule-table-doc-command — seedling-derived-rules.md (its index row, 2 links out) and the two
         //   links in to it from maze.md and pipeline-presets.md (5 doc).
-        expect(docs).toHaveLength(337);
+        //   337 → 338: content sets GEN-1 — the registry's `regionBiomeOf` row → maze.md § Region biomes (1 doc).
+        //   338 → 340: document library B3 — editing-core.md ↔ seedling-editor.md § Saving to the library (2 doc).
+        //   340 → 343: mystery substrate (2026-11-25/26): the new mystery.md → architecture.md, the generated README index's row for mystery.md, and substrate-registry.md's `ownContentOnly` → mystery.md (3 doc).
+        //   343 → 345: AN-MYST-1: action-nodes.md § The mystery link → mystery.md#at-play, and mystery.md → action-nodes.md#the-mystery-link (2 doc).
+        expect(docs).toHaveLength(345);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

@@ -15,17 +15,13 @@
  * click hits, and a click on a cell runs the region actions on its region (`regionOfCell`). Locations are those cells'
  * squares (`model.cells[key].tiles`), less any discovery hides or shows as a placeholder.
  *
- * Twins of `regionGraph/nodePicker.js` (for the duplication cleanup): `pickerHTML` ≈ its `pickerHTML` (the
- * `region-map-pick` class prefix, "cell" for "node"), `fillList` = its `fillList` (but the document it creates in: the list's own), `setupRegionMapPicker` ≈
- * its `setupNodePicker` (the lists read from the Map's model instead of Cytoscape; the click is the panel's own).
+ * The wiring (lists, refresh, boxes) is `regionView/goToPicker.js`, shared with the Graph's twin
+ * (`regionGraph/nodePicker.js`, region-view-dedup); the markup, the lists' contents, the clicks and the wording stay
+ * here.
  */
+import { pickerSelectors, setupGoToPicker } from '../regionView/goToPicker.js';
 
-export const MAP_PICKER = Object.freeze({
-    section: 'details.region-map-pick',
-    region: 'input.region-map-pick-region',
-    location: 'input.region-map-pick-location',
-    status: '.region-map-pick-status',
-});
+export const MAP_PICKER = pickerSelectors('region-map-pick');
 
 let listIds = 0;
 
@@ -76,35 +72,21 @@ export function pickableLocations(ui, cells = pickableCells(ui)) {
     return out;
 }
 
-function fillList(list, names) {
-    const doc = list.ownerDocument ?? document;
-    list.replaceChildren(...[...names].sort((a, b) => a.localeCompare(b)).map((name) => {
-        const o = doc.createElement('option');
-        o.value = name;
-        return o;
-    }));
-}
-
 /**
  * Wire the picker `root` to panel `ui` (a RegionMapUI). → `{ refresh, goToRegion(name), goToLocation(name) }`; the two
  * `goTo*` resolve to the click's record (`ui.lastClick`) or null, after the status line is written.
  */
 export function setupRegionMapPicker(ui, root) {
-    const regionBox = root.querySelector(MAP_PICKER.region);
-    const locationBox = root.querySelector(MAP_PICKER.location);
-    const status = root.querySelector(MAP_PICKER.status);
     const [regionList, locationList] = root.querySelectorAll('datalist');
-    const say = (text) => { status.textContent = text; };
-
-    // The lists are read when they can be used, not kept in step with the map.
-    const refresh = () => {
-        const cells = pickableCells(ui);
-        fillList(regionList, cells.keys());
-        fillList(locationList, pickableLocations(ui, cells).keys());
-    };
-    root.addEventListener('toggle', () => { if (root.open) refresh(); });
-    regionBox.addEventListener('focus', refresh);
-    locationBox.addEventListener('focus', refresh);
+    const { refresh, say } = setupGoToPicker({
+        root,
+        selectors: MAP_PICKER,
+        lists: () => [regionList, locationList],
+        regions: () => pickableCells(ui),
+        locations: (cells) => pickableLocations(ui, cells),
+        goRegion: (name) => goToRegion(name).catch((e) => say(`Could not go to ${name}: ${e?.message ?? e}`)),
+        goLocation: (name) => goToLocation(name).catch((e) => say(`Could not go to ${name}: ${e?.message ?? e}`)),
+    });
 
     async function goToRegion(name) {
         const frame = pickableCells(ui).get(name);
@@ -125,13 +107,5 @@ export function setupRegionMapPicker(ui, root) {
         return click;
     }
 
-    regionBox.addEventListener('change', () => {
-        const name = regionBox.value.trim();
-        if (name) goToRegion(name).catch((e) => say(`Could not go to ${name}: ${e?.message ?? e}`));
-    });
-    locationBox.addEventListener('change', () => {
-        const name = locationBox.value.trim();
-        if (name) goToLocation(name).catch((e) => say(`Could not go to ${name}: ${e?.message ?? e}`));
-    });
     return { refresh, goToRegion, goToLocation };
 }

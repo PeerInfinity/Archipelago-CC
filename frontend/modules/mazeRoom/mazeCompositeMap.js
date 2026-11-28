@@ -58,7 +58,9 @@ import { drawMazeThings } from './mazeThingOverlay.js';
 import {
     CONCEPT_ART_CLEARED_ALPHA, drawArrowTraps, drawConsumableTile, drawLiveMarkers,
 } from './mazeRoomRender.js';
-import { browserPackIo, documentContentOf, effectiveContentStack } from '../procgenPipeline/worldContent.js';
+import {
+    RECORDED_EXISTS_KEY, browserPackIo, documentContentOf, documentWorldSettingsOf, effectiveContentStack,
+} from '../procgenPipeline/worldContent.js';
 import { browserDecoder, browserRasteriser } from '../artLibrary/artLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
@@ -79,13 +81,16 @@ function slotOf(source) {
 
 /**
  * ⛓ The region's effective content stack for its ART: its substrate's default
- * pack, then the slot's recorded content (`worldContent.effectiveContentStack`,
- * the one stack rule `mazeRoomUI._tileArtStack` uses). No source → the default
- * pack alone. A content list that does not parse draws without it, by name.
+ * pack, then the slot's recorded "what exists" packs, then its recorded content
+ * (`worldContent.effectiveContentStack`, the one stack rule `mazeRoomUI._tileArtStack`
+ * uses; ⛓ GEN-2: the `exists` packs too, so a kind the generator placed from one
+ * draws from it). No source → the default pack alone. A list that does not parse
+ * draws without it, by name.
  */
 export function mazeCompositeStackOf(region, source = null, registry = substrateRegistry) {
     const id = compositeMapIdOf(region);
     let content = [];
+    let exists = [];
     const slot = slotOf(source);
     if (source?.rules && slot !== null) {
         try {
@@ -93,8 +98,13 @@ export function mazeCompositeStackOf(region, source = null, registry = substrate
         } catch (err) {
             console.warn(`[mazeCompositeMap] the world's content list is unreadable (${err.message}); drawing without it`);
         }
+        try {
+            exists = documentWorldSettingsOf(source.rules, slot)[RECORDED_EXISTS_KEY];
+        } catch (err) {
+            console.warn(`[mazeCompositeMap] the world's "what exists" list is unreadable (${err.message}); drawing without it`);
+        }
     }
-    return effectiveContentStack({ substrateIds: id ? [id] : [], content, registry });
+    return effectiveContentStack({ substrateIds: id ? [id] : [], exists, content, registry });
 }
 
 /** stack key → `{ status: 'loading'|'ready'|'failed'|'unavailable', loaded, error, waiters }`. */

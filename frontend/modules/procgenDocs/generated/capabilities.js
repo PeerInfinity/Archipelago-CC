@@ -34,7 +34,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "loop",
                     "statement": "What you can queue for it",
-                    "text": "moves between regions, performing each node's action"
+                    "text": "moves between regions, performing each node's action, wait"
                 },
                 {
                     "group": "loop",
@@ -710,6 +710,77 @@ export const CAPABILITIES = frz({
             ]
         },
         {
+            "id": "mystery",
+            "label": "Mystery case",
+            "lines": [
+                {
+                    "group": "play",
+                    "statement": "You can play its regions by hand",
+                    "text": null
+                },
+                {
+                    "group": "play",
+                    "statement": "The Playback Bot can walk it (replaying a world's solution)",
+                    "text": null
+                },
+                {
+                    "group": "play",
+                    "statement": "What the generator may do with it",
+                    "text": "locations placed anywhere"
+                },
+                {
+                    "group": "loop",
+                    "statement": "You can play it in loop mode",
+                    "text": null
+                },
+                {
+                    "group": "loop",
+                    "statement": "What you can queue for it",
+                    "text": "moves between regions, location checks"
+                },
+                {
+                    "group": "loop",
+                    "statement": "You can record a visit and replay it",
+                    "text": null
+                },
+                {
+                    "group": "loop",
+                    "statement": "How a replay works",
+                    "text": "re-runs the queued actions"
+                },
+                {
+                    "group": "loop",
+                    "statement": "Instant fast-forward",
+                    "text": "a per-block toggle"
+                },
+                {
+                    "group": "loop",
+                    "statement": "A Bot block can play it for you",
+                    "text": "the game's own automation walks it"
+                },
+                {
+                    "group": "loop",
+                    "statement": "You can play it outside loop mode",
+                    "text": null
+                },
+                {
+                    "group": "generate",
+                    "statement": "A world of it can start with an empty inventory",
+                    "text": null
+                },
+                {
+                    "group": "edit",
+                    "statement": "An exit can be moved to another side (and a side can hold more than one)",
+                    "text": "and a side can hold more than one"
+                },
+                {
+                    "group": "edit",
+                    "statement": "The editor's validity report checks its location and exit names",
+                    "text": null
+                }
+            ]
+        },
+        {
             "id": "noiz2sa",
             "label": "Noiz2sa",
             "lines": [
@@ -1048,6 +1119,10 @@ export const CAPABILITIES = frz({
             "label": "Maze"
         },
         {
+            "id": "mystery",
+            "label": "Mystery case"
+        },
+        {
             "id": "noiz2sa",
             "label": "Noiz2sa"
         },
@@ -1061,11 +1136,11 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 115,
+        "fields": 120,
         "fieldsRead": 42,
-        "fieldsUnread": 70,
+        "fieldsUnread": 75,
         "statements": 32,
-        "substrates": 10
+        "substrates": 11
     },
     "fieldsRead": [
         "apExitNamesOf",
@@ -1278,6 +1353,21 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "panelComponentType",
+                            "value": "mysteryPanel"
+                        },
+                        {
+                            "field": "deserializeWorld",
+                            "value": "fn"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "yes",
                     "text": null,
@@ -1439,6 +1529,21 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "getPlaybackController",
+                            "value": "fn"
+                        },
+                        {
+                            "field": "playbackScope",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "yes",
                     "text": null,
@@ -1568,6 +1673,17 @@ export const CAPABILITIES = frz({
                         {
                             "field": "compositeMap.drawRegion",
                             "value": "fn"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "compositeMap.drawRegion",
+                            "value": "—"
                         }
                     ]
                 },
@@ -1720,6 +1836,21 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "{}"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "arbitrary_ap_locations"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "yes",
                     "text": "Victory, Noiz2sa Star",
@@ -1853,6 +1984,17 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "yes",
+                    "text": "locations placed anywhere",
+                    "why": [
+                        {
+                            "field": "supportedFeatures",
+                            "value": "arbitrary_ap_locations"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "yes",
                     "text": "locations placed anywhere",
@@ -1975,6 +2117,17 @@ export const CAPABILITIES = frz({
                         {
                             "field": "conceptRealisations",
                             "value": "{guardian, swim, sword, water}"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2105,6 +2258,17 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "contentRoles",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "no",
                     "text": null,
@@ -2225,6 +2389,17 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "loopSupport.manual",
+                            "value": "yes"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "yes",
                     "text": null,
@@ -2270,11 +2445,11 @@ export const CAPABILITIES = frz({
                 {
                     "id": "action_nodes",
                     "kind": "yes",
-                    "text": "moves between regions, performing each node's action",
+                    "text": "moves between regions, performing each node's action, wait",
                     "why": [
                         {
                             "field": "loopSupport.queueActions",
-                            "value": "regionMove, act"
+                            "value": "regionMove, act, wait"
                         }
                     ]
                 },
@@ -2341,6 +2516,17 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.queueActions",
                             "value": "regionMove, locationCheck, explore"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "kind": "yes",
+                    "text": "moves between regions, location checks",
+                    "why": [
+                        {
+                            "field": "loopSupport.queueActions",
+                            "value": "regionMove, locationCheck"
                         }
                     ]
                 },
@@ -2479,6 +2665,21 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "maze",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "loopSupport.record",
+                            "value": "yes"
+                        },
+                        {
+                            "field": "loopSupport.playback",
+                            "value": "yes"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
                     "kind": "yes",
                     "text": null,
                     "why": [
@@ -2654,6 +2855,21 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "yes",
+                    "text": "re-runs the queued actions",
+                    "why": [
+                        {
+                            "field": "takeLastRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "yes",
                     "text": "applies the result instantly",
@@ -2801,6 +3017,21 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "maze",
+                    "kind": "yes",
+                    "text": "a per-block toggle",
+                    "why": [
+                        {
+                            "field": "loopSupport.instant",
+                            "value": "yes"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
                     "kind": "yes",
                     "text": "a per-block toggle",
                     "why": [
@@ -2972,6 +3203,21 @@ export const CAPABILITIES = frz({
                         {
                             "field": "sharing.mana.loopActionDelegation",
                             "value": "yes"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "kind": "yes",
+                    "text": "the game's own automation walks it",
+                    "why": [
+                        {
+                            "field": "loopSupport.executeVia",
+                            "value": "solver"
+                        },
+                        {
+                            "field": "sharing.mana.loopActionDelegation",
+                            "value": "—"
                         }
                     ]
                 },
@@ -3221,6 +3467,33 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "loopSupport.instant",
+                            "value": "yes"
+                        },
+                        {
+                            "field": "loopSupport.executeVia",
+                            "value": "solver"
+                        },
+                        {
+                            "field": "takeLastRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "yes"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "na",
                     "text": null,
@@ -3393,6 +3666,17 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "loopSupport.requiresLoopMode",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "yes",
                     "text": null,
@@ -3513,6 +3797,17 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.mana",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "no",
                     "text": null,
@@ -3623,6 +3918,17 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "maze",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.items",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
                     "kind": "no",
                     "text": null,
                     "why": [
@@ -3773,6 +4079,17 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "describeAction",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "no",
                     "text": null,
@@ -3893,6 +4210,17 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.stats",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "no",
                     "text": null,
@@ -4003,6 +4331,17 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "maze",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "sharing.resources",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
                     "kind": "no",
                     "text": null,
                     "why": [
@@ -4181,6 +4520,25 @@ export const CAPABILITIES = frz({
                         {
                             "field": "generateZoneForSpecs",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateZoneForSpecsGen",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": "only as content from its own game",
+                    "why": [
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
+                        },
+                        {
+                            "field": "generateZoneForSpecs",
+                            "value": "fn"
                         },
                         {
                             "field": "generateZoneForSpecsGen",
@@ -4391,6 +4749,25 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "zoneCount",
+                            "value": "0"
+                        },
+                        {
+                            "field": "zoneSourceLabel",
+                            "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "yes",
                     "text": "3 Noiz2sa segments",
@@ -4528,6 +4905,17 @@ export const CAPABILITIES = frz({
                 {
                     "id": "maze",
                     "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "generationCost",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -4681,6 +5069,21 @@ export const CAPABILITIES = frz({
                         {
                             "field": "instantiateLibraryEntry",
                             "value": "fn"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "captureLibraryEntry",
+                            "value": "—"
+                        },
+                        {
+                            "field": "instantiateLibraryEntry",
+                            "value": "—"
                         }
                     ]
                 },
@@ -4846,6 +5249,21 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "canHostExitGates",
+                            "value": "—"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "arbitrary_ap_locations"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "no",
                     "text": null,
@@ -4979,6 +5397,17 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "renderProcgenParams",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "yes",
                     "text": null,
@@ -5089,6 +5518,17 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "maze",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "startingInventory",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
                     "kind": "yes",
                     "text": null,
                     "why": [
@@ -5219,6 +5659,17 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "na",
                     "text": null,
@@ -5335,6 +5786,17 @@ export const CAPABILITIES = frz({
                         {
                             "field": "roomEditor",
                             "value": "{arm, kind, page}"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "roomEditor",
+                            "value": "—"
                         }
                     ]
                 },
@@ -5459,6 +5921,17 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "regionRoundTrip",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "no",
                     "text": null,
@@ -5575,6 +6048,17 @@ export const CAPABILITIES = frz({
                         {
                             "field": "exitSides",
                             "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "mystery",
+                    "kind": "yes",
+                    "text": "and a side can hold more than one",
+                    "why": [
+                        {
+                            "field": "exitSides",
+                            "value": "{keys, relabel}"
                         }
                     ]
                 },
@@ -5727,6 +6211,21 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
+                    "id": "mystery",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "apLocationNamesOf",
+                            "value": "fn"
+                        },
+                        {
+                            "field": "apExitNamesOf",
+                            "value": "fn"
+                        }
+                    ]
+                },
+                {
                     "id": "noiz2sa",
                     "kind": "yes",
                     "text": null,
@@ -5826,10 +6325,13 @@ export const CAPABILITIES = frz({
         "loopBot",
         "loopSupport.actionGate",
         "loopSupport.authoredCosts",
+        "loopSupport.clockLine",
         "loopSupport.customQueues",
         "loopSupport.playClock",
+        "loopSupport.pool",
         "loopSupport.strictQueueActions",
         "onContentEdit",
+        "ownContentOnly",
         "pipelineConfigFromParams",
         "pipelineConfigKeys",
         "placeFromItems",
@@ -5838,6 +6340,8 @@ export const CAPABILITIES = frz({
         "priceRegions",
         "procgenParamsFromPayload",
         "recordablePipelineConfig",
+        "recordedRegionParams",
+        "regionBiomeOf",
         "regionEditStatus",
         "regionGeometry",
         "regionSourceDefault",

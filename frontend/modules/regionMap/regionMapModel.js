@@ -9,7 +9,8 @@
  *     region object its painter draws, its level EXTENT (`compositeMap.regionExtent`, tiles) and its location TILES
  *     (`compositeMap.locationTiles`, plus `compositeMap.remoteLocationTiles` for an event whose object is in another
  *     level);
- *   · the LINKS BETWEEN GROUPS, with endpoints at the real door tiles (`exit_tiles` / `x, y` of the payload's exits).
+ *   · the LINKS BETWEEN GROUPS, with endpoints at the real door tiles (`exit_tiles` / `x, y` of the payload's exits),
+ *     and apart from them the links between NEIGHBOURS in one group (`neighbourLinks`, the edge transitions).
  *
  * ⚖ No substrate is named here: every substrate answer comes through the registry, as `compositeMap.drawRegion`
  * does. A region with no sidecar (a classic AP world) is a cell with no painter, no extent and GENERIC square
@@ -22,11 +23,12 @@
  *
  * Built ONCE per rules load or grouping change — never per snapshot (snapshots only re-colour the overlay).
  */
+import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
 import { displayRegionReader, resolveRegionLayout } from '../procgenCore/regionLayoutResolve.js';
 import { regionsOf } from '../procgenCore/rulesGraph.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { DEFAULT_EXTENT } from './regionMapFrames.js';
-import { genericLocationTiles } from './regionMapOverlay.js';
+import { genericLocationTiles, legacyGenericLocationTiles } from './regionMapOverlay.js';
 
 /** An exit's door tile in its own level's tiles, or null: `x, y` (the maze/text-adventure shape), else `exit_tiles[0]`. */
 export function exitTileOf(exit) {
@@ -40,6 +42,20 @@ const safe = (fn, fallback) => {
 };
 
 /**
+ * ⛓ WHICH UNTILED CELLS GET THE BIGGER, LOWER SQUARES (region-map-squares-rings). An untiled cell (no substrate
+ * `locationTiles`) that still DRAWS ART (`cell.region`: e.g. a maze level) may read as "tiled" to the user.
+ * `GENERIC_ART_CELLS_GET_BIG_PLACES` is the one switch: true → every untiled cell gets `genericLocationTiles`;
+ * false → an art-drawing untiled cell keeps the pre-slice `legacyGenericLocationTiles`, byte-identical.
+ * ⚖ The user, session 84c8ab35, 2026-11-23T21:05:24Z: "Only levels without art (Recommended)" — "The 116 maze levels
+ * that draw art keep today's boxes, so the bigger boxes don't cover the art. The other 190 maze levels, and worlds
+ * like A Link to the Past, get the change."
+ */
+export const GENERIC_ART_CELLS_GET_BIG_PLACES = false;
+export function usesBigGenericPlaces(cell) {
+    return GENERIC_ART_CELLS_GET_BIG_PLACES || !cell?.region;
+}
+
+/**
  * @param {object} args
  * @param {object} args.rules  a rules.json document (the RAW one: `preset_sidecars` live only there)
  * @param {string|number} [args.player]
@@ -47,7 +63,7 @@ const safe = (fn, fallback) => {
  * @param {object} [args.hookCtx]   handed to every substrate hook (e.g. `atlases` for a custom Seedling set)
  * @param {string|Function} [args.rule]  the grouping rule (a `GROUPING_RULES` name)
  * @param {number} [args.gap]
- * @returns {{layout, cells: Map, links: object[], unplaced: object[], player: string, groupOf: Map}}
+ * @returns {{layout, cells: Map, links: object[], unplaced: object[], player: string, groupOf: Map, refused: object[]}} (`refused`: a cell whose payload its own substrate cannot read — drawn generic)
  */
 export function buildRegionMapModel({ rules, player = null, registry = substrateRegistry, hookCtx = {}, rule = 'R1', gap = 1 } = {}) {
     const layout = resolveRegionLayout({ rules, player, registry, hookCtx, rule, gap });
@@ -68,6 +84,7 @@ export function buildRegionMapModel({ rules, player = null, registry = substrate
     for (const name of Object.keys(regions)) cells.get(displayOf(name))?.members.push(name);
 
     const placed = new Set();
+    const refused = [];
     for (const cell of cells.values()) {
         const rep = cell.members.find((m) => sidecars[m]?.playable_payload) ?? null;
         const sc = rep ? sidecars[rep] : null;
@@ -80,6 +97,16 @@ export function buildRegionMapModel({ rules, player = null, registry = substrate
             };
             const e = typeof hooks?.regionExtent === 'function' ? safe(() => hooks.regionExtent(cell.region, ctx), null) : null;
             cell.extent = e && e.w > 0 && e.h > 0 ? { w: e.w, h: e.h } : null;
+            // ⛓ painter-throws: the painter draws the DESERIALIZED world (`compositeMap.drawRegion`'s contract, which
+            //   `procgenPipeline/compositeMapDocument.js` meets through the same door), never the sidecar's JSON shape.
+            //   The hooks above and below are DATA hooks and keep reading the sidecar payload, as before.
+            const world = hydratedPayload(registry, sc, payload, rep);
+            if (world.refusal) {
+                refused.push({ region_id: rep, key: cell.key, substrate: sc.substrate ?? null, sentence: world.refusal });
+                cell.region = null;
+            } else {
+                cell.region.playable_payload = world.world;
+            }
         }
         if (typeof hooks?.locationTiles === 'function' && cell.extent) {
             cell.tileSource = 'substrate';
@@ -115,7 +142,7 @@ export function buildRegionMapModel({ rules, player = null, registry = substrate
         const names = cell.members.flatMap((m) => (regions[m]?.locations ?? []).map((l) => l?.name))
             .filter((n) => typeof n === 'string' && !placed.has(n));
         for (const n of names) placed.add(n);
-        cell.tiles = genericLocationTiles(names, cell.extent ?? DEFAULT_EXTENT);
+        cell.tiles = (usesBigGenericPlaces(cell) ? genericLocationTiles : legacyGenericLocationTiles)(names, cell.extent ?? DEFAULT_EXTENT);
         cell.tileSource = 'generic';
     }
     const unplaced = [];
@@ -127,15 +154,55 @@ export function buildRegionMapModel({ rules, player = null, registry = substrate
         }
     }
 
-    return { layout, cells, links: groupLinks({ layout, sidecars, displayOf, groupOf }), unplaced, player: p, groupOf };
+    const linkArgs = { layout, sidecars, displayOf, groupOf };
+    return {
+        layout, cells, links: groupLinks(linkArgs), neighbourLinks: neighbourLinks(linkArgs), unplaced, player: p, groupOf,
+        refused,
+    };
 }
 
 /**
- * ⛓ The links BETWEEN groups (within a group the grid's adjacency says it; ⚖ user: no lines between neighbours).
- * `[{from, to, kind, a, b}]`, display keys; `a` / `b` the door tile in `from`'s / `to`'s level (`[x, y]` tiles) or
- * null (the cell's centre). One link per unordered pair of display regions.
+ * ⛓ painter-throws — the world a cell's painter draws: the sidecar `payload` through its substrate's own
+ * `deserializeWorld` (`procgenCore/deserializeRefusal.js`, the door the composite map's document reader shares), or the
+ * payload unchanged when the substrate declares no deserializer. `{world}` or `{refusal}` (the entry's own sentence).
+ * Until this, the maze painter was handed the JSON shape (`obstacles` / `items` as `[key, id]` lists) and threw
+ * `world.obstacles.get is not a function` on every maze cell, both on the Region Map and in the Region Graph map look.
  */
-export function groupLinks({ layout, sidecars, displayOf, groupOf }) {
+function hydratedPayload(registry, sc, payload, regionId) {
+    const adapter = registry?.get?.(sc?.substrate);
+    if (typeof adapter?.deserializeWorld !== 'function') return { world: payload };
+    return deserializeOrRefuse(adapter, payload, { regionId, substrate: sc.substrate });
+}
+
+/**
+ * ⛓ The links BETWEEN groups. `[{from, to, kind, a, b}]`, display keys; `a` / `b` the door tile in `from`'s / `to`'s
+ * level (`[x, y]` tiles) or null (the cell's centre). One link per unordered pair of display regions.
+ * The pairs INSIDE a group are `neighbourLinks` (a second list, so a reader counts each kind apart).
+ */
+export function groupLinks(args) {
+    return linkPairs(args, false);
+}
+
+/**
+ * ⛓ The links between NEIGHBOURS: every pair of display regions in the SAME group that the world links (on a
+ * Seedling world, the edge transitions you walk between; ⚖ user 2026-11-22T20:24:34Z "Draw lines between
+ * neighbours", which retired the panel build's "no lines between adjacent cells"). The same shape, endpoints and
+ * one-per-pair rule as `groupLinks`, each with `neighbour: true`. A side-by-side pair the world does not link gets none.
+ */
+export function neighbourLinks(args) {
+    return linkPairs(args, true).filter((l) => neighbourDrawn(l, args.layout)).map((l) => ({ ...l, neighbour: true }));
+}
+
+/**
+ * ⛓ WHICH in-group pairs get a line: every one the world links (as briefed). The ONE place that says so, so a ruling
+ * on the generic-layout worlds (whose groups hold every link, mostly not side by side) is a one-line change here.
+ */
+export function neighbourDrawn(_link, _layout) {
+    return true;
+}
+
+/** The world's links between display regions, one per unordered pair: those inside one group (`same`) or between two. */
+function linkPairs({ layout, sidecars, displayOf, groupOf }, same) {
     const kindOf = new Map();
     for (const l of layout.graph?.links ?? []) {
         const k = `${l.from}\u0000${l.to}`;
@@ -145,7 +212,7 @@ export function groupLinks({ layout, sidecars, displayOf, groupOf }) {
     const seen = new Set();
     const push = (from, to, a, b) => {
         if (from === to || !layout.positions.has(from) || !layout.positions.has(to)) return;
-        if (groupOf.get(from) === groupOf.get(to)) return;
+        if ((groupOf.get(from) === groupOf.get(to)) !== same) return;
         const pair = from < to ? `${from}\u0000${to}` : `${to}\u0000${from}`;
         if (seen.has(pair)) return;
         seen.add(pair);
@@ -161,6 +228,9 @@ export function groupLinks({ layout, sidecars, displayOf, groupOf }) {
                 push(displayOf(name), displayOf(to), exitTileOf(e), back ? exitTileOf(back) : null);
             }
         }
+        // ⛓ In a group, the LAYOUT GRAPH's links too (it is what made the group): a pair no sidecar exit names (a
+        // generic-path world with sidecars, e.g. the maze) is drawn centre to centre. Between groups: unchanged.
+        if (same) for (const l of layout.graph?.links ?? []) push(l.from, l.to, null, null);
     } else {
         for (const l of layout.graph?.links ?? []) push(l.from, l.to, null, null);
     }

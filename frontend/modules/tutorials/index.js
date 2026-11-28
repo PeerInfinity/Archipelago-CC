@@ -81,6 +81,10 @@ export function register(registrationApi) {
     // The feature checks seedling-solve-progress-line and seedling-dash-window have the flash panel stage a solve
     // (flashPanel/seedlingSolveDemo.js SOLVE_DEMO_EVENT).
     registrationApi.registerEventBusPublisher('flashPanel:stageSolveDemo');
+    // The feature check mystery-local-play asks the mystery page for its careful reader and hears its status
+    // (the page's own two messages, relayed by the iframe adapter: mystery-clue-game ui/bridge.js).
+    registrationApi.registerEventBusPublisher('mystery:autoSolve');
+    registrationApi.registerEventBusSubscriberIntent('mystery:autoSolveStatus');
 }
 
 /**

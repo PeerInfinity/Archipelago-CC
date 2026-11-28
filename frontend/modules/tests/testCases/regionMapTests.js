@@ -25,6 +25,13 @@ import { MIN_ZOOM } from '../../procgenCore/mapCamera.js';
 import { seedlingCompositeMapStats } from '../../flashPanel/seedlingCompositeMap.js';
 import { worldToScreen } from '../../procgenCore/mapCamera.js';
 import { squareAt } from '../../regionMap/regionMapOverlay.js';
+import { linkShape } from '../../regionMap/regionMapLinkGeometry.js';
+import { exitTileOf } from '../../regionMap/regionMapModel.js';
+import { exitDirections } from '../../regionGraph/directionLayout.js';
+import mobileLayoutManager from '../../../app/core/mobileLayoutManager.js';
+import { completeModuleInfo } from '../../../app/initialization/completeModuleInfo.js';
+import { lookupModuleInfo } from '../../quickLaunch/quickLaunchCatalog.js';
+import { ZOOM_BUTTON_FACTOR, ZOOM_BUTTON_PX } from '../../regionMap/regionMapUI.js';
 import { REGION_MAP_CLICK_ACTIONS_KEY, regionOfCell } from '../../regionMap/regionMapClickActions.js';
 import { defaultClickActions, withInitialValues } from '../../regionView/clickActions.js';
 import { resetLoopsToIdle } from './loopsPanelTests.js';
@@ -145,6 +152,21 @@ export async function testRegionMapSeedlingPaints(testController) {
     const all = await fitAllAndSettle(testController, 'fit all paints all N cells');
     testController.reportCondition(`fit all paints all N cells (${dbg().lastPaint.cells})`, all && dbg().lastPaint.cells === layout.positions.size);
     testController.reportCondition(`every cell is drawn by its substrate's painter (${dbg().lastPaint.art} art)`, dbg().lastPaint.art === dbg().lastPaint.cells);
+    // ⛓ art-ends (⚖ the user 2026-11-23T01:20:20.902Z): a line ends at its door tile when it has one, else on the
+    // level art's border. The wanted counts are linkShape's own `ends` over the model; Seedling has door tiles.
+    {
+      const p = panel();
+      const ends = { tile: 0, art: 0, centre: 0 };
+      for (const l of [...p.model.links, ...p.model.neighbourLinks]) {
+        const q = linkShape(l, p.frames);
+        if (q?.form === 'line') for (const e of [q.ends.from, q.ends.to]) ends[e] += 1;
+      }
+      const lp = dbg().lastPaint;
+      testController.log(`ART ENDS: ${lp.tileEnds} at a door tile (want ${ends.tile}), ${lp.artEnds} on the art (want ${ends.art}), `
+        + `${lp.centreEnds} at a centre (want ${ends.centre}), ${lp.shortHeads} heads longer than their line`);
+      testController.reportCondition(`line ends: door tile / art border / centre as linkShape says (${lp.tileEnds}/${lp.artEnds}/${lp.centreEnds} = ${ends.tile}/${ends.art}/${ends.centre}, tiles > 0)`,
+        ends.tile > 0 && lp.tileEnds === ends.tile && lp.artEnds === ends.art && lp.centreEnds === ends.centre);
+    }
 
     // the art bakes for the visible cells: nothing pending, nothing failed
     const baked = await testController.pollForCondition(() => {
@@ -162,7 +184,7 @@ export async function testRegionMapSeedlingPaints(testController) {
     testController.reportCondition(`repaints are coalesced (${d.counters.paints} paints ≤ ${d.counters.paintRequests} requests)`,
       d.counters.paints <= d.counters.paintRequests);
 
-    // the squares: exactly the visible levels' tiles, every location of the world placed, ≥ min at the minimum zoom
+    // the squares: exactly the visible levels' tiles, every location of the world placed, capped by the tile at the minimum zoom
     const want = Object.values(rawRules().rules.regions[rawRules().playerId] ?? {}).reduce((n, r) => n + (r.locations?.length ?? 0), 0);
     const placed = Object.values(d.tiles).reduce((n, t) => n + t.length, 0);
     testController.reportCondition(`every location is placed (${placed}/${want}; not on map: ${d.unplaced.length})`, placed + d.unplaced.length === want);
@@ -173,8 +195,12 @@ export async function testRegionMapSeedlingPaints(testController) {
     await nextFrames(3);
     const min = dbg().settings.minSquarePx;
     const sq = dbg().squares;
-    testController.reportCondition(`at the minimum zoom every square is ≥ ${min} px (smallest ${Math.min(...sq.map((q) => q.side)).toFixed(1)}, ${sq.length} squares)`,
-      sq.length > 0 && sq.every((q) => q.side >= min));
+    // ⛓ tiled-squares-cap (⚖ the user, session 84c8ab35, 2026-11-23/24): a tiled square is never larger than its tile,
+    // and never under a 1 px dot; `minSquarePx` holds only up to the tile. → side = clamp(min(min, tile), 1, max(1, tile)).
+    const tileOf = (q) => panel().frames.get(q.key).tilePx * dbg().camera.zoom;
+    testController.reportCondition(`at the minimum zoom every square is ≤ max(its tile, 1 px) and ≥ max(1 px, min(${min} px, its tile)) `
+      + `(smallest ${Math.min(...sq.map((q) => q.side)).toFixed(2)}, tile ${tileOf(sq[0] ?? { key: d.lastPaint.keys[0] }).toFixed(3)} px, ${sq.length} squares)`,
+      sq.length > 0 && sq.every((q) => q.side <= Math.max(1, tileOf(q)) + 1e-9 && q.side >= Math.max(1, Math.min(min, tileOf(q))) - 1e-9));
     testController.reportCondition('event squares are drawn as events', sq.some((q) => q.kind === 'event') && sq.some((q) => q.kind === 'item'));
 
     // the cell-size toggle changes the frames: uniform = one square for every cell
@@ -610,6 +636,140 @@ export async function testRegionMapClicksGenerated(testController) {
   } finally {
     restorePlayer?.();
     await reloadIfChecked(testController, s?.ctx, checked, { before: s?.before, restoreWorld: true });
+    if (s) await tearDown(testController, s, { restoreWorld: true });
+  }
+  return testController.getOverallResult();
+}
+
+/**
+ * ⛓ region-map-maze-hooks: the maze levels' cells (procgen_topdown AP_1, sized by level). Each maze cell has the
+ * level's own extent (its payload's width × height) and is framed at that size; its location squares are the
+ * substrate's (`compositeMap.locationTiles`: the items' tiles), one per rules location of its members, none "not on
+ * map"; and every maze exit has a direction off the panel's own model (`directionLayout.exitDirections`, the read the
+ * Region Graph's Direction-aware layout makes). Every count derived from the loaded rules.
+ */
+async function mazeCellsLeg(testController, ctx) {
+  await ctx.setSetting('moduleSettings.regionMap.cellSize', 'level');
+  await testController.pollForCondition(() => dbg()?.settings?.cellSize === 'level', 'cells sized by level', 3000, 25);
+  const { rules, playerId } = rawRules();
+  const sc = rules.preset_sidecars?.[playerId] ?? {};
+  const m = panel().model;
+  const d = dbg();
+  const cells = [...m.cells.values()].filter((c) => c.members.some((n) => sc[n]?.substrate === 'maze'));
+  const bad = [];
+  let squares = 0;
+  for (const c of cells) {
+    const rep = c.members.find((n) => sc[n]?.playable_payload);
+    const pl = rep ? sc[rep].playable_payload : null;
+    const f = d.frames[c.key];
+    const want = c.members.flatMap((n) => (rules.regions[playerId][n]?.locations ?? []).map((l) => l.name));
+    if (!pl || c.extent?.w !== pl.width || c.extent?.h !== pl.height) bad.push(`${c.key}: extent ${JSON.stringify(c.extent)}`);
+    else if (!f || f.w !== pl.width * f.tilePx || f.h !== pl.height * f.tilePx) bad.push(`${c.key}: frame ${f?.w}×${f?.h}`);
+    if (c.tileSource !== 'substrate' || c.tiles.length !== want.length) bad.push(`${c.key}: ${c.tileSource} ${c.tiles.length}/${want.length} squares`);
+    squares += c.tiles.length;
+  }
+  testController.log(`MAZE CELLS: ${cells.length} cells, ${squares} substrate squares, ${d.unplaced.length} not on map${bad.length ? `; ${bad.slice(0, 4).join('; ')}` : ''}`);
+  testController.reportCondition(`every maze cell has its level's extent and frame, and a substrate square per location (${cells.length} cells, ${squares} squares)`,
+    cells.length > 0 && squares > 0 && bad.length === 0 && d.unplaced.length === 0);
+  const { counts } = exitDirections({ sidecars: sc, model: m, tileOf: exitTileOf });
+  testController.reportCondition(`every maze exit has a direction off the panel's model (${counts.withDirection}/${counts.exits})`,
+    counts.exits > 0 && counts.withDirection === counts.exits);
+}
+
+/**
+ * zoom-links: the toolbar's + / −, a two-finger pinch and the neighbour lines, on procgen_topdown AP_1 (fast). The
+ * + press multiplies the zoom by ZOOM_BUTTON_FACTOR and − divides it back; a pinch of two synthetic pointers (distinct
+ * pointerIds) zooms by the finger-distance ratio and fires NO click; the links painted are the model's, cross-group
+ * and neighbour counted apart. Counts derived from the panel's own model (no preset pins).
+ */
+export async function testRegionMapZoomPinchLinks(testController) {
+  let s = null;
+  try {
+    s = await setUp(testController, GENERATED, { rulesPath: GENERATED_RULES });
+    if (!s.ready) return testController.getOverallResult();
+    await s.ctx.setSetting('moduleSettings.regionMap.showLinks', true);
+    await s.ctx.setSetting('moduleSettings.regionMap.followPlayer', true);
+    const p = panel();
+    p.follow = true;
+    p.controls.follow.checked = true;
+    const ok = await fitAllAndSettle(testController, 'fit all paints every cell');
+    testController.reportCondition('fit all paints every cell', ok);
+    await mazeCellsLeg(testController, s.ctx);
+    p.follow = true;
+    p.controls.follow.checked = true;
+
+    // + then −, by the real buttons
+    const zoomOf = () => Number(p.canvas.dataset.zoom);
+    const z0 = dbg().camera.zoom;
+    const plus = p.root.querySelector('button.region-map-zoom-in');
+    const minus = p.root.querySelector('button.region-map-zoom-out');
+    testController.reportCondition('the toolbar has + and − buttons beside Fit all',
+      !!plus && !!minus && minus.previousElementSibling?.classList.contains('region-map-fit-all') && plus.previousElementSibling === minus);
+    const side = plus ? plus.getBoundingClientRect() : null;
+    testController.reportCondition(`the buttons are large enough to tap (${side?.width.toFixed(0)}×${side?.height.toFixed(0)} px ≥ ${ZOOM_BUTTON_PX - 1})`,
+      !!side && side.width >= ZOOM_BUTTON_PX - 1 && side.height >= ZOOM_BUTTON_PX - 1);
+    plus.click();
+    const zin = await testController.pollForCondition(() => Math.abs(zoomOf() - z0 * ZOOM_BUTTON_FACTOR) < 1e-9 * z0,
+      'the + press painted', 3000, 25);
+    testController.log(`ZOOM: fit ${z0.toPrecision(6)} → + ${zoomOf().toPrecision(6)} (×${(zoomOf() / z0).toFixed(4)})`);
+    testController.reportCondition(`+ multiplies the zoom by ${ZOOM_BUTTON_FACTOR.toFixed(4)} (${z0.toPrecision(4)} → ${zoomOf().toPrecision(4)})`, zin);
+    testController.reportCondition('a + press turns Follow off, as the wheel does', dbg().follow === false && p.controls.follow.checked === false);
+    testController.reportCondition('the press stamps canvas.dataset.zoomedAt', Number(p.canvas.dataset.zoomedAt) > 0);
+    minus.click();
+    const zout = await testController.pollForCondition(() => Math.abs(zoomOf() - z0) < 1e-9 * z0, 'the − press painted', 3000, 25);
+    testController.reportCondition(`− divides it back (${zoomOf().toPrecision(4)})`, zout);
+
+    // a two-finger pinch: fingers 100 px apart around the centre → 200 px apart
+    const r = p.canvas.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const clicks = p.clickCount;
+    const zp = dbg().camera.zoom;
+    const ev = (type, id, x, y) => p.canvas.dispatchEvent(new PointerEvent(type, {
+      clientX: x, clientY: y, pointerId: id, pointerType: 'touch', isPrimary: id === 11, bubbles: true, button: 0,
+    }));
+    ev('pointerdown', 11, cx - 50, cy);
+    ev('pointerdown', 12, cx + 50, cy);
+    for (let k = 1; k <= 5; k += 1) {
+      ev('pointermove', 11, cx - 50 - 10 * k, cy);
+      ev('pointermove', 12, cx + 50 + 10 * k, cy);
+    }
+    ev('pointerup', 12, cx + 100, cy);
+    ev('pointerup', 11, cx - 100, cy);
+    await nextFrames(3);
+    const zr = dbg().camera.zoom / zp;
+    testController.log(`PINCH: 100 → 200 px apart: zoom ${zp.toPrecision(6)} → ${dbg().camera.zoom.toPrecision(6)} (×${zr.toFixed(4)}); `
+      + `pinches ${dbg().pinch.pinches}, pinch moves ${dbg().pinch.pinchMoves}`);
+    testController.reportCondition(`the pinch zoomed by the finger-distance ratio (×${zr.toFixed(4)} = ×2)`, Math.abs(zr - 2) < 1e-6);
+    testController.reportCondition(`the pinch fired no click (clicks ${clicks} → ${p.clickCount})`, p.clickCount === clicks && dbg().pinch.pointers === 0);
+
+    // the links: every one on screen after Fit all, the two kinds counted apart
+    await fitAllAndSettle(testController, 'fit all again');
+    await nextFrames(2);
+    const d = dbg();
+    const m = p.model;
+    const wantNb = m.neighbourLinks.length;
+    testController.log(`LINKS: ${d.lastPaint.links} cross-group (model ${m.links.length}), ${d.lastPaint.neighbourLinks} neighbour (model ${wantNb})`);
+    testController.reportCondition(`the neighbour lines are drawn (${d.lastPaint.neighbourLinks} = the model's ${wantNb}, > 0)`,
+      wantNb > 0 && d.lastPaint.neighbourLinks === wantNb && d.neighbourLinks === wantNb);
+    testController.reportCondition(`the cross-group lines are counted apart (${d.lastPaint.links} = ${m.links.length})`, d.lastPaint.links === m.links.length);
+    // ⛓ link-ends: how the lines END — a gap mark between adjacent cells, else a line clipped to the borders; an
+    // arrowhead on every kind but join. The wanted counts are the geometry module's own answer over the model.
+    const shapes = [...m.links, ...m.neighbourLinks].map((l) => linkShape(l, p.frames)).filter(Boolean);
+    const want = { gap: shapes.filter((q) => q.form === 'gap').length, line: shapes.filter((q) => q.form === 'line').length,
+      heads: shapes.filter((q) => q.head).length };
+    testController.log(`LINK ENDS: ${d.lastPaint.gapMarks} gap marks (want ${want.gap}), ${d.lastPaint.edgeLines} edge-clipped lines `
+      + `(want ${want.line}), ${d.lastPaint.arrowheads} arrowheads (want ${want.heads})`);
+    testController.reportCondition(`every link is drawn as a gap mark or a border-clipped line, as linkShape says (${d.lastPaint.gapMarks}/${d.lastPaint.edgeLines} = ${want.gap}/${want.line})`,
+      want.gap > 0 && d.lastPaint.gapMarks === want.gap && d.lastPaint.edgeLines === want.line);
+    testController.reportCondition(`no arrowhead on a join (${d.lastPaint.arrowheads} drawn = ${want.heads} non-join links)`, d.lastPaint.arrowheads === want.heads);
+    await s.ctx.setSetting('moduleSettings.regionMap.showLinks', false);
+    const off = await testController.pollForCondition(() => dbg().lastPaint.neighbourLinks === 0 && dbg().lastPaint.links === 0,
+      'Links off draws none', 3000, 25);
+    testController.reportCondition('the Links box turns the neighbour lines off too', off);
+  } catch (error) {
+    testController.reportCondition(`zoom/pinch/links row error-free: ${error.message}`, false);
+  } finally {
     if (s) await tearDown(testController, s, { restoreWorld: true });
   }
   return testController.getOverallResult();
@@ -1184,6 +1344,60 @@ export async function testRegionMapWatchSetBundle(testController) {
   });
 }
 
+/**
+ * region-map-link-ends: the Region Map's MOBILE tab sits right after the Region Graph's (⚖ the user 2026-11-22T21:55Z,
+ * "Yes, add it"). Any boot: the mobile tab order computed the way `mobileLayoutManager.determinePanelOrder` computes it,
+ * from the registry's own moduleInfo (as `layoutManager.js` `setupMobileLayout` registers it) and the served layout
+ * presets, on every preset. On a MOBILE boot (`npm test -- --layout=mobile`) also the live tab bar: the tab is next to
+ * the Region Graph's, a tap shows the panel, and it paints.
+ */
+export async function testRegionMapMobileTab(testController) {
+  try {
+    const presets = await (await fetch('./layout-configs/layout_presets.json', { cache: 'no-store' })).json();
+    const registry = [...centralRegistry.getAllPanelComponents()];
+    const info = lookupModuleInfo('regionMapPanel', centralRegistry.getAllPanelComponents().get('regionMapPanel')) ?? {};
+    testController.reportCondition(`the Region Map's moduleInfo names mobileAfter = regionGraphPanel (${JSON.stringify(info.mobileAfter ?? null)})`,
+      info.mobileAfter === 'regionGraphPanel');
+    // A scratch manager with the singleton's own methods: the live one (if any) is never touched.
+    const scratch = Object.create(Object.getPrototypeOf(mobileLayoutManager));
+    const results = [];
+    for (const id of Object.keys(presets)) {
+      Object.assign(scratch, { panels: new Map(), layoutPresets: presets, activeLayoutId: id, columnCount: 0 });
+      for (const [type, entry] of registry) {
+        scratch.registerPanel(type, entry.componentClass, type, completeModuleInfo(type, lookupModuleInfo(type, entry) ?? {}));
+      }
+      scratch.determinePanelOrder();
+      const col = scratch.columnPanels.find((c) => c.includes('regionMapPanel')) ?? [];
+      const ok = scratch.panelOrder.filter((t) => t === 'regionMapPanel').length === 1
+        && col[col.indexOf('regionGraphPanel') + 1] === 'regionMapPanel';
+      results.push(`${id}:${ok ? 'next' : 'NOT'}`);
+    }
+    testController.log(`MOBILE ORDER per preset: ${results.join(' ')}`);
+    testController.reportCondition(`on every layout preset the Region Map tab follows the Region Graph's, once (${results.length} presets)`,
+      results.length > 0 && results.every((r) => r.endsWith(':next')));
+
+    const mobile = document.body.classList.contains('mobile-layout-active');
+    testController.log(`boot layout: ${mobile ? 'MOBILE' : 'desktop'} (${window.innerWidth} × ${window.innerHeight})`);
+    if (!mobile) return testController.getOverallResult();
+    const m = mobileLayoutManager;
+    const before = m.activePanel;
+    m.showPanel('regionGraphPanel');
+    const tabs = () => [...document.querySelectorAll('.mobile-tab-bar .mobile-tab')].map((t) => t.dataset.componentType);
+    const t = tabs();
+    testController.log(`LIVE TABS (Region Graph's column): ${t.join(', ')}`);
+    testController.reportCondition('the live tab bar shows the Region Map tab right after the Region Graph\'s',
+      t[t.indexOf('regionGraphPanel') + 1] === 'regionMapPanel' && t.filter((x) => x === 'regionMapPanel').length === 1);
+    document.querySelector('.mobile-tab[data-component-type="regionMapPanel"]')?.click();
+    const shown = await testController.pollForCondition(() => m.activePanel === 'regionMapPanel'
+      && (getPanelInstances()[0]?.getDebugState()?.lastPaint?.cells ?? 0) > 0, 'the Region Map shows and paints', 20000, 50);
+    testController.reportCondition('a tap on the tab shows the Region Map, and it paints', shown);
+    if (before && m.panels.has(before)) m.showPanel(before);
+  } catch (error) {
+    testController.reportCondition(`mobile tab row error-free: ${error.message}`, false);
+  }
+  return testController.getOverallResult();
+}
+
 registerTest({
   id: 'region-map-classic-world',
   name: 'Region Map: a classic AP world (no grid_cell, no hook)',
@@ -1193,12 +1407,28 @@ registerTest({
   description: 'The panel loads a world with no sidecars: the generic layout, one generic box per region, a square place for every location',
 });
 registerTest({
+  id: 'region-map-zoom-pinch-links',
+  name: 'Region Map: + / − zoom, a two-finger pinch, the neighbour lines',
+  category: 'Region Map',
+  testFunction: testRegionMapZoomPinchLinks,
+  enabled: false,
+  description: 'zoom-links: + and − zoom by ZOOM_BUTTON_FACTOR and untick Follow; a two-pointer pinch zooms by the distance ratio and fires no click; the neighbour lines drawn are the model\'s, counted apart from the cross-group links, under the Links box; link-ends: gap marks / border-clipped lines / arrowheads as linkShape says; maze-hooks: every maze cell has its level\'s extent and frame (sized by level), a substrate square per location, and every maze exit a direction',
+});
+registerTest({
+  id: 'region-map-mobile-tab',
+  name: 'Region Map: the mobile tab sits next to the Region Graph\'s',
+  category: 'Region Map',
+  testFunction: testRegionMapMobileTab,
+  enabled: false,
+  description: 'link-ends: from the registry\'s moduleInfo and the served presets, the mobile tab order puts the Region Map right after the Region Graph on every preset; on a --layout=mobile boot, the live tab is there and a tap shows and paints the panel',
+});
+registerTest({
   id: 'region-map-seedling-paints',
   name: 'Region Map: seedling_playthrough cells, art, squares, cell size',
   category: 'Region Map: Seedling',
   testFunction: testRegionMapSeedlingPaints,
   enabled: false,
-  description: 'N cells = the layout\'s display regions; the art bakes; squares = the visible levels\' tiles, ≥ the minimum at the minimum zoom; the cell-size toggle changes the frames',
+  description: 'N cells = the layout\'s display regions; the art bakes; squares = the visible levels\' tiles, ≤ their tile (a 1 px dot at least) at the minimum zoom; the cell-size toggle changes the frames',
 });
 registerTest({
   id: 'region-map-follow-player',

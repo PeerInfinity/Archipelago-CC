@@ -1,0 +1,245 @@
+{
+  "measures": {
+    "alttp": {
+      "crowded": {
+        "key": "Eastern Palace",
+        "n": 9
+      },
+      "fit": {
+        "zoom": 0.1116441908713693,
+        "squares": 268,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "zoomCrowded": {
+        "key": "Eastern Palace",
+        "cellPx": 759.05,
+        "zoom": 2.37203125,
+        "squares": 9,
+        "minSide": 26.56675,
+        "maxSide": 26.56675,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "labelCrowded": {
+        "key": "Eastern Palace",
+        "cellPx": 64,
+        "zoom": 0.2,
+        "squares": 204,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "few": {
+        "key": "Sewers Secret Room",
+        "n": 3
+      },
+      "zoomFew": {
+        "key": "Sewers Secret Room",
+        "cellPx": 759.05,
+        "zoom": 2.37203125,
+        "squares": 3,
+        "minSide": 26.56675,
+        "maxSide": 26.56675,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "labelFew": {
+        "key": "Sewers Secret Room",
+        "cellPx": 64,
+        "zoom": 0.2,
+        "squares": 165,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      }
+    },
+    "tunic": {
+      "crowded": {
+        "key": "Overworld",
+        "n": 22
+      },
+      "fit": {
+        "zoom": 0.14465725806451613,
+        "squares": 317,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "zoomCrowded": {
+        "key": "Overworld",
+        "cellPx": 759.05,
+        "zoom": 2.37203125,
+        "squares": 24,
+        "minSide": 26.56675,
+        "maxSide": 26.56675,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "labelCrowded": {
+        "key": "Overworld",
+        "cellPx": 64,
+        "zoom": 0.2,
+        "squares": 268,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      }
+    },
+    "ladx": {
+      "crowded": {
+        "key": "D1 Room",
+        "n": 3
+      },
+      "fit": {
+        "zoom": 0.09819799270072993,
+        "squares": 226,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "zoomCrowded": {
+        "key": "D1 Room",
+        "cellPx": 759.05,
+        "zoom": 2.37203125,
+        "squares": 4,
+        "minSide": 26.56675,
+        "maxSide": 26.56675,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "labelCrowded": {
+        "key": "D1 Room",
+        "cellPx": 64,
+        "zoom": 0.2,
+        "squares": 113,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      }
+    },
+    "seedling_playthrough": {
+      "crowded": {
+        "key": "level_0",
+        "n": null
+      },
+      "fit": {
+        "zoom": 0.09965277777777778,
+        "squares": 89,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 160
+      },
+      "ringOut": {
+        "zoom": 0.09965277777777778,
+        "squares": 89,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 160
+      },
+      "ringIn": {
+        "zoom": 1.4883333333333333,
+        "squares": 11,
+        "minSide": 16.66933333333333,
+        "maxSide": 16.66933333333333,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 24
+      },
+      "zoomCrowded": {
+        "key": "level_0",
+        "cellPx": 506.0333333333333,
+        "zoom": 0.7906770833333333,
+        "squares": 12,
+        "minSide": 8.855583333333332,
+        "maxSide": 8.855583333333332,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 36
+      },
+      "labelCrowded": {
+        "key": "level_0",
+        "cellPx": 64,
+        "zoom": 0.1,
+        "squares": 85,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 148
+      }
+    },
+    "soe": {
+      "crowded": {
+        "key": "Ingame",
+        "n": 340
+      },
+      "fit": {
+        "zoom": 2.690625,
+        "squares": 340,
+        "minSide": 30.134999999999994,
+        "maxSide": 30.134999999999994,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "zoomCrowded": {
+        "key": "Ingame",
+        "cellPx": 759.05,
+        "zoom": 2.37203125,
+        "squares": 340,
+        "minSide": 26.56675,
+        "maxSide": 26.56675,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      },
+      "labelCrowded": {
+        "key": "Ingame",
+        "cellPx": 64,
+        "zoom": 0.2,
+        "squares": 340,
+        "minSide": 6,
+        "maxSide": 6,
+        "doorRings": null,
+        "ringR": null,
+        "tileEnds": 0
+      }
+    }
+  },
+  "phone": {
+    "zoom": 0.756875,
+    "squares": 18,
+    "minSide": 8.476999999999999,
+    "maxSide": 8.476999999999999,
+    "doorRings": null,
+    "ringR": null,
+    "tileEnds": 0
+  },
+  "phoneErrors": [
+    "SecurityError: Failed to read a named property from 'Window': Blocked a frame with origin \"http://localhost:8143\" from accessing a cross-origin frame."
+  ]
+}

@@ -137,7 +137,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ rules-lavatrap-neck: rule T gates L77's and L78's lavatrap discs.
         // ⛓ rules-remerge-lavatrap: rule T re-merged onto main (train 146); re-recorded from the producers (5ca88dfe -> ea1ef5ba).
         // ⛓ rules-k-pursuit-resume: rule K + (b) on the line-cut pull disc; re-recorded from the producers (ea1ef5ba -> b856f0fc).
-        expect(c.atlasId).toBe('seedling-b856f0fc');
+        // ⛓ rules-l25-wand-arm: L25 west->east's no-hit gate gains the witnessed Wand arm; one internal row's rule widens, no
+        //   exit or door moves; re-recorded from the producers (b856f0fc -> 4586de3a).
+        expect(c.atlasId).toBe('seedling-4586de3a');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.

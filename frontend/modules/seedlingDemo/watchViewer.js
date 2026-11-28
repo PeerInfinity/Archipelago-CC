@@ -9909,6 +9909,45 @@ async function runEditor(params, lifetime) {
      * makes an overlay a document that can arrive at all.
      */
     let heldOverlay = null;
+    /**
+     * ⛓⛓⛓ DOCUMENT LIBRARY B3 — **THE LAB SAVES BY ITSELF.** `onSetChange`'s `why` reaches the writer
+     * (`watchLibrary.js`): a room CLOSE, a REPORT, a download and the hand-over are numbered versions, an
+     * edit is the tab's rolling draft, a selection writes nothing (⚖ Robert Q1). ⛔ The writer is imported
+     * DYNAMICALLY at the first save, so a page that never saves fetches nothing new, and nothing restores
+     * on reload. A set loaded from the box, a file, a preset or a host starts a NEW lineage; one opened
+     * from "Recent sets" continues ITS lineage (`libraryOrigin`, set only for that one call).
+     */
+    let libraryWriter = null;
+    let libraryLoad = null;
+    let librarySession = { lineageId: null, parent: null };
+    let libraryOrigin = null;
+    const libraryRecord = () => setSession?.record() ?? null;
+    const withLibrary = () => (libraryLoad ??= import('./watchLibrary.js').then((m) => {
+        if (!lifetime.alive()) return null;
+        libraryWriter = m.createLabLibrary({
+            lifetime,
+            schemas: { rulesSchema, levelSetSchema, atlasSchema },
+            getRecord: libraryRecord,
+            statusEl: $('editLibraryStatus'),
+            session: librarySession,
+        });
+        return libraryWriter;
+    }));
+    const libraryChanged = (why) => {
+        if (why === 'select' || why === 'room' || !setSession) return;
+        if (libraryWriter) {
+            libraryWriter.changed(why);
+            return;
+        }
+        // ⛓ The first save: the record at THIS moment is what a save point saves, so it is held until the
+        // writer has loaded (an edit's draft reads the record when it fires, as always).
+        const at = setSession.record();
+        withLibrary().then((w) => {
+            if (!w) return;
+            if (why === 'op') w.changed(why);
+            else w.changed(why, at);
+        });
+    };
     const takeLevelSet = (set, overlay = null, { fromHost = false } = {}) => {
         if (!fromHost && refuseWhileHostRoomOpen()) return false;
         const v = validateLevelSet(set);
@@ -9933,7 +9972,11 @@ async function runEditor(params, lifetime) {
             $('status').textContent = `the LOAD box was REFUSED — ${why}`;
             return false;
         }
+        // ⛓ B3: the OLD session's pending draft is written before the session changes under it.
+        libraryWriter?.flush();
         setSession = createSetSession(setAdapter, record, { base });
+        librarySession = libraryOrigin ?? { lineageId: null, parent: null };
+        libraryWriter?.startSession(librarySession, libraryRecord);
         setRoomSource = setSessionRoomSource(setSession);
         openRoom = null;
         markSetSaved();
@@ -9998,7 +10041,7 @@ async function runEditor(params, lifetime) {
                 download(name, text, type);
             },
             loadZip,
-            onSetChange: () => {
+            onSetChange: (change) => {
                 renderSetRooms();
                 render();
                 /**
@@ -10034,6 +10077,8 @@ async function runEditor(params, lifetime) {
                  * its own `render`.
                  */
                 if (lifetime.alive()) publishWatch(params.source);
+                // ⛓ B3 — LAST, after everything above: the library save is beside the page's own work.
+                if (lifetime.alive()) libraryChanged(change?.why);
             },
         });
         renderSetRooms();
@@ -10109,6 +10154,29 @@ async function runEditor(params, lifetime) {
         }
         return takeLevelSet(setSession.record().set, overlay, { fromHost });
     };
+
+    /**
+     * ⛓⛓ DOCUMENT LIBRARY B3 — **RECENT SETS.** Lists the library's sets (the writer's module, loaded on
+     * this press) and opens one BY FINGERPRINT through `takeLevelSet`, the LOAD box's own door. The
+     * session it opens continues that set's lineage (`libraryOrigin`, for exactly that call).
+     */
+    lifetime.on($('editLoadRecent'), 'click', async () => {
+        const m = await import('./watchLibrary.js');
+        if (!lifetime.alive()) return;
+        await m.showRecentSets({
+            lifetime,
+            listEl: $('editRecentList'),
+            noteEl: $('editRecentNote'),
+            onOpen: ({ set, overlay, lineageId, parent }) => {
+                libraryOrigin = { lineageId, parent };
+                try {
+                    return takeLevelSet(set, overlay);
+                } finally {
+                    libraryOrigin = null;
+                }
+            },
+        });
+    });
 
     lifetime.on($('editSetOpen'), 'click', () => {
         if (!setSession) return;

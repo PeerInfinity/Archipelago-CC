@@ -49,13 +49,20 @@ import {
 } from './pressKillCost.js';
 import { SOLVER_ENV_NAMES } from './solverEnvChannel.js';
 import { HIT_AVOID_PASS as __HIT_AVOID_PASS_HOLD } from './jsRuntimeSolver.js';
+import { FADE_MOVE as __FADE_MOVE_HOLD } from './solverBot.js';
 
 // ⛓ `HIT_AVOID_PASS` held OFF for this whole file: it ships ON since the PKC + FH flip (⚖ the user, 2026-11-20). ON, on the non-default `previewBeamTowerDrift: false` control the third pass replaces the 2-hit 310 t plan.
 // These rows predate the flip and pin other switches; held OFF they are byte-for-byte their pre-flip selves. The
 // flip's own effect is measured by its sweeps and survey.
+// ⛓ `FADE_MOVE` held OFF the same way since the ROCKLOCK + FADE flip (⚖ the user, 2026-11-22). ON, L12 leg 149's
+// regression arm and leg 160's OFF control wait the keylock fade out at a refuge: hitless (no punch), 160 at 680 t.
 let __heldWas;
-beforeAll(() => { __heldWas = __HIT_AVOID_PASS_HOLD.enabled; __HIT_AVOID_PASS_HOLD.enabled = false; });
-afterAll(() => { __HIT_AVOID_PASS_HOLD.enabled = __heldWas; });
+let __fadeWas;
+beforeAll(() => {
+    __heldWas = __HIT_AVOID_PASS_HOLD.enabled; __HIT_AVOID_PASS_HOLD.enabled = false;
+    __fadeWas = __FADE_MOVE_HOLD.enabled; __FADE_MOVE_HOLD.enabled = false;
+});
+afterAll(() => { __HIT_AVOID_PASS_HOLD.enabled = __heldWas; __FADE_MOVE_HOLD.enabled = __fadeWas; });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ENV = globalThis.process?.env ?? {};
