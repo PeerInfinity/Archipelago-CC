@@ -1,0 +1,35 @@
+L57 exit request: J1 #163 (js-runtime-L57-exit) vs W1 #118 (wasm-exit-57)
+  staging.boot: SAME
+  staging.despawn: SAME
+  staging.equips: SAME
+  staging.grants: SAME
+  staging.inventory_slots: SAME
+  staging.noDamage: SAME
+  staging.noHazards: SAME
+  staging.noclip: SAME
+  staging.persistence: js 54 rows, wasm 75 rows; js-only []; wasm-only ['{"level": 10, "tag": 0}', '{"level": 11, "tag": 0}', '{"level": 12, "tag": 9}', '{"level": 15, "tag": 1}', '{"level": 17, "tag": 0}', '{"level": 17, "tag": 29}']
+  staging.pins: js 2 rows, wasm 2 rows; js-only []; wasm-only []
+  staging.rng.fp: js=987286273  wasm=null
+  staging.rng.seed: js=0  wasm=980896863
+  staging.rng.split: js=false  wasm=true
+  staging.save: SAME
+  staging.seam.beam: js=null  wasm=false
+  staging.seam.cutscene: js=null  wasm=[false, false, false, false]
+  staging.seam.hits_max: js=null  wasm=3
+  staging.seam.items: js={"hasSword": true, "hasDarkSword": false, "hasGhostSword": false, "hasShield": true, "hasDarkShield": false, "hasFire": true, "hasWand": false, "hasFireWand": f  wasm={"hasSword": true, "hasGhostSword": false, "hasShield": true, "hasFire": true, "hasWand": false, "hasFireWand": false, "canSwim": true, "hasSpear": false, "hasD
+  staging.seam.menu_state: js=null  wasm=0
+  staging.seam.rock_set: js=null  wasm=false
+  staging.seam.secondary: js=null  wasm=0
+  staging.seam.time: js=4800  wasm=43275
+  budgetWork: SAME
+  equips: SAME
+  live: SAME
+  name: js="js-runtime-L57-exit"  wasm="wasm-exit-57"
+  passes: js=null  wasm=[{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": "all", "adds": "sword-dash", "sto
+  perTick: SAME
+  scratchPersistence: SAME
+  solverGoal: SAME
+  source: SAME
+  upgradeWindowWork: SAME
+JS answer: False de3dfedeffe6 solverBot(js-runtime-L57-exit) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag — the tentacles' placements are `Math.random()` draws, and the run's stream has no declared seed for this room
+wasm answer: True 9a2dd6e53352 1830 [{"pass": "dashless", "ok": true, "kind": null, "ticks": 1830, "ms": 467, "work": 65, "modelHits": {"hits": 0, "deaths": 0}}, {"pass": "full", "ok": true, "kind": null, "ticks": 1830, "ms": 428, "work": 151, "deadline": "sword-dash", "limit": "window", "modelHits": {"hits": 0, "deaths": 0}}]
