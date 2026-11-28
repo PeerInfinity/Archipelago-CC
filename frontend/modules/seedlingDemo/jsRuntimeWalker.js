@@ -251,9 +251,14 @@ const tileCentrePoint = ([tx, ty]) => ({ x: tx * TILE_SIZE + TILE_SIZE / 2, y: t
  *   walk's give-up clock does not run), and a declined goal is offered to
  *   the solver AGAIN after a death, a crossing, or `retryAfter` walked
  *   ticks — at most `retryMax` times, each retry named in the status.
+ * @param {(run:object, goal:object) => ({exit:{x:number, y:number}}|null)} [deps.fightExitOf]  ⛓ seedling-js-l57-exit-check
+ *   — an exit a boss FIGHT adds to the room (`jsRuntimeSolver.fightExitOf` over the run's room source: L57's mouth,
+ *   L69's Lights teleporter). No teleporter stands on its cells until the fight ends, so the goal resolves to the
+ *   exit's own cell and the SOLVER plays it (the fight, then the exit); absent = such an exit is refused by name.
  * @param {object} [opts]
  */
-export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollected, locationServed = null, onEvent = () => {}, solver = null } = {}, {
+export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollected, locationServed = null, onEvent = () => {}, solver = null,
+    fightExitOf = null } = {}, {
     replanEvery = REPLAN_EVERY, giveUpTicks = WALK_GIVE_UP_TICKS,
     retryAfter = SOLVER_RETRY_AFTER_TICKS, retryMax = SOLVER_RETRY_MAX,
 } = {}) {
@@ -329,6 +334,18 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                 // ⛓ S4 — a PIT exit: walked onto with that one pit exempted from the plan.
                 const pit = nearestPitAt(run.world, tiles, run.state);
                 if (pit) return { target: tileCentrePoint(pit.tile), allowTeleporter: null, pit: { tx: pit.tx, ty: pit.ty } };
+                // ⛓ seedling-js-l57-exit-check — an exit a FIGHT adds (`TentacleBeast.createMouthEntrance`,
+                // `LightBossController.endState`): no teleporter stands there until the fight ends. Only the solver
+                // fights (`solverGoalFor` → clear-tag, then reach-exit), so with the solver off it is refused by name.
+                const fight = typeof fightExitOf === 'function' ? fightExitOf(run, goal) : null;
+                if (fight) {
+                    if (!solver?.enabled) {
+                        return { refused: `level ${goal.level}'s exit at (${fight.exit.x}, ${fight.exit.y}) is the teleporter a `
+                            + 'boss fight adds when it ends: only the solver fights it, and the solver mode is off' };
+                    }
+                    const cell = [Math.floor(fight.exit.x / TILE_SIZE), Math.floor(fight.exit.y / TILE_SIZE)];
+                    return { target: tileCentrePoint(cell), allowTeleporter: null, fight };
+                }
                 return { refused: `level ${goal.level} has no live teleporter or pit on ${tiles.length === 1
                     ? `tile (${tiles[0][0]}, ${tiles[0][1]})` : `any of the tiles ${JSON.stringify(tiles)}`}` };
             }
@@ -476,7 +493,8 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                     return null;
                 }
                 // ⛓ ENCOUNTER LEGS — the same for an encounter: only the solver's executor fights it, so a walk clears nothing.
-                if (s?.declined && (goal.event || goal.encounter)) {
+                // ⛓ seedling-js-l57-exit-check — and for a FIGHT's exit: a walk to its cell fights nothing, so no door opens.
+                if (s?.declined && (goal.event || goal.encounter || r.fight)) {
                     // ⛓ EVENT GOALS — only the solver's `clear-tag` can set the game's flag: "walking instead" walks to
                     // the obstacle's cell and clears nothing (measured: L16's rope, no weapon — the walk left by the
                     // arrival door). The goal FAILS now, by the solver's own reason.

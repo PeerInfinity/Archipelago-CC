@@ -23,6 +23,7 @@
  *
  * Built ONCE per rules load or grouping change — never per snapshot (snapshots only re-colour the overlay).
  */
+import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
 import { displayRegionReader, resolveRegionLayout } from '../procgenCore/regionLayoutResolve.js';
 import { regionsOf } from '../procgenCore/rulesGraph.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -62,7 +63,7 @@ export function usesBigGenericPlaces(cell) {
  * @param {object} [args.hookCtx]   handed to every substrate hook (e.g. `atlases` for a custom Seedling set)
  * @param {string|Function} [args.rule]  the grouping rule (a `GROUPING_RULES` name)
  * @param {number} [args.gap]
- * @returns {{layout, cells: Map, links: object[], unplaced: object[], player: string, groupOf: Map}}
+ * @returns {{layout, cells: Map, links: object[], unplaced: object[], player: string, groupOf: Map, refused: object[]}} (`refused`: a cell whose payload its own substrate cannot read — drawn generic)
  */
 export function buildRegionMapModel({ rules, player = null, registry = substrateRegistry, hookCtx = {}, rule = 'R1', gap = 1 } = {}) {
     const layout = resolveRegionLayout({ rules, player, registry, hookCtx, rule, gap });
@@ -83,6 +84,7 @@ export function buildRegionMapModel({ rules, player = null, registry = substrate
     for (const name of Object.keys(regions)) cells.get(displayOf(name))?.members.push(name);
 
     const placed = new Set();
+    const refused = [];
     for (const cell of cells.values()) {
         const rep = cell.members.find((m) => sidecars[m]?.playable_payload) ?? null;
         const sc = rep ? sidecars[rep] : null;
@@ -95,6 +97,16 @@ export function buildRegionMapModel({ rules, player = null, registry = substrate
             };
             const e = typeof hooks?.regionExtent === 'function' ? safe(() => hooks.regionExtent(cell.region, ctx), null) : null;
             cell.extent = e && e.w > 0 && e.h > 0 ? { w: e.w, h: e.h } : null;
+            // ⛓ painter-throws: the painter draws the DESERIALIZED world (`compositeMap.drawRegion`'s contract, which
+            //   `procgenPipeline/compositeMapDocument.js` meets through the same door), never the sidecar's JSON shape.
+            //   The hooks above and below are DATA hooks and keep reading the sidecar payload, as before.
+            const world = hydratedPayload(registry, sc, payload, rep);
+            if (world.refusal) {
+                refused.push({ region_id: rep, key: cell.key, substrate: sc.substrate ?? null, sentence: world.refusal });
+                cell.region = null;
+            } else {
+                cell.region.playable_payload = world.world;
+            }
         }
         if (typeof hooks?.locationTiles === 'function' && cell.extent) {
             cell.tileSource = 'substrate';
@@ -145,7 +157,21 @@ export function buildRegionMapModel({ rules, player = null, registry = substrate
     const linkArgs = { layout, sidecars, displayOf, groupOf };
     return {
         layout, cells, links: groupLinks(linkArgs), neighbourLinks: neighbourLinks(linkArgs), unplaced, player: p, groupOf,
+        refused,
     };
+}
+
+/**
+ * ⛓ painter-throws — the world a cell's painter draws: the sidecar `payload` through its substrate's own
+ * `deserializeWorld` (`procgenCore/deserializeRefusal.js`, the door the composite map's document reader shares), or the
+ * payload unchanged when the substrate declares no deserializer. `{world}` or `{refusal}` (the entry's own sentence).
+ * Until this, the maze painter was handed the JSON shape (`obstacles` / `items` as `[key, id]` lists) and threw
+ * `world.obstacles.get is not a function` on every maze cell, both on the Region Map and in the Region Graph map look.
+ */
+function hydratedPayload(registry, sc, payload, regionId) {
+    const adapter = registry?.get?.(sc?.substrate);
+    if (typeof adapter?.deserializeWorld !== 'function') return { world: payload };
+    return deserializeOrRefuse(adapter, payload, { regionId, substrate: sc.substrate });
 }
 
 /**

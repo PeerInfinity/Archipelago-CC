@@ -1,0 +1,68 @@
+{
+  "kind": "action-graph",
+  "schema_version": 1,
+  "graph_id": "same-monday",
+  "name": "The Same Monday",
+  "provenance": {
+    "sources": {
+      "case": {
+        "type": "game",
+        "name": "The Same Monday (mystery-clue-game miniature)",
+        "repo": "PeerInfinity/mystery-clue-game",
+        "commit": "7a9ae373c5",
+        "files": ["cases/miniatures/same-monday/world/case.json"],
+        "note": "the five visits (labels, costs in hours, the same-day `after`, the `needs.read` gates), the five paper titles, the day of 3 hours from nine o'clock, and the one question, whose answer needs the papers office, inn and watch. Structure, labels and titles only: no story text"
+      },
+      "an-time4": {
+        "type": "model",
+        "model": "claude-opus-5-5",
+        "date": "2026-11-25",
+        "session": "actionnodes-time4",
+        "note": "The case as a timed ActionNodes world (slice AN-TIME-4). A visit made is a check; the five papers are the items, shuffled across the five visits (the long case's shape: the paper is the unit that travels). `needs.read: [X]` becomes holding paper X (a boon giving that paper's stat); `after` stays a same-day link; the goal is the question. No filler and no extra-hour item: five visits, five papers. Region XP off (a timed world).",
+        "approved": {
+          "by": "Robert",
+          "date": "2026-11-25",
+          "ruling": "The Same Monday as the first timed world; case names in the preset; papers shuffled now, a 'each visit keeps its paper' setting later"
+        }
+      }
+    },
+    "default": "an-time4"
+  },
+  "mystery": {
+    "story": "same-monday", "version": "f778f1b06ee9", "case": "cases/miniatures/same-monday",
+    "goal": { "node": "question", "question": "q.who" },
+    "papers": { "paper-office": "office", "paper-inn": "inn", "paper-watch": "watch", "paper-pilot": "pilot", "paper-chandler": "chandler" }
+  },
+  "clock": { "start": "09:00", "minutesPerUnit": 60 },
+  "pool": { "name": "Time", "unit": "h" },
+  "loop": { "mana": 3 },
+  "stats": {
+    "office": { "name": "Read: The harbour office", "src": "case" },
+    "inn": { "name": "Read: At the Ship inn", "src": "case" },
+    "watch": { "name": "Read: The night watchman", "src": "case" },
+    "pilot": { "name": "Read: The pilot", "src": "case" },
+    "chandler": { "name": "Read: At the chandler's", "src": "case" }
+  },
+  "resources": {},
+  "boons": {
+    "paper-office": { "name": "The harbour office", "count": 1, "gives": { "stats": { "office": 1 }, "mana": 0 }, "src": "case" },
+    "paper-inn": { "name": "At the Ship inn", "count": 1, "gives": { "stats": { "inn": 1 }, "mana": 0 }, "src": "case" },
+    "paper-watch": { "name": "The night watchman", "count": 1, "gives": { "stats": { "watch": 1 }, "mana": 0 }, "src": "case" },
+    "paper-pilot": { "name": "The pilot", "count": 1, "gives": { "stats": { "pilot": 1 }, "mana": 0 }, "src": "case" },
+    "paper-chandler": { "name": "At the chandler's", "count": 1, "gives": { "stats": { "chandler": 1 }, "mana": 0 }, "src": "case" }
+  },
+  "start": "monday",
+  "nodes": {
+    "monday": { "name": "Monday Morning", "kind": "start", "time": 0, "limit": 1 },
+    "office": { "name": "Look over the harbour office", "kind": "check", "time": 1, "limit": 1, "after": [["monday"]], "src": "case" },
+    "inn": { "name": "Ask at the Ship inn", "kind": "check", "time": 1, "limit": 1, "after": [["monday"]], "src": "case" },
+    "watch": { "name": "Wake the night watchman at the ropewalk", "kind": "check", "time": 2, "limit": 1, "after": [["inn"]],
+      "requires": { "stats": { "inn": 1 } }, "src": "case" },
+    "pilot": { "name": "Ask the pilot about his key", "kind": "check", "time": 1, "limit": 1, "after": [["monday"]],
+      "requires": { "stats": { "office": 1 } }, "src": "case" },
+    "chandler": { "name": "Call on Silas Finch at the chandler's", "kind": "check", "time": 1, "limit": 1, "after": [["monday"]],
+      "requires": { "stats": { "pilot": 1 } }, "src": "case" },
+    "question": { "name": "Who took the chart from the harbour office?", "kind": "goal", "time": 0, "limit": 1, "after": [["monday"]],
+      "requires": { "stats": { "office": 1, "inn": 1, "watch": 1 } }, "src": "case" }
+  }
+}

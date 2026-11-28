@@ -256,14 +256,14 @@ registerTest({
 
 /**
  * ⛓ CONTENT SETS GEN-2 — THE "RANDOMLY PLACED TILES" DEMO, PLAYED TO THE END. The committed `tile_kinds_demo` preset
- * (top-down over Adventure, every region a maze room, the `furniture` pack's rugs and pillars placed in the
- * `scattered` rooms of a scattered 2 : classic 1 mix), loop mode off: the bot drives the maze controller through every
- * room at instant speed, around the pillars, until every location of the preset's embedded sphere log is checked. The
- * Maze Room panel, watched through the run, must load the world's recorded "what exists" pack into its art stack (the
- * placed kinds draw from the pack, not their bases).
+ * (top-down over Adventure, every region a maze room, the `furniture` pack's rugs and pillars and (GEN-5) the `ledges`
+ * pack's one-way ledges placed in the `scattered` rooms of a scattered 2 : classic 1 mix), loop mode off: the bot
+ * drives the maze controller through every room at instant speed, around the pillars and the shut sides of the ledges,
+ * until every location of the preset's embedded sphere log is checked. The Maze Room panel, watched through the run,
+ * must load every one of the world's recorded "what exists" packs into its art stack (the placed kinds draw from their
+ * packs, not their bases).
  */
 const TILE_KINDS_DEMO_RULES = './presets/tile_kinds_demo/AP_1/AP_1_rules.json';
-const TILE_KINDS_DEMO_PACK = 'furniture';
 
 async function playbackBotTileKindsDemoTest(testController) {
   const loopModeOn = () => centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true;
@@ -285,10 +285,13 @@ async function playbackBotTileKindsDemoTest(testController) {
   const sidecars = rulesDoc.preset_sidecars?.['1'] ?? {};
   const furnished = Object.entries(sidecars).filter(([, s]) => (s.playable_payload?.tileKinds ?? []).length > 0);
   const kinds = furnished.flatMap(([, s]) => s.playable_payload.tileKinds);
+  const passCount = (pass) => kinds.filter((k) => (k.pass ?? 'walkable') === pass).length;
   testController.reportCondition(
-    `the preset places both passes (${furnished.length} furnished rooms; ${kinds.filter((k) => k.pass === 'blocked').length} blocked, `
-      + `${kinds.filter((k) => k.pass !== 'blocked').length} walkable)`,
-    kinds.some((k) => k.pass === 'blocked') && kinds.some((k) => k.pass !== 'blocked'));
+    `the preset places every pass (${furnished.length} furnished rooms; ${passCount('blocked')} blocked, `
+      + `${passCount('walkable')} walkable, ${passCount('one-way')} one-way)`,
+    ['blocked', 'walkable', 'one-way'].every((pass) => passCount(pass) > 0));
+  const existsPacks = rulesDoc.procgen_metadata?.['1']?.exists ?? [];
+  testController.reportCondition(`the preset records its exists packs (${JSON.stringify(existsPacks)})`, existsPacks.length > 0);
   const sphereState = getSphereStateSingleton();
   await sphereState.loadSphereLog(`embedded:${TILE_KINDS_DEMO_RULES}`,
     (rulesDoc.sphere_log ?? []).map((e) => JSON.stringify(e)).join('\n'));
@@ -297,15 +300,15 @@ async function playbackBotTileKindsDemoTest(testController) {
   const warehouse = _testOnly_getWarehouse();
   testController.reportCondition('procgenPlayer built a warehouse', !!warehouse && warehouse.size() > 0);
 
-  // Watch the Maze Room panel: its art stack is the world's (the maze pack, then the recorded exists pack).
+  // Watch the Maze Room panel: its art stack is the world's (the maze pack, then the recorded exists packs).
   testController.eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
   const maze = await testController.pollForValue(() => getMazePanel(), 'maze panel instance', 5000, 100);
   const artReady = await testController.pollForCondition(() => {
     const st = maze?.getTileArtStatus?.();
-    return st?.status === 'ready' && st.stack.includes(TILE_KINDS_DEMO_PACK);
-  }, 'maze panel art stack ready with the exists pack', 10000, 100);
+    return st?.status === 'ready' && existsPacks.every((id) => st.stack.includes(id));
+  }, 'maze panel art stack ready with the exists packs', 10000, 100);
   testController.reportCondition(
-    `the maze panel's art stack takes the recorded exists pack (${JSON.stringify(maze?.getTileArtStatus?.() ?? null)})`, artReady);
+    `the maze panel's art stack takes the recorded exists packs (${JSON.stringify(maze?.getTileArtStatus?.() ?? null)})`, artReady);
   bot.refresh();
 
   const restoreSpeed = await startAppBotTestSpeed();
@@ -335,9 +338,10 @@ registerTest({
   id: 'playback-bot-tile-kinds-demo',
   name: 'Playback Bot: the "Randomly placed tiles" demo preset (tile_kinds_demo) to the end',
   description:
-    'Loads the committed tile_kinds_demo preset (top-down over Adventure, rugs and pillars from the furniture pack in '
-    + 'the scattered rooms), loop mode off, and drives the bot at instant speed through the maze rooms until every '
-    + 'sphere-log location is checked; the Maze Room panel loads the world\'s exists pack into its art stack.',
+    'Loads the committed tile_kinds_demo preset (top-down over Adventure, rugs and pillars from the furniture pack and '
+    + 'one-way ledges from the ledges pack in the scattered rooms), loop mode off, and drives the bot at instant speed '
+    + 'through the maze rooms until every sphere-log location is checked; the Maze Room panel loads the world\'s exists '
+    + 'packs into its art stack.',
   testFunction: playbackBotTileKindsDemoTest,
   category: 'Playback Bot',
   enabled: false,

@@ -12,8 +12,21 @@
 //
 //   page -> host  mystery:questionSolved { story, questionId }
 //   page -> host  mystery:requestState   { story, version? }
-//   host -> page  mystery:state          { story, version, game, connected, papers, solved }
+//   host -> page  mystery:state          { story, version, game, connected, papers, solved, lock?, inOffice?, loop? }
 //   host -> page  mystery:refused        { reason, story, version }
+//
+// A GENERATED world may hold the case as one region of several (the `mystery` substrate,
+// mysterySubstrateLibrary.js). The map is then that region's payload (`ap_locations`, `papers`),
+// and the state carries two more fields: `lock`, the world's rule for what is locked while the
+// player is not in the case's region (`actions`, `new-reading`, `everything`), and `inOffice`,
+// whether the player is in it now AND may play it by hand: in loop mode that is only while the
+// Loops queue is parked for live play on the region (the strict action gate would refuse a check
+// at any other time, and the page must not offer what will not happen). Both are absent for a world whose case is its slot's (one
+// region, always "in the office"). A question solved away from the region is not checked.
+//
+// `loop` is the day the page is played on (an int, 1 on the first): present in EVERY state of a world
+// whose slot is played in numbered loops (an ActionNodes world: its runtime's `loopNumber`), and absent
+// for any other. The page marks what it first met on an earlier day.
 //
 // `mystery:state` always carries the WHOLE set of papers held and questions checked, so the page
 // replaces what it has and never adds; a reload or a reconnect is then safe. It is sent when the
@@ -41,6 +54,16 @@ export const MYSTERY_REFUSALS = Object.freeze({
 
 export const SOURCE_MODULE = 'mysteryArchipelago';
 
+/** The events after which the answer of `getLivePlay` may have changed (index.js declares the intents). */
+export const LIVE_PLAY_EVENTS = Object.freeze([
+  'gameState:loopModeChanged', 'loopState:manualEntered', 'loopState:manualResumed', 'loopState:pauseStateChanged',
+  'loopState:queuePausedUntilReset', 'loopState:loopReset', 'loopState:queueCompleted', 'loopState:newActionStarted',
+  'loopState:processingStopped',
+]);
+
+/** The events after which the answer of `getLoopNumber` may have changed (index.js declares the intents). */
+export const LOOP_NUMBER_EVENTS = Object.freeze(['actionNodes:stateChanged']);
+
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
 /**
@@ -61,11 +84,73 @@ export function mysteryBlockOf(staticData) {
     player,
     story: block.story,
     version: block.version ?? null,
+    case: typeof block.case === 'string' && block.case ? block.case : null,
     seedName: staticData.seed_name != null ? String(staticData.seed_name) : '',
     questionOfLocation: block.locations,
     paperOfItem: block.items,
     locationOfQuestion,
+    regionId: null,
+    lock: null,
   };
+}
+
+/**
+ * The same block, read off ONE region of a generated world: the `mystery` substrate's payload
+ * (`{story, version?, case, lock, ap_locations: {<question id>: <location name>}, papers: {<item
+ * name>: <paper id>}}`). Null when the payload is no case.
+ * @param {string} regionId
+ * @param {Object} payload - the region's deserialised world
+ * @param {Object|null} staticData - for the player and the seed name
+ */
+export function mysteryBlockOfRegion(regionId, payload, staticData) {
+  if (!isObject(payload) || typeof payload.story !== 'string' || !isObject(payload.ap_locations) || !isObject(payload.papers)) {
+    return null;
+  }
+  const questionOfLocation = {};
+  for (const [questionId, locationName] of Object.entries(payload.ap_locations)) questionOfLocation[locationName] = questionId;
+  return {
+    player: String(staticData?.playerId ?? Object.keys(staticData?.world ?? {})[0] ?? '1'),
+    story: payload.story,
+    version: payload.version ?? null,
+    case: typeof payload.case === 'string' && payload.case ? payload.case : null,
+    seedName: staticData?.seed_name != null ? String(staticData.seed_name) : '',
+    questionOfLocation,
+    paperOfItem: payload.papers,
+    locationOfQuestion: new Map(Object.entries(payload.ap_locations)),
+    regionId,
+    lock: typeof payload.lock === 'string' ? payload.lock : null,
+  };
+}
+
+/**
+ * The `mystery` regions of the runtime player's warehouse (`procgenPlayer`'s `WorldWarehouse`:
+ * `keys()` and `get(regionId) → {substrate, world}`), as `currentMysteryBlock` wants them. `[]`
+ * for no warehouse (a world that is not generated).
+ */
+export function caseRegionsOfWarehouse(warehouse, substrateId) {
+  if (!warehouse || typeof warehouse.keys !== 'function' || typeof warehouse.get !== 'function') return [];
+  const out = [];
+  for (const regionId of warehouse.keys()) {
+    const entry = warehouse.get(regionId);
+    if (entry?.substrate === substrateId && entry.world) out.push({ regionId, payload: entry.world });
+  }
+  return out;
+}
+
+/**
+ * The case the page is to be answered about. A generated world's case regions win over the
+ * slot's block; among several the one of the asked `story`, else the one the player is in, else
+ * the first. Null when the world holds no case.
+ * @param {{staticData: Object|null, caseRegions?: Array<{regionId: string, payload: Object}>, activeRegionId?: string|null, story?: string}} world
+ */
+export function currentMysteryBlock({ staticData, caseRegions = [], activeRegionId = null, story } = {}) {
+  const blocks = (caseRegions ?? [])
+    .map((r) => mysteryBlockOfRegion(r.regionId, r.payload, staticData))
+    .filter(Boolean);
+  if (blocks.length === 0) return mysteryBlockOf(staticData);
+  return blocks.find((b) => story !== undefined && b.story === story)
+    ?? blocks.find((b) => b.regionId === activeRegionId)
+    ?? blocks[0];
 }
 
 /** The `game` string: one slot of one generated multiworld. */
@@ -75,10 +160,20 @@ export function gameKeyOf(block, connection) {
 }
 
 /**
+ * Is the player in the case's region and able to play it by hand? `livePlay` is the Loops module's
+ * word (`{loopMode, region}`: loop mode on, and the region the queue is parked on for live play, or
+ * null); with loop mode off, or no Loops module, being in the region is enough.
+ */
+export function inOfficeNow(block, activeRegionId, livePlay = null) {
+  if (!block.regionId || activeRegionId !== block.regionId) return false;
+  return !livePlay?.loopMode || livePlay.region === block.regionId;
+}
+
+/**
  * The whole `mystery:state` payload for a block, a state snapshot and the connection.
  * Both lists are sorted, so two equal states are equal as JSON.
  */
-export function mysteryStateOf(block, snapshot, connection) {
+export function mysteryStateOf(block, snapshot, connection, activeRegionId = null, livePlay = null, loop = null) {
   const inventory = isObject(snapshot?.inventory) ? snapshot.inventory : {};
   const papers = [];
   for (const [itemName, paperId] of Object.entries(block.paperOfItem)) {
@@ -96,6 +191,11 @@ export function mysteryStateOf(block, snapshot, connection) {
     connected: !!connection?.connected,
     papers: papers.sort(),
     solved: solved.sort(),
+    // Only for a case that is a region of a generated world.
+    ...(block.lock ? { lock: block.lock } : {}),
+    ...(block.regionId ? { inOffice: inOfficeNow(block, activeRegionId, livePlay) } : {}),
+    // Only for a world played in numbered loops (`getLoopNumber`): the day, an int of at least 1.
+    ...(Number.isInteger(loop) && loop >= 1 ? { loop } : {}),
   };
 }
 
@@ -109,22 +209,43 @@ export class MysteryArchipelagoLogic {
    * @param {() => {connected: boolean, slot: number|null, team: number|null}} deps.getConnection - asked
    *   every time, never remembered: this module may be enabled after the app has connected, and a
    *   connect event it was not there for must not leave it saying "offline".
+   * @param {() => Array<{regionId: string, payload: Object}>} [deps.getCaseRegions] - the loaded world's
+   *   `mystery` regions (none for a world that is not generated)
+   * @param {() => string|null} [deps.getActiveRegionId] - the region the player is in
+   * @param {() => {loopMode: boolean, region: string|null}|null} [deps.getLivePlay] - loop mode, and the
+   *   region the Loops queue is parked on for live play (see `inOfficeNow`)
+   * @param {() => number|null} [deps.getLoopNumber] - the loop the loaded world is on (1 the first),
+   *   or null for a world not played in numbered loops; sent as `loop`
    * @param {(level: string, message: string, ...data: any[]) => void} [deps.log]
    */
-  constructor({ eventBus, dispatcher, getStaticData, getSnapshot, getConnection, log = () => {} }) {
+  constructor({
+    eventBus, dispatcher, getStaticData, getSnapshot, getConnection,
+    getCaseRegions = () => [], getActiveRegionId = () => null, getLivePlay = () => null, getLoopNumber = () => null, log = () => {},
+  }) {
     this._eventBus = eventBus;
     this._dispatcher = dispatcher;
     this._getStaticData = getStaticData;
     this._getSnapshot = getSnapshot;
     this._log = log;
     this._getConnection = getConnection;
+    this._getCaseRegions = getCaseRegions;
+    this._getActiveRegionId = getActiveRegionId;
+    this._getLivePlay = getLivePlay;
+    this._getLoopNumber = getLoopNumber;
+    // The story the page last asked about: with several cases in one world, the one it is answered about.
+    this._pageStory = undefined;
     // The page has asked at least once; until then nothing is sent (no page, nobody to tell).
     this._pageAsked = false;
     this._lastSent = null;
   }
 
   initialize() {
-    const sub = (event, handler) => this._eventBus.subscribe(event, handler);
+    this.dispose(); // a second initialize replaces the subscriptions, never adds to them
+    this._unsubscribes = [];
+    const sub = (event, handler) => {
+      const off = this._eventBus.subscribe(event, handler);
+      if (typeof off === 'function') this._unsubscribes.push(off);
+    };
     sub(MYSTERY_EVENTS.QUESTION_SOLVED, (data) => this.handleQuestionSolved(data));
     sub(MYSTERY_EVENTS.REQUEST_STATE, (data) => this.handleRequestState(data));
     // The connection events only say WHEN to look; what is so is asked of the client each time.
@@ -135,6 +256,37 @@ export class MysteryArchipelagoLogic {
     sub('game:itemsReceived', () => this.sendStateIfChanged());
     sub('stateManager:rulesLoaded', () => this.sendStateIfChanged());
     sub('stateManager:snapshotUpdated', () => this.sendStateIfChanged());
+    // The player moved: `inOffice` may have changed.
+    sub('procgen:activeSubstrateChanged', () => this.sendStateIfChanged());
+    // Loop mode, or the queue's park, changed: so may `inOffice`.
+    for (const event of LIVE_PLAY_EVENTS) sub(event, () => this.sendStateIfChanged());
+    // The loop runtime changed (a new loop): so may `loop`.
+    for (const event of LOOP_NUMBER_EVENTS) sub(event, () => this.sendStateIfChanged());
+  }
+
+  /**
+   * Drop every subscription `initialize` made. The module calls it before building a new bridge:
+   * re-enabling a module runs its `initialize` again (app/initialization), and a bridge left
+   * subscribed would answer every page request a second time.
+   */
+  dispose() {
+    for (const off of this._unsubscribes ?? []) off();
+    this._unsubscribes = [];
+  }
+
+  /** The case to answer about, for the story the page asked (or last asked). */
+  _block(story = this._pageStory) {
+    return currentMysteryBlock({
+      staticData: this._getStaticData(),
+      caseRegions: this._getCaseRegions(),
+      activeRegionId: this._getActiveRegionId(),
+      story,
+    });
+  }
+
+  _state(block) {
+    return mysteryStateOf(block, this._getSnapshot(), this._getConnection(), this._getActiveRegionId(), this._getLivePlay(),
+      this._getLoopNumber());
   }
 
   /** Why the page's `{story, version}` is refused, or null. A missing `version` is not checked. */
@@ -159,18 +311,19 @@ export class MysteryArchipelagoLogic {
 
   handleRequestState(request) {
     this._pageAsked = true;
-    const block = mysteryBlockOf(this._getStaticData());
+    if (typeof request?.story === 'string') this._pageStory = request.story;
+    const block = this._block();
     const reason = this.refusalFor(block, request);
     if (reason) return this._refuse(reason, block);
-    this._send(mysteryStateOf(block, this._getSnapshot(), this._getConnection()));
+    this._send(this._state(block));
   }
 
   /** Send the state when the page has asked and the state differs from the last one sent. */
   sendStateIfChanged() {
     if (!this._pageAsked) return;
-    const block = mysteryBlockOf(this._getStaticData());
+    const block = this._block();
     if (!block) return;
-    const state = mysteryStateOf(block, this._getSnapshot(), this._getConnection());
+    const state = this._state(block);
     if (JSON.stringify(state) === this._lastSent) return;
     this._send(state);
   }
@@ -181,12 +334,22 @@ export class MysteryArchipelagoLogic {
   }
 
   handleQuestionSolved(data) {
-    const block = mysteryBlockOf(this._getStaticData());
+    const block = this._block(typeof data?.story === 'string' ? data.story : undefined);
     const reason = this.refusalFor(block, { story: data?.story });
     if (reason) return this._refuse(reason, block);
     const locationName = block.locationOfQuestion.get(data?.questionId);
+    // SILENT on purpose: no check and no state in reply (the page re-sends a solved question on each
+    // state that lacks it, so a reply here would make the two answer each other without end). This is
+    // also how an ActionNodes world's questions are dropped while its `locations` map is empty
+    // (⚑ PENDING, actionGraphCompiler.js `MYSTERY_QUESTION_LOCATIONS_PENDING`): the data decides, not the game.
     if (!locationName) {
       this._log('warn', `no location for question "${data?.questionId}"`);
+      return;
+    }
+    // A case that is a region is answered only in it, under every lock. The page sends the
+    // question again while the state lacks it, so it is checked once the player is back.
+    if (block.regionId && !inOfficeNow(block, this._getActiveRegionId(), this._getLivePlay())) {
+      this._log('warn', `question "${data?.questionId}" solved while region "${block.regionId}" is not played by hand: not checked`);
       return;
     }
     // Not remembered here on purpose: the page sends a solved question again when `mystery:state`

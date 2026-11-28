@@ -102,6 +102,15 @@ Details are in `docs/json/developer/procgen/concepts.md` § Provenance.
   `pack.json`). `mazeRoom/mazeFurniturePack.test.js` pins the pack; an edit to its `structure` or `concepts` layer
   owes `make-seedling-spiral-room-preset.mjs --state=tile-kinds-demo` (the placed kinds are baked into the world),
   an edit to its art none.
+- `ledges/` (content sets GEN-5) is the first committed "what exists" pack with a **`one-way`** kind the generator
+  places: a ledge (`ledges:terrain/ledge`), `pass: one-way` with fixed `dirs: ["S"]` (you can jump down onto it moving
+  south, and climb onto it from no other side), `generate: true`, presented by a concept with base `marker` (the cell
+  stays floor) and an `art` shape recipe whose rock lip sits on the north edge and whose chevron points south, so the
+  way in reads at a glance. A new pack rather than a ledge added to `furniture`, so furniture's pins do not move. The
+  demo world `tile-kinds-demo` names it after `furniture`. HAND-MADE for this repository, MIT (see `pack.json`).
+  `mazeRoom/mazeLedgesPack.test.js` pins the pack (the art's chevron tip is checked against `dirs`); an edit to its
+  `structure` or `concepts` layer owes `make-seedling-spiral-room-preset.mjs --state=tile-kinds-demo`, an edit to its
+  art none.
 
 ⛔ **The seedling and archipelago packs are GENERATED. Do not edit them.** Regenerate with
 `node scripts/procgen/extract-seedling-art-packs.mjs`, and check with the same command plus `--check`. The sheets

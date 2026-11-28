@@ -194,6 +194,7 @@ import './modules/tests/testCases/seedlingAtlasMazeTests.js';
 import './modules/tests/testCases/seedlingJsRuntimeTests.js';
 import './modules/tests/testCases/taswBlockModeTests.js';
 import './modules/tests/testCases/actionNodesTests.js';
+import './modules/tests/testCases/actionNodesMysteryTests.js';
 import './modules/tests/testCases/apworldEditorTests.js';
 import './modules/tests/testCases/substrateRegistryPanelTests.js';
 import './modules/tests/testCases/procgenPipelineTests.js';
@@ -203,6 +204,7 @@ import './modules/tests/testCases/tutorialTests.js';
 import './modules/tests/testCases/storagePanelTests.js';
 import './modules/tests/testCases/ruleConverterTests.js';
 import './modules/tests/testCases/mysteryBridgeTests.js';
+import './modules/tests/testCases/mysteryPlaybackBotTests.js';
 import './modules/tests/testCases/documentLibraryTests.js';
 import './modules/tests/testCases/labApworldDoorTests.js';
 

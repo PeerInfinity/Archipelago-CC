@@ -7404,5 +7404,43 @@
         "has_procgen_data": true
       }
     }
+  },
+  "mystery_street_test": {
+    "name": "Mystery Street Test",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Mystery Street Test"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
+  },
+  "action_nodes_same_monday": {
+    "name": "Action Nodes The Same Monday",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Action Nodes"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }

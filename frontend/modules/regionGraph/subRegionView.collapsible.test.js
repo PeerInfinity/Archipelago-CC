@@ -105,10 +105,13 @@ function fakeDoc() {
 }
 
 /** A collapsible graph with the badge layer on a fake document, and the interaction manager with a click spy. */
-function badgeUi(rel = ATLAS) {
+function badgeUi(rel = ATLAS, { styled = false } = {}) {
     const { regions } = load(rel);
     let layouts = 0;
-    const ui = kit.makeUi(kit.loadCytoscape(), { runLayout() { layouts += 1; } });
+    const cytoscape = kit.loadCytoscape();
+    // `styled`: a Cytoscape with its style on (sizes and `style` events are real), for the resize case.
+    const extra = styled ? { cy: cytoscape({ headless: true, styleEnabled: true }) } : {};
+    const ui = kit.makeUi(cytoscape, { runLayout() { layouts += 1; }, ...extra });
     const doc = fakeDoc();
     ui.rootElement = doc.root;
     ui.zoomLevels = { showRegionNames: 0.5 };
@@ -122,6 +125,9 @@ function badgeUi(rel = ATLAS) {
 }
 
 beforeEach(() => { gs.current = null; });
+
+/** The badge centre on the node's corner, to float rounding (left = c − HIT/2, read back + HIT/2). */
+const expectOnCorner = ({ dx, dy }) => { expect(Math.abs(dx)).toBeLessThan(1e-6); expect(Math.abs(dy)).toBeLessThan(1e-6); };
 
 describe('⛓ collapsible: the setting', () => {
     it('appends `collapsible` with its label; the default stays `separate`', () => {
@@ -309,7 +315,11 @@ describe('⛓ collapsible: the badge', () => {
         ui.cy.zoom(0.5);
         ui.groupBadges.sync();
         const c = G.badgeCentre(node.renderedBoundingBox({ includeLabels: false }));
-        expect(ui.groupBadges.centreOf(key)).toEqual(c);
+        // Not toEqual: centreOf reads back (c.x - HIT/2) + HIT/2 from the style string, which can be 1 ulp off c.x.
+        const at = ui.groupBadges.centreOf(key);
+        expect(at).not.toBeNull();
+        expect(at.x).toBeCloseTo(c.x, 6);
+        expect(at.y).toBeCloseTo(c.y, 6);
         const btn = ui.groupBadges.buttonOf(key);
         expect(btn.style.display).toBe('block');
         // The hit square is centred on the corner: a tap at the centre is inside the button.
@@ -320,6 +330,94 @@ describe('⛓ collapsible: the badge', () => {
         expect(btn.style.display).toBe('none');
         expect(ui.groupBadges.centreOf(key)).toBeNull();
         expect([G.BADGE_SIZE_PX, G.BADGE_HIT_PX]).toEqual([20, 36]);
+    });
+
+    it('region-graph-badge-resize: a node RESIZED with no position or viewport event gets its badge re-placed on the next frame; a style change that keeps every size runs no sync', () => {
+        const frames = [];
+        vi.stubGlobal('requestAnimationFrame', (f) => { frames.push(f); return frames.length; });
+        const flush = () => { while (frames.length) frames.shift()(); };
+        try {
+            const { ui } = badgeUi(ATLAS, { styled: true });
+            const cy = ui.cy;
+            const layer = ui.groupBadges;
+            const [node, other] = mergedNodes(cy);
+            const key = node.data('groupKey');
+            cy.zoom(1.5);
+            flush();
+            const corner = () => {
+                const c = G.badgeCentre(node.renderedBoundingBox({ includeLabels: false }));
+                const at = layer.centreOf(key);
+                return { dx: at.x - c.x, dy: at.y - c.y };
+            };
+            expectOnCorner(corner());
+            const before = { w: node.outerWidth(), h: node.outerHeight(), pos: { ...node.position() } };
+            let moved = 0;
+            const count = () => { moved += 1; };
+            cy.on('position viewport', count);
+            // The map look's resize: a width / height bypass, no position, no viewport event.
+            const syncs0 = layer.syncCount;
+            node.style({ width: before.w + 40, height: before.h + 30 });
+            expect(moved).toBe(0);
+            expect(node.position()).toEqual(before.pos);
+            expect(node.outerWidth()).not.toBe(before.w);
+            // Off the corner until the frame runs; exactly on it after, with ONE sync.
+            expect(Math.abs(corner().dx) + Math.abs(corner().dy)).toBeGreaterThan(1);
+            expect(frames.length).toBe(1);
+            flush();
+            expect(layer.syncCount).toBe(syncs0 + 1);
+            expectOnCorner(corner());
+            // The bypass leaving (map look off): re-placed again.
+            node.removeStyle('width height');
+            flush();
+            expect(layer.syncCount).toBe(syncs0 + 2);
+            expectOnCorner(corner());
+            // A style change that keeps every size (a colour; a class with no size): a frame compares, NO sync.
+            node.style('background-color', '#123456');
+            other.addClass('rg-test-no-size');
+            expect(frames.length).toBe(1);
+            flush();
+            expect(layer.syncCount).toBe(syncs0 + 2);
+            // A style change on a node with no badge (no group, not inside a box) schedules nothing.
+            const plain = cy.nodes().filter((n) => !G.isRegionGroupNode(n) && n.parent().length === 0)[0];
+            expect(plain).toBeTruthy();
+            plain.style({ width: 99 });
+            expect(frames.length).toBe(0);
+            // Nothing changed at all: no frame, no sync.
+            flush();
+            expect(layer.syncCount).toBe(syncs0 + 2);
+            cy.off('position viewport', count);
+        } finally {
+            vi.unstubAllGlobals();
+        }
+    });
+
+    it('region-graph-badge-resize: an OPEN box resized by a member\'s size change gets its − badge re-placed', () => {
+        const frames = [];
+        vi.stubGlobal('requestAnimationFrame', (f) => { frames.push(f); return frames.length; });
+        const flush = () => { while (frames.length) frames.shift()(); };
+        try {
+            const { ui, dm } = badgeUi(ATLAS, { styled: true });
+            const cy = ui.cy;
+            const key = mergedNodes(cy)[0].data('groupKey');
+            dm.setSubRegionGroupOpen(key, true);
+            cy.zoom(1.5);
+            flush();
+            const box = boxes(cy)[0];
+            const corner = () => {
+                const c = G.badgeCentre(box.renderedBoundingBox({ includeLabels: false }));
+                const at = ui.groupBadges.centreOf(key);
+                return { dx: at.x - c.x, dy: at.y - c.y };
+            };
+            expectOnCorner(corner());
+            const syncs0 = ui.groupBadges.syncCount;
+            const member = box.children()[0];
+            member.style({ width: member.outerWidth() + 200, height: member.outerHeight() + 200 });
+            flush();
+            expect(ui.groupBadges.syncCount).toBe(syncs0 + 1);
+            expectOnCorner(corner());
+        } finally {
+            vi.unstubAllGlobals();
+        }
     });
 });
 

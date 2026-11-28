@@ -52,8 +52,9 @@
  *   tile-kinds-demo → `tile_kinds_demo`: the TOP-DOWN world over the committed
  *            Adventure seed-1 preset (the row's `topDownSource`, with its sphere
  *            log: what a plain page load has loaded), every region a 16×12 maze
- *            room, the pack `furniture` named under "what exists" and the maze
- *            biome mix scattered 2 : classic 1 (content sets GEN-2), from
+ *            room, the packs `furniture` and (GEN-5) `ledges` named under
+ *            "what exists" and the maze biome mix scattered 2 : classic 1
+ *            (content sets GEN-2), from
  *            `TILE_KINDS_DEMO_STATE`.
  *
  * ONE recipe, twelve states: the same assembly, the same bytes rule, the same

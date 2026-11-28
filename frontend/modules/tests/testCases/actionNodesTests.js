@@ -1355,6 +1355,62 @@ async function omsiTownRow(tc) {
     return tc.getOverallResult();
 }
 
+/**
+ * AN-TIME-4: the first timed PRESET (The Same Monday). Every number and name is read from the committed preset: the
+ * day is `loop.mana` (not gameState's default 100: AN-TIME-2 § 6), the clock and the pool name from the block, the item
+ * gate's stat name from the block's stats.
+ */
+const SAME_MONDAY_RULES = './presets/action_nodes_same_monday/AP_1/AP_1_rules.json';
+
+async function sameMondayClock(tc) {
+    const rules = await (await fetch(SAME_MONDAY_RULES, { cache: 'no-store' })).json();
+    const block = rules.action_nodes[P];
+    const payloads = Object.fromEntries(Object.entries(rules.preset_sidecars[P]).map(([k, v]) => [k, v.playable_payload]));
+    clearHistoryOf(block.graph_id);
+    await tc.loadRulesFromFile(SAME_MONDAY_RULES);
+    await tc.stateManager.pingWorker('after-rules-load', 3000);
+    const ok = await tc.pollForCondition(
+        () => runtime().isLoaded() && runtime().model.block.graph_id === block.graph_id && gs()?.isLoopModeActive === true,
+        `the runtime holds ${block.graph_id} and loop mode is on`, 8000, 100);
+    tc.reportCondition(`the runtime holds ${block.graph_id} and loop mode is on`, !!ok);
+    if (!ok) return tc.getOverallResult();
+    const restore = freshQueue();
+    try {
+        const m = runtime().model;
+        const at = (u) => formatClock(m, u);
+        const { name: pool, unit } = block.pool;
+        const day = block.loop.mana;
+        const line = (spent) => `${pool}: ${at(spent)} · ${day - spent} ${unit} left · the day ends ${at(day)}`;
+        tc.assertEqual('the pool is the graph\'s loop.mana (the day), not the default', day, gs().getMaxMana());
+        tc.assertEqual('the pool is full at the loop\'s start', day, gs().getCurrentMana());
+        tc.assertEqual('the Time line at the loop\'s start', line(0), timeLine());
+        // The item gate: a visit whose paper is not held is refused by the start gate, naming the paper's stat. One hop
+        // from the start, so no same-day `after` refuses it first.
+        const [gatedId, gatedPayload] = Object.entries(payloads).find(([id, p]) => p.kind === 'check'
+            && Object.keys(p.requires?.stats ?? {}).length && hopsBetween(payloads, block.start, id).length === 1);
+        const statName = block.stats[Object.keys(gatedPayload.requires.stats)[0]].name;
+        const g = runtime().gate({ type: 'customAction', actionName: 'act', sourceRegion: gatedId, params: { nodeId: gatedId } });
+        tc.log(`gate ${gatedId}: ${JSON.stringify(g)}`);
+        tc.assertEqual(`the gate refuses ${gatedPayload.name}, naming "${statName}"`, true,
+            g.ok === false && (g.reason ?? '').includes(statName));
+        // One visit from the start: the clock moves by its time and the pool pays it (no region-XP discount).
+        const [visitId, visit] = Object.entries(payloads).find(([id, p]) => p.kind === 'check'
+            && !Object.keys(p.requires?.stats ?? {}).length && hopsBetween(payloads, block.start, id).length === 1);
+        gs().updatePath(visitId, `${block.start} -> ${visitId}`, block.start);
+        gs().addCustomAction('act', { nodeId: visitId, label: visit.name, regionName: visitId });
+        tc.assertEqual('the queue ran to its end', true, await runQueue(tc, 'queue finished'));
+        tc.assertEqual('no start-gate refusal', null, loopStateSingleton.lastActionRefusal);
+        tc.assertEqual(`${visit.name} performed once`, 1, countOf(visitId));
+        tc.assertEqual('the clock advanced by the visit\'s time', visit.time, runtime().clock);
+        tc.assertEqual('the pool paid exactly the visit\'s time', day - visit.time, gs().getCurrentMana());
+        tc.assertEqual('the Time line after the visit', line(visit.time), timeLine());
+    } finally {
+        restore();
+        clearHistoryOf(block.graph_id);
+    }
+    return tc.getOverallResult();
+}
+
 async function omsiTownBotPlaysToGoal(tc) {
     return botPlaysPresetToGoal(tc, {
         path: OMSI_TOWN_RULES, logName: 'embedded:actionNodesOmsiTown', loops: OMSI_TOWN_BOT_LOOPS, finishMs: 180000,
@@ -1396,6 +1452,8 @@ const ROWS = [
         'AN-TIME-2 over the visits fixture: before Visit A is performed the app does NOT hold its Knows: flag and the gate refuses Visit D ("needs to know Paper A"); a click on A then D queues both; after they run the app holds both flags; the next loop the gate passes from its start.', knowledgeGate],
     ['an-time-completed-before', 'ActionNodes time: "completed before" in loop 2, tagged loop 1',
         'AN-TIME-2 (Robert\'s Q6, minimal form): a node performed in loop 1 shows no mark in loop 1 and "completed before · loop 1" in loop 2; no other card is marked; the panel lists the set tagged by loop; it is saved per world under the declared prefix.', completedBeforeRow],
+    ['an-same-monday-clock', 'ActionNodes time: The Same Monday preset loads with its day as the pool and the clock line',
+        'AN-TIME-4: loads the committed timed preset: the pool is the graph\'s loop.mana (3 h, not 100), the Resources Time line reads the clock at the start, the start gate refuses a visit whose paper is not held (naming it), and one visit moves the clock and the pool by its time.', sameMondayClock],
 ];
 
 for (const [id, name, description, testFunction] of ROWS) {

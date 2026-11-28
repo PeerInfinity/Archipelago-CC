@@ -1,0 +1,6 @@
+ ✓ frontend/modules/mazeRoom/tileSpike/deriveLevelWorldLogic.latchSandwich.train.test.js (2 tests) 398824ms
+     ✓ native: byte-identical, and the prune removes at least half the searches (both counts derived)  111816ms
+     ✓ scripted, prune on: byte-identical to the native prune-off answer  287006ms
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Duration  418.15s (transform 3.38s, setup 212ms, import 19.00s, tests 398.82s, environment 0ms)
