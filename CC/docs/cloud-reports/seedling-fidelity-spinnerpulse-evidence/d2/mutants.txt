@@ -1,0 +1,29 @@
+## M1: publishRopeGroup steps the group's Pulsers 0 frames (not the span's 197). Predicted: the rock-set rows red, rockless rows green
+     ✓ rockless: the spinner's every live tick (position, hits, hitsTimer) is the game's, OFF 292ms
+     × rock: the spinner's every live tick (position, hits, hitsTimer) is the game's, OFF 237ms
+     × the hit ticks and the kill: the model OFF lands the game's three pulse hits on each set 288ms
+     × the removal: the game's ledger holds (39,4) at the sample the body leaves; the model stamps the write one later 249ms
+     × kill write: [rock OFF, rock pulserDeadFrameUpdate ON, rockless OFF, rockless ON]; the game: 1396 and 1643 523ms
+     × the double step: ON queues the rope rock's 197 frames that the pull already stepped (pulse phase +7) 442ms
+     × runTape (the committed-tape replay) is the atlas arm: its write is the rock set's 171ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelitySpinnerPulse.test.js > SPINNERPULSE — r5-shaft-control, the model OFF against the game, on the set the game ran > rock: the spinner's every live tick (position, hits, hitsTimer) is the game's, OFF
+ FAIL  frontend/modules/seedlingDemo/fidelitySpinnerPulse.test.js > SPINNERPULSE — r5-shaft-control, the model OFF against the game, on the set the game ran > the hit ticks and the kill: the model OFF lands the game's three pulse hits on each set
+ FAIL  frontend/modules/seedlingDemo/fidelitySpinnerPulse.test.js > SPINNERPULSE — r5-shaft-control, the model OFF against the game, on the set the game ran > the removal: the game's ledger holds (39,4) at the sample the body leaves; the model stamps the write one later
+ FAIL  frontend/modules/seedlingDemo/fidelitySpinnerPulse.test.js > SPINNERPULSE — the four arms of the kill tick, and the named ON defect > kill write: [rock OFF, rock pulserDeadFrameUpdate ON, rockless OFF, rockless ON]; the game: 1396 and 1643
+ FAIL  frontend/modules/seedlingDemo/fidelitySpinnerPulse.test.js > SPINNERPULSE — the four arms of the kill tick, and the named ON defect > the double step: ON queues the rope rock's 197 frames that the pull already stepped (pulse phase +7)
+ FAIL  frontend/modules/seedlingDemo/fidelitySpinnerPulse.test.js > SPINNERPULSE — the four arms of the kill tick, and the named ON defect > runTape (the committed-tape replay) is the atlas arm: its write is the rock set's
+      Tests  6 failed | 1 passed (7)
+
+## M2: dropRock queues no Pulser frames ON (the fix the report names). Predicted: the four-arms row and the double-step row red (rock ON = 1397); every OFF row green
+     ✓ rockless: the spinner's every live tick (position, hits, hitsTimer) is the game's, OFF 277ms
+     ✓ rock: the spinner's every live tick (position, hits, hitsTimer) is the game's, OFF 197ms
+     ✓ the hit ticks and the kill: the model OFF lands the game's three pulse hits on each set  493ms
+     ✓ the removal: the game's ledger holds (39,4) at the sample the body leaves; the model stamps the write one later  512ms
+     × kill write: [rock OFF, rock pulserDeadFrameUpdate ON, rockless OFF, rockless ON]; the game: 1396 and 1643 595ms
+     × the double step: ON queues the rope rock's 197 frames that the pull already stepped (pulse phase +7) 375ms
+     ✓ runTape (the committed-tape replay) is the atlas arm: its write is the rock set's 161ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelitySpinnerPulse.test.js > SPINNERPULSE — the four arms of the kill tick, and the named ON defect > kill write: [rock OFF, rock pulserDeadFrameUpdate ON, rockless OFF, rockless ON]; the game: 1396 and 1643
+ FAIL  frontend/modules/seedlingDemo/fidelitySpinnerPulse.test.js > SPINNERPULSE — the four arms of the kill tick, and the named ON defect > the double step: ON queues the rope rock's 197 frames that the pull already stepped (pulse phase +7)
+      Tests  2 failed | 5 passed (7)

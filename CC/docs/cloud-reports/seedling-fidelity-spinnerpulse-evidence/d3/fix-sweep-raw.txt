@@ -1,0 +1,7 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityDeadFrame2.test.js > DEADFRAME2 — the committed tapes the Pulser moves > move only the Pulser's ledger (and r5-shaft-control's spinner write), never a stream or a hit
+ FAIL  frontend/modules/seedlingDemo/fidelityDeadFrame2.test.js > DEADFRAME2 — the committed tapes the Pulser moves > r5-shaft-control: the spinner's pulse kill — the game writes (39,4) at 1643; OFF 1397, ON 1207 (both off: the spinner's pulse-kill path)
+ FAIL  frontend/modules/seedlingDemo/fidelitySpinnerPulse.test.js > SPINNERPULSE — the four arms of the kill tick, and the named ON defect > kill write: [rock OFF, rock pulserDeadFrameUpdate ON, rockless OFF, rockless ON]; the game: 1396 and 1643
+ FAIL  frontend/modules/seedlingDemo/fidelitySpinnerPulse.test.js > SPINNERPULSE — the four arms of the kill tick, and the named ON defect > the double step: ON queues the rope rock's 197 frames that the pull already stepped (pulse phase +7)
+ Test Files  2 failed | 35 passed (37)
+      Tests  4 failed | 816 passed (820)

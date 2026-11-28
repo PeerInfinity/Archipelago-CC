@@ -1,0 +1,19 @@
+# W72 scratch experiment (patched, measured, restored; NOT committed): levelRun.js `dropRock`'s
+# `queueDeadPulserFramesNow(frames, 'a rope\'s rock')` removed, so the rope rock's span is stepped once (by
+# `publishRopeGroup`'s pre-step) in both arms. Tool: wave 69's tape-dump.mjs over every committed tape (322).
+## base, pulserDeadFrameUpdate OFF vs ON (unpatched): movers 7
+hammer-d-ghostwall-witness/hammer-d-l39-ghostwall.tape.json: pulserHits
+tapes/prox-l38-chest.json: pulserHits
+tapes/prox-l38-reach-l39.json: pulserHits
+tapes/r5-shaft-control.json: pulserHits, spinnerWrites
+tapes/r5-shaft.json: pulserHits
+tapes/r5-totem-entrance-control.json: pulserHits
+tapes/r5-totem-entrance.json: pulserHits
+## OFF vs ON with the rope-rock queue removed: movers 5
+tapes/prox-l38-chest.json: pulserHits
+tapes/prox-l38-reach-l39.json: pulserHits
+tapes/r5-shaft.json: pulserHits          (its pickup lump: 150 frames at t2633, `pickup phase A (totempart)`)
+tapes/r5-totem-entrance-control.json: pulserHits
+tapes/r5-totem-entrance.json: pulserHits
+## r5-shaft-control, ON with the queue removed, against the game on the rock set
+game hits [1068,1116,1385] gone 1396 | model hits [1068,1116,1385] write t1397 | first divergence null
