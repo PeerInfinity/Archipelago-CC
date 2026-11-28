@@ -1,0 +1,230 @@
+1:0 'Level 010 - Sword' goal='wasm-continue-exit-0' retry=0 budget=640 -> ok=True kind=None work=12 ans=9815665bf4e4 env=None | 
+1:1 'Level 010 - Sword' goal='wasm-exit-2' retry=0 budget=640 -> ok=True kind=None work=4 ans=c9381c8180c1 env=None | 
+1:2 'Level 010 - Sword' goal='wasm-exit-3' retry=0 budget=640 -> ok=True kind=None work=16 ans=4c6b0fc89605 env=None | 
+1:3 'Level 010 - Sword' goal='wasm-exit-4' retry=0 budget=640 -> ok=True kind=None work=23 ans=a7a2cc65c56e env=None | 
+1:4 'Level 010 - Sword' goal='wasm-exit-5' retry=0 budget=640 -> ok=True kind=None work=22 ans=40fa2d7115c4 env=None | 
+1:5 'Level 010 - Sword' goal='wasm-exit-6' retry=0 budget=640 -> ok=True kind=None work=15 ans=208138dc2030 env=None | 
+1:6 'Level 010 - Sword' goal='wasm-exit-7' retry=0 budget=640 -> ok=True kind=None work=10 ans=e4f553544b9e env=None | 
+1:7 'Level 010 - Sword' goal='wasm-exit-8' retry=0 budget=640 -> ok=True kind=None work=64 ans=bae370a99c9b env=None | 
+1:8 'Level 010 - Sword' goal='wasm-exit-9' retry=0 budget=640 -> ok=True kind=None work=8 ans=a372b1d3f447 env=None | 
+1:9 'Level 010 - Sword' goal='wasm-location-10' retry=0 budget=640 -> ok=True kind=None work=4 ans=b3d74b00cc90 env=None | 
+2:0 'Level 011 - Chest' goal='wasm-continue-exit-10' retry=0 budget=640 -> ok=True kind=None work=9 ans=fede41eb3d2b env=None | 
+2:1 'Level 011 - Chest' goal='wasm-location-11' retry=0 budget=640 -> ok=True kind=None work=9 ans=68d4d40cbf2f env=None | 
+3:0 'Level 086 - Chest' goal='wasm-continue-exit-11' retry=0 budget=640 -> ok=True kind=None work=16 ans=aea232ad38b4 env=None | 
+3:1 'Level 086 - Chest' goal='wasm-exit-3' retry=0 budget=640 -> ok=True kind=None work=58 ans=36fbfb8fcac4 env=None | 
+3:2 'Level 086 - Chest' goal='wasm-exit-2' retry=0 budget=640 -> ok=True kind=None work=24 ans=0a6fbdcdb210 env=None | 
+3:3 'Level 086 - Chest' goal='wasm-exit-0' retry=0 budget=640 -> ok=True kind=None work=84 ans=70014a700f91 env=None | 
+3:4 'Level 086 - Chest' goal='wasm-location-86' retry=0 budget=640 -> ok=True kind=None work=24 ans=a3d43ee38b1a env=None | 
+4:0 'Level 036 - Chest' goal='wasm-continue-exit-86' retry=0 budget=640 -> ok=True kind=None work=12 ans=48390cdde75e env=None | 
+4:1 'Level 036 - Chest' goal='wasm-exit-0' retry=0 budget=640 -> ok=True kind=None work=122 ans=3e7df4d9c1ff env=None | 
+4:2 'Level 036 - Chest' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=152 ans=4a5f224d5169 env=None | 
+4:3 'Level 036 - Chest' goal='wasm-location-36' retry=0 budget=640 -> ok=True kind=None work=42 ans=68412fba1551 env=None | 
+5:0 'Level 017 - Chest' goal='wasm-continue-exit-36' retry=0 budget=640 -> ok=True kind=None work=66 ans=fc2858520a87 env=None | 
+5:1 'Level 017 - Chest' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=149 ans=715d72684614 env=None | 
+5:2 'Level 017 - Chest' goal='wasm-exit-0' retry=0 budget=640 -> ok=True kind=None work=126 ans=6f3fd7ec5b81 env=None | 
+5:3 'Level 017 - Chest' goal='wasm-exit-13' retry=0 budget=640 -> ok=True kind=None work=20 ans=a26860acd708 env=None | 
+5:4 'Level 017 - Chest' goal='wasm-exit-14' retry=0 budget=640 -> ok=True kind=None work=99 ans=db5fd4b94d13 env=None | 
+5:5 'Level 017 - Chest' goal='wasm-exit-15' retry=0 budget=640 -> ok=True kind=None work=321 ans=4881e0596b75 env=None | 
+5:6 'Level 017 - Chest' goal='wasm-location-16' retry=0 budget=640 -> ok=True kind=None work=63 ans=ec752efab65b env=None | 
+5:7 'Level 017 - Chest' goal='wasm-continue-exit-16' retry=0 budget=640 -> ok=True kind=None work=170 ans=4ef7e74de551 env=None | 
+5:8 'Level 017 - Chest' goal='wasm-location-17' retry=0 budget=640 -> ok=True kind=None work=9 ans=0338f93054da env=None | 
+6:0 'Level 019 - Boss Key 0' goal='wasm-continue-exit-17' retry=0 budget=640 -> ok=True kind=None work=44 ans=e2af257cb85e env=None | 
+6:1 'Level 019 - Boss Key 0' goal='wasm-exit-16' retry=0 budget=640 -> ok=True kind=None work=318 ans=c0a7d7c74485 env=None | 
+6:2 'Level 019 - Boss Key 0' goal='wasm-exit-18' retry=0 budget=640 -> ok=True kind=None work=70 ans=e360049b4a15 env=None | 
+6:3 'Level 019 - Boss Key 0' goal='wasm-location-19' retry=0 budget=640 -> ok=True kind=None work=133 ans=b0255c571df8 env=None | 
+6:4 'Level 019 - Boss Key 0' goal='wasm-continue-location-19' retry=0 budget=640 -> ok=True kind=None work=38 ans=7dae05511196 env=None | 
+8:0 'Level 020 - Shield' goal='wasm-continue-exit-19' retry=0 budget=640 -> ok=True kind=None work=150 ans=795edf3b20ac env=None | 
+8:1 'Level 020 - Shield' goal='wasm-location-20' retry=0 budget=640 -> ok=True kind=None work=43 ans=71280758af23 env=None | 
+9:0 'Level 025 - Chest' goal='wasm-continue-location-20' retry=0 budget=640 -> ok=True kind=None work=53 ans=25a7b2fc3705 env=None | 
+9:1 'Level 025 - Chest' goal='wasm-continue-exit-20' retry=0 budget=640 -> ok=False kind=refusal work=2 ans=79b4eae46c81 env=None | solverBot(wasm-continue-exit-20): no corridor for goal reach-exit toward (24,56) in level 20. Obstacle: proximity-hazard:shieldlocknorm (shieldlocknorm@176,16).
+9:2 'Level 025 - Chest' goal='wasm-exit-20' retry=0 budget=640 -> ok=True kind=None work=132 ans=c630ffc9a519 env=None | 
+9:3 'Level 025 - Chest' goal='wasm-exit-13' retry=0 budget=640 -> ok=True kind=None work=52 ans=2c94de465db7 env=None | 
+9:4 'Level 025 - Chest' goal='wasm-exit-0' retry=0 budget=640 -> ok=True kind=None work=124 ans=131f351c6749 env=None | 
+9:5 'Level 025 - Chest' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=642 ans=29090a254529 env=None | 
+9:6 'Level 025 - Chest' goal='wasm-exit-21' retry=0 budget=640 -> ok=True kind=None work=16 ans=8dd3cdbb7bea env=None | 
+9:7 'Level 025 - Chest' goal='wasm-exit-22' retry=0 budget=640 -> ok=False kind=refusal work=643 ans=d777bfb2c075 env=None | solverBot(wasm-exit-22) reach-exit (0,128)->L25 -> kill (bob@96,144) stance -> kill (bob@96,144) stance: CORRIDOR — the corridor meets chaser:wallflyer@64,80 (t
+9:8 'Level 025 - Chest' goal='wasm-exit-22' retry=1 budget=2560 -> ok=True kind=None work=817 ans=78614fcbef7f env=None | 
+9:9 'Level 025 - Chest' goal='wasm-location-25' retry=0 budget=640 -> ok=True kind=None work=24 ans=63b5d2caa12b env=None | 
+10:0 'Level 029 - Boss Key 1' goal='wasm-continue-exit-25' retry=0 budget=640 -> ok=True kind=None work=24 ans=947da59da07e env=None | 
+10:1 'Level 029 - Boss Key 1' goal='wasm-exit-22' retry=0 budget=640 -> ok=True kind=None work=642 ans=6485ba65c223 env=None | 
+10:2 'Level 029 - Boss Key 1' goal='wasm-location-29' retry=0 budget=640 -> ok=True kind=None work=100 ans=ba462f2839f7 env=None | 
+11:0 'Level 030 - Torchpickup' goal='wasm-continue-exit-29' retry=0 budget=640 -> ok=True kind=None work=37 ans=38f2acf11279 env=None | 
+11:1 'Level 030 - Torchpickup' goal='wasm-exit-31' retry=0 budget=640 -> ok=True kind=None work=170 ans=d33cf470a285 env=None | 
+11:2 'Level 030 - Torchpickup' goal='wasm-location-30' retry=0 budget=640 -> ok=True kind=None work=184 ans=fd190112594c env=None | 
+12:0 'Level 032 - Bob Boss' goal='wasm-continue-exit-30' retry=0 budget=640 -> ok=True kind=None work=101 ans=6179eaf56144 env=None | 
+12:1 'Level 032 - Bob Boss' goal='wasm-location-32' retry=0 budget=640 -> ok=True kind=None work=50 ans=3ba3fa4a3fa5 env=None | 
+14:0 'Level 012 - Chest' goal='wasm-continue-exit-32' retry=0 budget=640 -> ok=True kind=None work=55 ans=2da4d3d08985 env=None | 
+14:1 'Level 012 - Chest' goal='wasm-exit-30' retry=0 budget=640 -> ok=True kind=None work=377 ans=6822fc6a1a3b env=None | 
+14:2 'Level 012 - Chest' goal='wasm-exit-22' retry=0 budget=640 -> ok=True kind=None work=376 ans=88f5621dc344 env=None | 
+14:3 'Level 012 - Chest' goal='wasm-exit-21' retry=0 budget=640 -> ok=True kind=None work=16 ans=8eca48f7e0fe env=None | 
+14:4 'Level 012 - Chest' goal='wasm-exit-23' retry=0 budget=640 -> ok=True kind=None work=9 ans=719cdf53e4df env=None | 
+14:5 'Level 012 - Chest' goal='wasm-exit-24' retry=0 budget=640 -> ok=True kind=None work=72 ans=48d5cb7275ac env=None | 
+14:6 'Level 012 - Chest' goal='wasm-location-12' retry=0 budget=640 -> ok=True kind=None work=642 ans=00202603014b env=None | 
+15:0 'Level 038 - Chest' goal='wasm-continue-exit-12' retry=0 budget=640 -> ok=True kind=None work=273 ans=c8a79859b240 env=None | 
+15:1 'Level 038 - Chest' goal='wasm-exit-37' retry=0 budget=640 -> ok=True kind=None work=148 ans=a872e08d116c env=None | 
+15:2 'Level 038 - Chest' goal='wasm-location-38' retry=0 budget=640 -> ok=True kind=None work=152 ans=845b0dd2d230 env=None | 
+16:0 'Level 049 - Conch' goal='wasm-continue-exit-38' retry=0 budget=640 -> ok=False kind=refusal work=11 ans=896d548c0b76 env=None | solverBot(wasm-continue-exit-38) reach-exit (144,304)->L37 -> hold: every responder in group t=2 [cover@208,224] is ALREADY OPEN before the hold begins, so hold
+16:1 'Level 049 - Conch' goal='wasm-exit-38' retry=0 budget=640 -> ok=True kind=None work=9 ans=497c1673b306 env=None | 
+16:2 'Level 049 - Conch' goal='wasm-exit-37' retry=0 budget=640 -> ok=True kind=None work=140 ans=8f4963b9423b env=None | 
+16:3 'Level 049 - Conch' goal='wasm-exit-44' retry=0 budget=640 -> ok=True kind=None work=100 ans=727325c1ec6f env=None | 
+16:4 'Level 049 - Conch' goal='wasm-exit-45' retry=0 budget=640 -> ok=True kind=None work=125 ans=cc48385600bb env=None | 
+16:5 'Level 049 - Conch' goal='wasm-exit-46' retry=0 budget=640 -> ok=True kind=None work=132 ans=fe3c255eb650 env=None | 
+16:6 'Level 049 - Conch' goal='wasm-exit-47' retry=0 budget=640 -> ok=True kind=None work=128 ans=d001f6562397 env=None | 
+16:7 'Level 049 - Conch' goal='wasm-exit-48' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=fadafc100c20 env=None | solverBot(wasm-exit-48): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-48) reach-pit (11,3)->L49's corr
+16:8 'Level 049 - Conch' goal='wasm-exit-48' retry=1 budget=2560 -> ok=True kind=None work=1384 ans=465a41f144c4 env=None | 
+16:9 'Level 049 - Conch' goal='wasm-location-49' retry=0 budget=640 -> ok=True kind=None work=98 ans=1c4063bd7ae1 env=None | 
+17:0 'Level 015 - Chest' goal='wasm-exit-0' retry=0 budget=640 -> ok=True kind=None work=24 ans=424cb13e4235 env=None | 
+17:1 'Level 015 - Chest' goal='wasm-exit-13' retry=0 budget=640 -> ok=True kind=None work=20 ans=a26860acd708 env=None | 
+17:2 'Level 015 - Chest' goal='wasm-exit-14' retry=0 budget=640 -> ok=True kind=None work=56 ans=da966c0a50fa env=None | 
+17:3 'Level 015 - Chest' goal='wasm-location-15' retry=0 budget=640 -> ok=True kind=None work=110 ans=de282fc5960d env=None | 
+18:0 'Level 039 - Totem Part 72,40' goal='wasm-continue-exit-15' retry=0 budget=640 -> ok=True kind=None work=109 ans=f1a8af48f075 env=None | 
+18:1 'Level 039 - Totem Part 72,40' goal='wasm-continue-exit-15' retry=0 budget=640 -> ok=True kind=None work=109 ans=f1a8af48f075 env=None | 
+18:2 'Level 039 - Totem Part 72,40' goal='wasm-continue-exit-15' retry=0 budget=640 -> ok=True kind=None work=109 ans=f1a8af48f075 env=None | 
+18:3 'Level 039 - Totem Part 72,40' goal='wasm-continue-exit-15' retry=0 budget=640 -> ok=True kind=None work=109 ans=f1a8af48f075 env=None | 
+18:4 'Level 039 - Totem Part 72,40' goal='wasm-exit-14' retry=0 budget=640 -> ok=True kind=None work=39 ans=2f98dfe2a76b env=None | 
+18:5 'Level 039 - Totem Part 72,40' goal='wasm-exit-13' retry=0 budget=640 -> ok=True kind=None work=52 ans=1177bb0b62b1 env=None | 
+18:6 'Level 039 - Totem Part 72,40' goal='wasm-exit-0' retry=0 budget=640 -> ok=True kind=None work=121 ans=25992e1d32b6 env=None | 
+18:7 'Level 039 - Totem Part 72,40' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=191 ans=92fa949ace5f env=None | 
+18:8 'Level 039 - Totem Part 72,40' goal='wasm-exit-37' retry=0 budget=640 -> ok=True kind=None work=134 ans=5a305d6f3fde env=None | 
+18:9 'Level 039 - Totem Part 72,40' goal='wasm-location-38' retry=0 budget=640 -> ok=True kind=None work=88 ans=b16263c22cc3 env=None | 
+18:10 'Level 039 - Totem Part 72,40' goal='wasm-continue-exit-38' retry=0 budget=640 -> ok=True kind=None work=43 ans=671a4d383d98 env=None | 
+18:11 'Level 039 - Totem Part 72,40' goal='wasm-location-39' retry=0 budget=640 -> ok=True kind=None work=643 ans=e92ccbb96f88 env=None | 
+19:0 'Level 040 - Chest' goal='wasm-continue-exit-39' retry=0 budget=640 -> ok=True kind=None work=28 ans=54122416ab2a env=None | 
+19:1 'Level 040 - Chest' goal='wasm-location-40' retry=0 budget=640 -> ok=False kind=refusal work=644 ans=668f4ca7aff6 env=None | solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) con
+19:2 'Level 040 - Chest' goal='wasm-location-40' retry=1 budget=2560 -> ok=True kind=None work=1459 ans=3ff0a60bc964 env=None | 
+20:0 'Level 040 - Totem Part 160,640' goal='wasm-continue-location-40' retry=0 budget=640 -> ok=False kind=refusal work=136 ans=161a7f5aeae9 env=None | solverBot(wasm-continue-location-40) apitem (160,640) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (579.0,679.2) — spinner:spi
+20:1 'Level 040 - Totem Part 160,640' goal='wasm-location-40' retry=0 budget=640 -> ok=True kind=None work=65 ans=acb3a63487eb env=None | 
+21:0 'Level 046 - Chest' goal='wasm-exit-0' retry=0 budget=640 -> ok=True kind=None work=118 ans=235f7d32072f env=None | 
+21:1 'Level 046 - Chest' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=191 ans=92fa949ace5f env=None | 
+21:2 'Level 046 - Chest' goal='wasm-exit-37' retry=0 budget=640 -> ok=True kind=None work=17 ans=0543691bee23 env=None | 
+21:3 'Level 046 - Chest' goal='wasm-exit-44' retry=0 budget=640 -> ok=True kind=None work=105 ans=0f12b97f54f5 env=None | 
+21:4 'Level 046 - Chest' goal='wasm-exit-45' retry=0 budget=640 -> ok=True kind=None work=134 ans=7ed221f406be env=None | 
+21:5 'Level 046 - Chest' goal='wasm-location-46' retry=0 budget=640 -> ok=True kind=None work=142 ans=17716172a963 env=None | 
+22:0 'Level 048 - Chest' goal='wasm-continue-exit-46' retry=0 budget=640 -> ok=True kind=None work=140 ans=8d88b6ae56d2 env=None | 
+22:1 'Level 048 - Chest' goal='wasm-exit-47' retry=0 budget=640 -> ok=True kind=None work=126 ans=6818d77999b0 env=None | 
+22:2 'Level 048 - Chest' goal='wasm-location-48' retry=0 budget=640 -> ok=True kind=None work=115 ans=18ef889799ef env=None | 
+23:0 'Level 055 - Boss Key 3' goal='wasm-continue-exit-48' retry=0 budget=640 -> ok=True kind=None work=112 ans=bd8d697b3268 env=None | 
+23:1 'Level 055 - Boss Key 3' goal='wasm-exit-49' retry=0 budget=640 -> ok=True kind=None work=98 ans=75e4bdfb9bca env=None | 
+23:2 'Level 055 - Boss Key 3' goal='wasm-exit-50' retry=0 budget=640 -> ok=True kind=None work=174 ans=efdb2b974e45 env=None | 
+23:3 'Level 055 - Boss Key 3' goal='wasm-exit-50' retry=0 budget=640 -> ok=True kind=None work=174 ans=efdb2b974e45 env=None | 
+23:4 'Level 055 - Boss Key 3' goal='wasm-exit-51' retry=0 budget=640 -> ok=True kind=None work=106 ans=b56851ac3fd3 env=None | 
+23:5 'Level 055 - Boss Key 3' goal='wasm-exit-51' retry=0 budget=640 -> ok=True kind=None work=106 ans=b56851ac3fd3 env=None | 
+23:6 'Level 055 - Boss Key 3' goal='wasm-exit-53' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=f53839eba3ee env=None | solverBot(wasm-exit-53): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-53) reach-exit (144,240)->L54's 
+23:7 'Level 055 - Boss Key 3' goal='wasm-exit-53' retry=1 budget=2560 -> ok=True kind=None work=2110 ans=c4360b3cadd1 env=None | 
+23:8 'Level 055 - Boss Key 3' goal='wasm-exit-54' retry=0 budget=640 -> ok=True kind=None work=142 ans=df7c7d430064 env=None | 
+23:9 'Level 055 - Boss Key 3' goal='wasm-exit-52' retry=0 budget=640 -> ok=True kind=None work=118 ans=8a220e9480b5 env=None | 
+23:10 'Level 055 - Boss Key 3' goal='wasm-exit-52' retry=0 budget=640 -> ok=True kind=None work=118 ans=8a220e9480b5 env=None | 
+23:11 'Level 055 - Boss Key 3' goal='wasm-location-55' retry=0 budget=640 -> ok=True kind=None work=94 ans=1b71e6c10fca env=None | 
+24:0 'Level 089 - Feather' goal='wasm-continue-exit-55' retry=0 budget=640 -> ok=True kind=None work=40 ans=d645ee6ba302 env=None | 
+24:1 'Level 089 - Feather' goal='wasm-exit-52' retry=0 budget=640 -> ok=True kind=None work=146 ans=59051355e86c env=None | 
+24:2 'Level 089 - Feather' goal='wasm-exit-56' retry=0 budget=640 -> ok=True kind=None work=134 ans=f51292dd0c6d env=None | 
+24:3 'Level 089 - Feather' goal='wasm-exit-57' retry=0 budget=640 -> ok=True kind=None work=216 ans=9a2dd6e53352 env=None | 
+24:4 'Level 089 - Feather' goal='wasm-continue-exit-57' retry=0 budget=640 -> ok=True kind=None work=118 ans=9bb3364d43ce env=None | 
+24:5 'Level 089 - Feather' goal='wasm-location-58' retry=0 budget=640 -> ok=True kind=None work=100 ans=8df1f566fc8e env=None | 
+24:6 'Level 089 - Feather' goal='wasm-location-58' retry=0 budget=640 -> ok=True kind=None work=100 ans=8df1f566fc8e env=None | 
+24:7 'Level 089 - Feather' goal='wasm-continue-exit-58' retry=0 budget=640 -> ok=False kind=refusal work=110 ans=7a183280bda8 env=None | solverBot(wasm-continue-exit-58) reach-exit (80,16)->L46: the re-planned corridor failed too — solverBot(wasm-continue-exit-58) reach-exit (80,16)->L46 waypoint
+24:8 'Level 089 - Feather' goal='wasm-exit-58' retry=0 budget=640 -> ok=True kind=None work=102 ans=d638696bfa03 env=None | 
+24:9 'Level 089 - Feather' goal='wasm-exit-46' retry=0 budget=640 -> ok=True kind=None work=130 ans=0b32bd9e5468 env=None | 
+24:10 'Level 089 - Feather' goal='wasm-exit-45' retry=0 budget=640 -> ok=True kind=None work=134 ans=b15bedaf2d74 env=None | 
+24:11 'Level 089 - Feather' goal='wasm-exit-44' retry=0 budget=640 -> ok=True kind=None work=40 ans=4ba416d94cf8 env=None | 
+24:12 'Level 089 - Feather' goal='wasm-exit-87' retry=0 budget=640 -> ok=True kind=None work=170 ans=b0946c81a8b9 env=None | 
+24:13 'Level 089 - Feather' goal='wasm-exit-92' retry=0 budget=640 -> ok=True kind=None work=150 ans=3b013414edcc env=None | 
+24:14 'Level 089 - Feather' goal='wasm-exit-91' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=3955a8b535dd env=None | solverBot(wasm-exit-91): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-91) reach-exit (16,144)->L89's c
+24:15 'Level 089 - Feather' goal='wasm-exit-91' retry=1 budget=2560 -> ok=True kind=None work=1455 ans=54915ffd6edf env=None | 
+24:16 'Level 089 - Feather' goal='wasm-location-89' retry=0 budget=640 -> ok=True kind=None work=110 ans=3292f58f68f9 env=None | 
+25:0 'Level 090 - Chest' goal='wasm-continue-exit-89' retry=0 budget=640 -> ok=True kind=None work=138 ans=c49093fcd6cd env=None | 
+25:1 'Level 090 - Chest' goal='wasm-continue-exit-89' retry=0 budget=640 -> ok=True kind=None work=134 ans=14c8bd496b77 env=None | 
+25:2 'Level 090 - Chest' goal='wasm-continue-exit-89' retry=0 budget=640 -> ok=True kind=None work=138 ans=766213173a83 env=None | 
+25:3 'Level 090 - Chest' goal='wasm-continue-exit-89' retry=0 budget=640 -> ok=True kind=None work=138 ans=9eb6d6861b78 env=None | 
+25:4 'Level 090 - Chest' goal='wasm-continue-exit-89' retry=0 budget=640 -> ok=True kind=None work=138 ans=f093a50e7976 env=None | 
+25:5 'Level 090 - Chest' goal='wasm-location-90' retry=0 budget=640 -> ok=True kind=None work=20 ans=97d0b07f4359 env=None | 
+26:0 'Level 040 - Boss Key 2' goal='wasm-continue-exit-90' retry=0 budget=640 -> ok=True kind=None work=24 ans=1085cb371483 env=None | 
+26:1 'Level 040 - Boss Key 2' goal='wasm-exit-89' retry=0 budget=640 -> ok=True kind=None work=137 ans=76718a4f3092 env=None | 
+26:2 'Level 040 - Boss Key 2' goal='wasm-exit-87' retry=0 budget=640 -> ok=True kind=None work=144 ans=05cf8632df10 env=None | 
+26:3 'Level 040 - Boss Key 2' goal='wasm-exit-44' retry=0 budget=640 -> ok=True kind=None work=43 ans=3c470457fd49 env=None | 
+26:4 'Level 040 - Boss Key 2' goal='wasm-exit-37' retry=0 budget=640 -> ok=True kind=None work=146 ans=371c0acc9ff2 env=None | 
+26:5 'Level 040 - Boss Key 2' goal='wasm-exit-38' retry=0 budget=640 -> ok=True kind=None work=62 ans=1b729ff66a18 env=None | 
+26:6 'Level 040 - Boss Key 2' goal='wasm-exit-39' retry=0 budget=640 -> ok=True kind=None work=642 ans=3ca423de0e1b env=None | 
+26:7 'Level 040 - Boss Key 2' goal='wasm-location-40' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=3c0ab3bebcec env=None | solverBot(wasm-location-40) clear-tag {40,12} wandlock@480,560 -> burn stance (burnabletree@872,784): the combat ladder is EXHAUSTED. The corridor passes throug
+26:8 'Level 040 - Boss Key 2' goal='wasm-location-40' retry=1 budget=2560 -> ok=True kind=None work=1251 ans=c378e25d7e9f env=None | 
+26:9 'Level 040 - Boss Key 2' goal='wasm-continue-location-40' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=432ec5f5b196 env=None | solverBot(wasm-continue-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-continue-location-40) ap
+26:10 'Level 040 - Boss Key 2' goal='wasm-continue-location-40' retry=1 budget=2560 -> ok=False kind=refusal work=2562 ans=432ec5f5b196 env=None | solverBot(wasm-continue-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-continue-location-40) ap
+26:11 'Level 040 - Boss Key 2' goal='wasm-location-40' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=22a13cc16402 env=None | solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (656,528) con
+26:12 'Level 040 - Boss Key 2' goal='wasm-location-40' retry=1 budget=2560 -> ok=True kind=None work=2561 ans=535a61951b01 env=None | 
+28:0 'Level 064 - Ghostspear' goal='wasm-exit-0' retry=0 budget=640 -> ok=True kind=None work=118 ans=235f7d32072f env=None | 
+28:1 'Level 064 - Ghostspear' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=141 ans=6f4f93dd7472 env=None | 
+28:2 'Level 064 - Ghostspear' goal='wasm-exit-95' retry=0 budget=640 -> ok=True kind=None work=160 ans=75a451c119fb env=None | 
+28:3 'Level 064 - Ghostspear' goal='wasm-exit-59' retry=0 budget=640 -> ok=True kind=None work=92 ans=45b410673603 env=None | 
+28:4 'Level 064 - Ghostspear' goal='wasm-exit-60' retry=0 budget=640 -> ok=True kind=None work=642 ans=d57644cd7e8d env=None | 
+28:5 'Level 064 - Ghostspear' goal='wasm-exit-61' retry=0 budget=640 -> ok=False kind=refusal work=643 ans=90a5b1d9deed env=None | solverBot(wasm-exit-61): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-61) reach-exit (224,96)->L63's c
+28:6 'Level 064 - Ghostspear' goal='wasm-exit-61' retry=1 budget=2560 -> ok=True kind=None work=1583 ans=730e078f79e2 env=None | 
+28:7 'Level 064 - Ghostspear' goal='wasm-location-63' retry=0 budget=640 -> ok=True kind=None work=17 ans=44f5d79c9c7d env=None | 
+28:8 'Level 064 - Ghostspear' goal='wasm-continue-exit-63' retry=0 budget=640 -> ok=True kind=None work=40 ans=a7b0c0125e75 env=None | 
+28:9 'Level 064 - Ghostspear' goal='wasm-exit-62' retry=0 budget=640 -> ok=True kind=None work=139 ans=affb4bfd0e33 env=None | 
+28:10 'Level 064 - Ghostspear' goal='wasm-location-64' retry=0 budget=640 -> ok=True kind=None work=68 ans=6ba27ec9ff1e env=None | 
+29:0 'Level 041 - Totem Part 240,144' goal='wasm-continue-exit-64' retry=0 budget=640 -> ok=True kind=None work=94 ans=5c4dda9278c6 env=None | 
+29:1 'Level 041 - Totem Part 240,144' goal='wasm-exit-62' retry=0 budget=640 -> ok=True kind=None work=130 ans=1f0685cfa7da env=None | 
+29:2 'Level 041 - Totem Part 240,144' goal='wasm-exit-61' retry=0 budget=640 -> ok=True kind=None work=84 ans=d398ee706d01 env=None | 
+29:3 'Level 041 - Totem Part 240,144' goal='wasm-exit-60' retry=0 budget=640 -> ok=True kind=None work=118 ans=211c48a04339 env=None | 
+29:4 'Level 041 - Totem Part 240,144' goal='wasm-exit-59' retry=0 budget=640 -> ok=True kind=None work=104 ans=fbd6e6432a37 env=None | 
+29:5 'Level 041 - Totem Part 240,144' goal='wasm-exit-95' retry=0 budget=640 -> ok=True kind=None work=96 ans=8b43874a3516 env=None | 
+29:6 'Level 041 - Totem Part 240,144' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=189 ans=4a4b9424c260 env=None | 
+29:7 'Level 041 - Totem Part 240,144' goal='wasm-exit-37' retry=0 budget=640 -> ok=True kind=None work=134 ans=5a305d6f3fde env=None | 
+29:8 'Level 041 - Totem Part 240,144' goal='wasm-exit-38' retry=0 budget=640 -> ok=True kind=None work=62 ans=1b729ff66a18 env=None | 
+29:9 'Level 041 - Totem Part 240,144' goal='wasm-exit-39' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=bff14518fe9b env=None | solverBot(wasm-exit-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-39) reach-exit (144,0)->L40's co
+29:10 'Level 041 - Totem Part 240,144' goal='wasm-exit-39' retry=1 budget=2560 -> ok=True kind=None work=1500 ans=0255f5e5fdfa env=None | 
+29:11 'Level 041 - Totem Part 240,144' goal='wasm-exit-40' retry=0 budget=640 -> ok=True kind=None work=642 ans=5f46423586e1 env=None | 
+29:12 'Level 041 - Totem Part 240,144' goal='wasm-location-41' retry=0 budget=640 -> ok=True kind=None work=532 ans=5b74f789f125 env=None | 
+30:0 'Level 042 - Totem Part 184,152' goal='wasm-continue-exit-41' retry=0 budget=640 -> ok=True kind=None work=92 ans=c210fd2d9a1b env=None | 
+30:1 'Level 042 - Totem Part 184,152' goal='wasm-exit-40' retry=0 budget=640 -> ok=True kind=None work=35 ans=0dbae91cd01f env=None | 
+30:2 'Level 042 - Totem Part 184,152' goal='wasm-location-42' retry=0 budget=640 -> ok=True kind=None work=433 ans=4b8cf02ac01b env=None | 
+31:0 'Level 067 - Boss Key 4' goal='wasm-exit-0' retry=0 budget=640 -> ok=True kind=None work=118 ans=235f7d32072f env=None | 
+31:1 'Level 067 - Boss Key 4' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=141 ans=6f4f93dd7472 env=None | 
+31:2 'Level 067 - Boss Key 4' goal='wasm-exit-95' retry=0 budget=640 -> ok=True kind=None work=160 ans=75a451c119fb env=None | 
+31:3 'Level 067 - Boss Key 4' goal='wasm-exit-59' retry=0 budget=640 -> ok=True kind=None work=84 ans=f5abf233a97d env=None | 
+31:4 'Level 067 - Boss Key 4' goal='wasm-location-67' retry=0 budget=640 -> ok=True kind=None work=233 ans=a7d490a67ee4 env=None | 
+32:0 'Level 040 - Totem Part 64,144' goal='wasm-continue-exit-67' retry=0 budget=640 -> ok=True kind=None work=135 ans=a132d75eb154 env=None | 
+32:1 'Level 040 - Totem Part 64,144' goal='wasm-exit-59' retry=0 budget=640 -> ok=True kind=None work=64 ans=6be20773e47b env=None | 
+32:2 'Level 040 - Totem Part 64,144' goal='wasm-exit-95' retry=0 budget=640 -> ok=True kind=None work=96 ans=8b43874a3516 env=None | 
+32:3 'Level 040 - Totem Part 64,144' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=189 ans=4a4b9424c260 env=None | 
+32:4 'Level 040 - Totem Part 64,144' goal='wasm-exit-37' retry=0 budget=640 -> ok=True kind=None work=134 ans=5a305d6f3fde env=None | 
+32:5 'Level 040 - Totem Part 64,144' goal='wasm-exit-38' retry=0 budget=640 -> ok=True kind=None work=62 ans=1b729ff66a18 env=None | 
+32:6 'Level 040 - Totem Part 64,144' goal='wasm-exit-39' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=bff14518fe9b env=None | solverBot(wasm-exit-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-39) reach-exit (144,0)->L40's co
+32:7 'Level 040 - Totem Part 64,144' goal='wasm-exit-39' retry=1 budget=2560 -> ok=True kind=None work=1500 ans=0255f5e5fdfa env=None | 
+32:8 'Level 040 - Totem Part 64,144' goal='wasm-location-40' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=ce350ba73e1d env=None | solverBot(wasm-location-40) clear-tag {40,7} wandlock@208,128: 'hold' could not be resolved from (488,904): solverBot: no REACHABLE stance inside buttonroom@272
+32:9 'Level 040 - Totem Part 64,144' goal='wasm-location-40' retry=1 budget=2560 -> ok=True kind=None work=2066 ans=7839897c470f env=None | 
+32:10 'Level 040 - Totem Part 64,144' goal='wasm-continue-location-40' retry=0 budget=640 -> ok=False kind=refusal work=220 ans=ad8fd51dab94 env=None | solverBot(wasm-continue-location-40) apitem (64,144) contact -> hold stance (wandlock@176,208) -> break stance (breakablerock@176,128) -> kill (spinner@192,128)
+32:11 'Level 040 - Totem Part 64,144' goal='wasm-location-40' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=4af59f364225 env=None | solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (64,144) cont
+32:12 'Level 040 - Totem Part 64,144' goal='wasm-location-40' retry=1 budget=2560 -> ok=True kind=None work=1866 ans=a404ddf42e41 env=None | 
+33:0 'Level 069 - Lights' goal='wasm-exit-0' retry=0 budget=640 -> ok=True kind=None work=118 ans=235f7d32072f env=None | 
+33:1 'Level 069 - Lights' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=141 ans=6f4f93dd7472 env=None | 
+33:2 'Level 069 - Lights' goal='wasm-exit-95' retry=0 budget=640 -> ok=True kind=None work=160 ans=75a451c119fb env=None | 
+33:3 'Level 069 - Lights' goal='wasm-exit-59' retry=0 budget=640 -> ok=True kind=None work=92 ans=45b410673603 env=None | 
+33:4 'Level 069 - Lights' goal='wasm-exit-60' retry=0 budget=640 -> ok=True kind=None work=114 ans=7f02f76e8304 env=None | 
+33:5 'Level 069 - Lights' goal='wasm-exit-61' retry=0 budget=640 -> ok=True kind=None work=160 ans=7ca39971ac20 env=None | 
+33:6 'Level 069 - Lights' goal='wasm-exit-63' retry=0 budget=640 -> ok=True kind=None work=96 ans=ec7ef93d7b5f env=None | 
+33:7 'Level 069 - Lights' goal='wasm-exit-65' retry=0 budget=640 -> ok=True kind=None work=55 ans=78f27b05a1ac env=None | 
+33:8 'Level 069 - Lights' goal='wasm-exit-66' retry=0 budget=640 -> ok=True kind=None work=147 ans=4b1cda7f0f33 env=None | 
+33:9 'Level 069 - Lights' goal='wasm-exit-70' retry=0 budget=640 -> ok=True kind=None work=15 ans=5636a4d3e781 env=None | 
+33:10 'Level 069 - Lights' goal='wasm-location-69' retry=0 budget=640 -> ok=True kind=None work=67 ans=df5c2e4de9df env=None | 
+34:0 'Level 043 - Wand' goal='wasm-continue-exit-69' retry=0 budget=640 -> ok=True kind=None work=9 ans=5c86ec18bb60 env=None | 
+34:1 'Level 043 - Wand' goal='wasm-exit-36' retry=0 budget=640 -> ok=True kind=None work=24 ans=61cc180145d7 env=None | 
+34:2 'Level 043 - Wand' goal='wasm-exit-12' retry=0 budget=640 -> ok=True kind=None work=185 ans=6726d113060f env=None | 
+34:3 'Level 043 - Wand' goal='wasm-exit-37' retry=0 budget=640 -> ok=True kind=None work=134 ans=5a305d6f3fde env=None | 
+34:4 'Level 043 - Wand' goal='wasm-exit-38' retry=0 budget=640 -> ok=True kind=None work=62 ans=1b729ff66a18 env=None | 
+34:5 'Level 043 - Wand' goal='wasm-exit-39' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=bff14518fe9b env=None | solverBot(wasm-exit-39): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-39) reach-exit (144,0)->L40's co
+34:6 'Level 043 - Wand' goal='wasm-exit-39' retry=1 budget=2560 -> ok=True kind=None work=1500 ans=0255f5e5fdfa env=None | 
+34:7 'Level 043 - Wand' goal='wasm-exit-40' retry=0 budget=640 -> ok=True kind=None work=85 ans=aa56d3fa3e0a env=None | 
+34:8 'Level 043 - Wand' goal='wasm-location-43' retry=0 budget=640 -> ok=True kind=None work=48 ans=e82712b554f8 env=None | 
+35:0 'Level 012 - Witch' goal='wasm-exit-43' retry=0 budget=640 -> ok=True kind=None work=199 ans=822a1ca5659f env=None | 
+35:1 'Level 012 - Witch' goal='wasm-exit-37' retry=0 budget=640 -> ok=True kind=None work=65 ans=598e2710c216 env=None | 
+35:2 'Level 012 - Witch' goal='wasm-location-12' retry=0 budget=640 -> ok=True kind=None work=149 ans=480398ec77e2 env=None | 
+37:0 'Level 068 - Health' goal='wasm-continue-exit-12' retry=0 budget=640 -> ok=True kind=None work=146 ans=8e607d36726f env=None | 
+37:1 'Level 068 - Health' goal='wasm-exit-95' retry=0 budget=640 -> ok=True kind=None work=160 ans=75a451c119fb env=None | 
+37:2 'Level 068 - Health' goal='wasm-exit-59' retry=0 budget=640 -> ok=True kind=None work=88 ans=78410686b21d env=None | 
+37:3 'Level 068 - Health' goal='wasm-exit-60' retry=0 budget=640 -> ok=False kind=refusal work=642 ans=8f63b305b6aa env=None | levelRun: a wand shot (wand@60#115) reached the enemy "jellyfish@56,64" at tick 123 in level 60, and it is not a BossTotem. `Enemy.hit(3, p, 0.5, "Wand")` would
+37:4 'Level 068 - Health' goal='wasm-exit-60' retry=1 budget=2560 -> ok=True kind=None work=904 ans=3bed738b3580 env=None | 
+37:5 'Level 068 - Health' goal='wasm-exit-61' retry=0 budget=640 -> ok=False kind=refusal work=643 ans=90a5b1d9deed env=None | solverBot(wasm-exit-61): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-61) reach-exit (224,96)->L63's c
+37:6 'Level 068 - Health' goal='wasm-exit-61' retry=1 budget=2560 -> ok=True kind=None work=1584 ans=198ee08212fc env=None | 
+37:7 'Level 068 - Health' goal='wasm-exit-63' retry=0 budget=640 -> ok=False kind=refusal work=644 ans=2e192645c34b env=None | solverBot(wasm-exit-63): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-exit-63) reach-exit (128,304)->L65's 
+37:8 'Level 068 - Health' goal='wasm-exit-63' retry=1 budget=2560 -> ok=False kind=refusal work=2062 ans=9c5ba5c37277 env=None | levelRun: a WandShot in level 63 would collide with 5 Enemy-typed bod(ies) this run cannot place: grenade@128,128, darktrap@64,96, darktrap@80,64, darktrap@32,2
