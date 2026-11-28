@@ -179,8 +179,10 @@ describe('S5 — the committed arrivals that land ON a door (derived)', () => {
         }
     });
     // ⛓ Swim R4 modelled L40's IceTurret: L40 left this set (it was [40, 112]).
-    it('the only level no committed arrival can boot is the model\'s HALT row L112 (the Owl; the swim arc\'s)', () => {
-        expect([...HALTED].sort((a, b) => a - b)).toEqual([112]);
+    // ⛓ seedling-js-boot-rng-clock: L112 left this set too (it was [112]). A JS room boot now DECLARES its stream
+    // (`JS_BOOT_RNG`: a live seed, `split: true`), so the Owl's premises hold at an L112 boot and its first tick runs.
+    it('every level a committed arrival names boots (L112, the Owl, too, since the JS boot declares its stream)', () => {
+        expect([...HALTED].sort((a, b) => a - b)).toEqual([]);
     });
 });
 

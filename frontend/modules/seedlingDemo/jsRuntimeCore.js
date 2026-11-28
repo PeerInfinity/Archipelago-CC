@@ -137,6 +137,7 @@
 import { createManualSession } from './watchManual.js';
 import { TOGGLE_KEYS, createInventoryMenu, inventoryMenuFrame } from './inventoryMenu.js';
 import { bootStaging } from './procgenOracle.js';
+import { SeedlingRng } from './rng.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 import { parseOelLevel } from './procgenLevelOel.js';
 import { assembleLevelSetChunks } from './levelSetValidator.js';
@@ -178,6 +179,28 @@ export function encounterCheckAddress(goal) {
  * it the first wet tick throws (J0(a)), and `dead_frames` is the census pin.
  */
 export const JS_RUNTIME_PINS = Object.freeze(['dead_frames', 'sound']);
+
+/**
+ * ⛓⛓ seedling-js-boot-rng-clock — **THE JS ROOM BOOT'S DECLARED RANDOM STREAM** (⚖ Robert 2026-11-28T02:08:21Z: *"Random
+ * stream + clock together"*). Until this slice every non-tape boot staged `bootStaging`'s `rng {seed: 0, split: false,
+ * fp: …}`, a TAPE's "inherit the page's stream" — an origin no model has — so every model gate that needs the stream
+ * refused in a JS room: L57's Tentacled Beast (*"the run's stream has no declared seed for this room"*), L112's Owl
+ * (`assertOwlStreamPremises`), and the split-only exact camera jiggle (`levelRun` `rngSplit`). The wasm game's arrival
+ * declares its live stream (`wasmArrival.stagingFromWasmArrival`): `seed` = the begin record's `rng.gameplay`, `split` /
+ * `cosmetic` = `SHIPPED_RNG`'s, no `fp`. A JS room boot now declares the same SHAPE from the JS page's OWN stream:
+ *   seed      the page's gameplay stream (`createJsRuntime`'s `gameplayRng`) at the boot — never 0, never wasm's number;
+ *   split     true, as the shipped game runs (`SHIPPED_RNG.split`; `jsRuntimeBootRngClock.test.js` holds them equal — the
+ *             two cannot share one constant, `wasmArrival` imports this module);
+ *   cosmetic  0, `SHIPPED_RNG.cosmetic`: declared, never simulated (⚖ Robert 2026-10-10 / 10-25: no model of its draws);
+ *   fp        not staged: FlashPunk's LCG drives only the waterfall spray, no model reads it, and the JS frame has no
+ *             such generator (the wasm arrival leaves it out for the first reason).
+ * ⚠ WHERE THE JS FRAME DIFFERS FROM WASM, BY NAME: the wasm seed is the game's stream after every draw since load (each
+ * enemy's `coins`, each orb, each grass tile …), which the model books only inside a fight that reads it. So the JS page
+ * reseeds each ROOM BOOT from its own stream, as `Bot.botStart` reseeds a tape's window: one step of `SeedlingRng` per
+ * boot, from `BOOT_SEED` (a fresh build's `Math.random()` state) on a fresh page. The seeds are deterministic per run
+ * history and are not wasm's numbers.
+ */
+export const JS_BOOT_RNG = Object.freeze({ split: true, cosmetic: 0 });
 
 /**
  * What this runtime declares, in `builds.json`'s capability vocabulary — the
@@ -471,6 +494,12 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     let restoredSlots = null;
     /** ⛓ sdc-js-save-day-clock — a restored save's day clock (`Main.time`), staged by the next non-tape boot (then null). */
     let restoredTime = null;
+    /**
+     * ⛓ seedling-js-boot-rng-clock — the page's GAMEPLAY STREAM (`Math.random()`, `rng.js`): `BOOT_SEED` on a fresh page
+     * (seed 0 = the build's boot state), one step per non-tape boot, whose declared `rng.seed` it is (`JS_BOOT_RNG`).
+     * A tape's boot declares the tape's own `rng` and leaves this stream alone.
+     */
+    const gameplayRng = new SeedlingRng(0);
     /** ⛓ RE2 — the restore's own reboot in place: a fresh life, so it carries no damage. */
     let restoreBoot = false;
     /** ⛓ RE2 — a restored save no boot has staged yet. */
@@ -710,7 +739,22 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // which the restore set in the same step), not the run it replaces.
         const slots = restoredSlots && !declared ? slotsHeld(restoredSlots, flags) : carriedSlots();
         // ⛓ sdc-js-save-day-clock — and the SAVED day clock (`Main.time`); null = `bootStaging`'s own (a fresh page's).
-        const time = restoredTime !== null && !declared ? restoredTime : undefined;
+        // ⛓⛓ seedling-js-boot-rng-clock — THE CLOCK CARRIES ACROSS ROOM BOOTS: `Game.time` IS `Main.time` (`Game.as:490-497`),
+        // a static every `new Game` keeps, so the wasm game's next world reads the running clock. A non-tape boot from a
+        // live run stages that run's `gameTime` (`savedClock`: null while its clock does not count) as the next boot's
+        // `time`, the very value a save holds — so the new run reads `gameTime + BOOT_PRESWAP_FRAMES + LOAD_FADE_FRAMES`,
+        // the restore's arithmetic. Which boots keep a default, and why:
+        //   · a restore no boot has staged yet: the SAVED clock, and a save without one (version 1) a fresh start's —
+        //     the save is the state put back, not the run it replaces (unchanged);
+        //   · no live run (the first frame, the first boot after a mount — a new set is a new save): a fresh page's
+        //     `PAGE_BOOT_TIME` (unchanged);
+        //   · a tape's boot (`declared`): the tape's own declaration (unchanged).
+        // ⚠ A run replaced before its first tick (the host's start teleport right after the first frame) ran no
+        // `Game.update()` on this page, so it hands on the clock it was BOOTED with (`carriedClockOf`), not its
+        // `gameTime`, which already counts that world's fade.
+        const carriedClock = declared || restorePending ? null : carriedClockOf(session);
+        const time = !declared && restorePending ? (restoredTime ?? undefined)
+            : !declared && carriedClock !== null ? carriedClock : undefined;
         if (!declared) { restoredSlots = null; restoredTime = null; restorePending = false; }
         // The constructor writes the statics before it builds anything (a room the model refuses included).
         lastCtor = { x, y };
@@ -718,7 +762,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // game's `botStart` resets the persistence table and the save arrays to a fresh start and applies only what the
         // tape declares (`Bot.as:1708-1772`, ⚖ ruling 25). Absent (every other caller), the staging below is unchanged.
         const staging = declared ? { ...declared } : bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS], time });
-        if (!declared) stageSession(staging, slots, playerDamage);
+        if (!declared) {
+            // ⛓⛓ seedling-js-boot-rng-clock — the DECLARED stream (`JS_BOOT_RNG`): the page's own gameplay stream at this
+            // boot, then one step, so the next boot declares the next state. Replaces `bootStaging`'s tape-default
+            // `{seed: 0 (inherit), split: false, fp}`.
+            staging.rng = { seed: gameplayRng.state, split: JS_BOOT_RNG.split, cosmetic: JS_BOOT_RNG.cosmetic };
+            gameplayRng.next();
+            stageSession(staging, slots, playerDamage);
+        }
         // ⛓ seedling-js-replay-continuation — a NON-tape boot (the first frame, a teleport, an in-place reboot) ends
         // the tape chain: the next `botStart` rebuilds (see `botStart`'s bounded liberty).
         if (!declared) tape.chainBoot = null;
@@ -1324,6 +1375,17 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     /** `Main.time` as the save holds it: the run's `Game.time` when its clock counts, else null (a fresh start's). */
     function savedClock(run) {
         const t = run?.gameTime ?? null;
+        return Number.isFinite(t) && t > 0 ? t : null;
+    }
+
+    /**
+     * ⛓ seedling-js-boot-rng-clock — the `Main.time` a boot that REPLACES session `s` carries (null = none, the boot's
+     * default): the run's `savedClock` once it has stepped; before its first tick, the clock its own boot declared.
+     */
+    function carriedClockOf(s) {
+        if (!s?.run) return null;
+        if ((s.run.ticksCompleted ?? 0) > 0) return savedClock(s.run);
+        const t = s.staging?.seam?.time;
         return Number.isFinite(t) && t > 0 ? t : null;
     }
 

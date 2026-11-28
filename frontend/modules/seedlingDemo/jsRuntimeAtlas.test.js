@@ -291,12 +291,35 @@ describe('jsRuntimeCore J3 — a real level the model cannot run HALTS BY NAME',
         expect(rt.run.level).toBe(40);
     });
 
-    it('L112 refuses on its first tick (the Owl needs `rng.split`): the page halts by name, never silently', () => {
+    // ⛓ seedling-js-boot-rng-clock — RE-RECORDED: this row was "L112 refuses on its first tick (the Owl needs
+    // `rng.split`): the page halts by name". A JS room boot now declares its stream (`JS_BOOT_RNG`: the page's own
+    // seed, `split: true`, the boot room built first after it), which are exactly the Owl's premises
+    // (`assertOwlStreamPremises`), so the page RUNS L112. The halt-by-name branch keeps its first-tick witness below:
+    // the same boot with the stream forced back to `bootStaging`'s unsplit default still halts by name.
+    it('L112 BOOTS since the JS boot declares its stream (the Owl\'s premises hold): the page runs it, no halt', () => {
         const { rt } = vanillaRuntime();
         const arrival = MAP.levels.flatMap((l) => l.entities.filter((e) => Number(e.attrs?.to) === 112)
             .map((e) => ({ x: Number(e.attrs.playerx), y: Number(e.attrs.playery) })))[0];
         teleport(rt, { level: 112, ...arrival });
-        // The teleport's own tick is the Owl room's first: it refuses there.
+        expect(rt.run.level).toBe(112);
+        expect(rt.session.staging.rng.split).toBe(true);
+        for (let t = 0; t < 600 && !rt.halted; t += 1) rt.tick();
+        expect(rt.halted).toBeNull();
+        expect(rt.run.level).toBe(112);
+    });
+
+    it('L112 with an UNSPLIT stream refuses on its first tick (the Owl needs `rng.split`): halted by name, never silently', () => {
+        const { rt } = vanillaRuntime();
+        const arrival = MAP.levels.flatMap((l) => l.entities.filter((e) => Number(e.attrs?.to) === 112)
+            .map((e) => ({ x: Number(e.attrs.playerx), y: Number(e.attrs.playery) })))[0];
+        // The unsplit stream is a TAPE's own declaration now (a JS room boot always declares `split: true`): the
+        // committed `collide-up-rock` tape, its boot moved to the Owl room, its `rng` the unsplit `{seed: 0}` default.
+        const raw = readJson('frontend/modules/seedlingDemo/fixtures/tapes/collide-up-rock.json');
+        const tape = { ...raw, boot: { level: 112, ...arrival }, rng: { seed: 0, split: false, cosmetic: 0, fp: 0 } };
+        expect(rt.game.botLoadTape(JSON.stringify(tape))).toBe('ok');
+        rt.game.botStart();
+        rt.tick();
+        // The tape's first tick is the Owl room's first: it refuses there.
         expect(rt.run.level).toBe(112);
         expect(rt.halted?.message).toMatch(/the Owl fight in level 112 needs `rng: \{ split: true \}`/);
         expect(JSON.parse(rt.game.botStatus()).halted).toMatch(/Owl fight/);

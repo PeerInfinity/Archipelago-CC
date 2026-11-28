@@ -376,20 +376,28 @@ describe('⛓ sdc-js-save-day-clock — the JS save brings back the time of day 
         }
     });
 
-    it('with no restore the clock is untouched: every boot is a fresh page\'s (the save OFF is today\'s run)', () => {
+    // ⛓ seedling-js-boot-rng-clock — RE-RECORDED (⚖ Robert 2026-11-28: "Random stream + clock together"): this row
+    // pinned "a teleport (a new Game) boots the default clock, as before this slice". A JS room boot now CARRIES the
+    // run's clock (`Game.time` is `Main.time`, a static `new Game` keeps), so the teleport stages the run's gameTime.
+    it('with no restore the clock runs on: two fresh pages agree, and a teleport (a new Game) carries the run\'s clock', () => {
         const a = vanillaPage();
         const b = vanillaPage();
         idle(a, 50);
         idle(b, 50);
         expect(a.run.gameTime).toBe(b.run.gameTime);
         expect(a.run.gameTime).toBe(PAGE_BOOT_TIME + freshOffset() + 50);
-        // a teleport (a new Game) boots the default clock, as before this slice
+        // a teleport (a new Game) carries the clock: the new run reads the old one's gameTime plus a boot's own offset
+        const before = a.run.gameTime;
         a.queueItems([teleport(START)]);
         a.tick();
-        expect(a.run.gameTime).toBe(PAGE_BOOT_TIME + freshOffset());
+        expect(a.session.staging.seam.time).toBe(before);
+        expect(a.run.gameTime).toBe(before + freshOffset());
     });
 
-    it('the restored clock is staged ONCE: the boot after the restore\'s reboot is a default one again', () => {
+    // ⛓ seedling-js-boot-rng-clock — RE-RECORDED: this row pinned "the boot after the restore's reboot is a default one
+    // again". The restored clock is still staged ONCE (the restore's own reboot); the next boot now carries the RESTORED
+    // run's clock on, as every room boot does (`jsRuntimeCore` `carriedClockOf`), not a fresh page's.
+    it('the restored clock is staged ONCE: the boot after the restore\'s reboot carries the restored run\'s clock on', () => {
         const a = vanillaPage();
         idle(a, 3000);
         const save = a.exportSave();
@@ -397,9 +405,12 @@ describe('⛓ sdc-js-save-day-clock — the JS save brings back the time of day 
         b.restoreSave(reloaded(save));
         b.tick();
         expect(b.run.gameTime).toBe(save.time + freshOffset());
+        const restored = b.run.gameTime;
         b.queueItems([teleport(START)]);
         b.tick();
-        expect(b.run.gameTime).toBe(PAGE_BOOT_TIME + freshOffset());
+        expect(b.restorePending).toBe(false);
+        expect(b.session.staging.seam.time).toBe(restored);
+        expect(b.run.gameTime).toBe(restored + freshOffset());
     });
 
     it('a NEW SET drops a restored clock no boot has staged', () => {
