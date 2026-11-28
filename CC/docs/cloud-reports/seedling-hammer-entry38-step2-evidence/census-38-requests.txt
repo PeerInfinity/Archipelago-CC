@@ -1,0 +1,115 @@
+SAME  A1 19:0
+   OFF SOLVED a39227153503 work=36 ticks=66 hits=0
+   ON  SOLVED a39227153503 work=36 ticks=66 hits=0
+SAME  A1 19:1
+   OFF refused 8007b96643fd work=642 ticks=None hits=0
+   ON  refused 8007b96643fd work=642 ticks=None hits=0
+SAME  A1 19:2
+   OFF SOLVED 85c7dc2a524c work=1715 ticks=1642 hits=0
+   ON  SOLVED 85c7dc2a524c work=1715 ticks=1642 hits=0
+SAME  A1 24:0
+   OFF SOLVED d645ee6ba302 work=40 ticks=38 hits=0
+   ON  SOLVED d645ee6ba302 work=40 ticks=38 hits=0
+SAME  A1 24:1
+   OFF SOLVED 59051355e86c work=146 ticks=470 hits=0
+   ON  SOLVED 59051355e86c work=146 ticks=470 hits=0
+SAME  A1 24:2
+   OFF SOLVED f51292dd0c6d work=134 ticks=280 hits=0
+   ON  SOLVED f51292dd0c6d work=134 ticks=280 hits=0
+SAME  A1 24:3
+   OFF SOLVED ea358a138d43 work=282 ticks=1530 hits=1 tentacle:tentacle#41@863
+   ON  SOLVED ea358a138d43 work=282 ticks=1530 hits=1 tentacle:tentacle#41@863
+SAME  A1 24:4
+   OFF SOLVED 9bb3364d43ce work=118 ticks=260 hits=0
+   ON  SOLVED 9bb3364d43ce work=118 ticks=260 hits=0
+SAME  A1 24:5
+   OFF SOLVED 8df1f566fc8e work=100 ticks=151 hits=0
+   ON  SOLVED 8df1f566fc8e work=100 ticks=151 hits=0
+SAME  A1 24:6
+   OFF SOLVED 8df1f566fc8e work=100 ticks=151 hits=0
+   ON  SOLVED 8df1f566fc8e work=100 ticks=151 hits=0
+SAME  A1 24:7
+   OFF refused 7a183280bda8 work=110 ticks=None hits=0
+   ON  refused 7a183280bda8 work=110 ticks=None hits=0
+SAME  A1 24:8
+   OFF SOLVED d638696bfa03 work=102 ticks=104 hits=0
+   ON  SOLVED d638696bfa03 work=102 ticks=104 hits=0
+SAME  A1 24:9
+   OFF SOLVED 0b32bd9e5468 work=130 ticks=342 hits=0
+   ON  SOLVED 0b32bd9e5468 work=130 ticks=342 hits=0
+SAME  A1 24:10
+   OFF SOLVED b15bedaf2d74 work=134 ticks=360 hits=0
+   ON  SOLVED b15bedaf2d74 work=134 ticks=360 hits=0
+SAME  A1 24:11
+   OFF SOLVED 4ba416d94cf8 work=40 ticks=92 hits=0
+   ON  SOLVED 4ba416d94cf8 work=40 ticks=92 hits=0
+SAME  A1 24:12
+   OFF SOLVED b0946c81a8b9 work=170 ticks=652 hits=0
+   ON  SOLVED b0946c81a8b9 work=170 ticks=652 hits=0
+SAME  A1 24:13
+   OFF SOLVED 7c9a3f164d6c work=145 ticks=389 hits=0
+   ON  SOLVED 7c9a3f164d6c work=145 ticks=389 hits=0
+SAME  A1 24:14
+   OFF refused 3955a8b535dd work=642 ticks=None hits=0
+   ON  refused 3955a8b535dd work=642 ticks=None hits=0
+SAME  A1 24:15
+   OFF SOLVED 54915ffd6edf work=1455 ticks=223 hits=0
+   ON  SOLVED 54915ffd6edf work=1455 ticks=223 hits=0
+SAME  A1 24:16
+   OFF SOLVED 3292f58f68f9 work=110 ticks=163 hits=0
+   ON  SOLVED 3292f58f68f9 work=110 ticks=163 hits=0
+SAME  A1 37:0
+   OFF SOLVED 072dfe0843b0 work=145 ticks=428 hits=0
+   ON  SOLVED 072dfe0843b0 work=145 ticks=428 hits=0
+SAME  A1 37:1
+   OFF SOLVED 75a451c119fb work=160 ticks=548 hits=0
+   ON  SOLVED 75a451c119fb work=160 ticks=548 hits=0
+SAME  A1 37:2
+   OFF SOLVED 78410686b21d work=97 ticks=301 hits=0
+   ON  SOLVED 78410686b21d work=97 ticks=301 hits=0
+SAME  A1 37:3
+   OFF SOLVED 421d3aafd275 work=114 ticks=222 hits=0
+   ON  SOLVED 421d3aafd275 work=114 ticks=222 hits=0
+SAME  A1 37:4
+   OFF SOLVED 421d3aafd275 work=903 ticks=222 hits=0
+   ON  SOLVED 421d3aafd275 work=903 ticks=222 hits=0
+SAME  A1 37:5
+   OFF refused 90a5b1d9deed work=643 ticks=None hits=0
+   ON  refused 90a5b1d9deed work=643 ticks=None hits=0
+SAME  A1 37:6
+   OFF SOLVED 198ee08212fc work=1724 ticks=462 hits=0
+   ON  SOLVED 198ee08212fc work=1724 ticks=462 hits=0
+SAME  A1 37:7
+   OFF refused 2e192645c34b work=644 ticks=None hits=0
+   ON  refused 2e192645c34b work=644 ticks=None hits=0 | PGF asked=1 eligible=0 leaned=[] declined=[]
+SAME  A1 37:8
+   OFF SOLVED 948269aa1764 work=2337 ticks=497 hits=0
+   ON  SOLVED 948269aa1764 work=2337 ticks=497 hits=0 | PGF asked=2 eligible=0 leaned=[] declined=[]
+SAME  A1 37:9
+   OFF SOLVED 00ff039aabc7 work=200 ticks=593 hits=0
+   ON  SOLVED 00ff039aabc7 work=200 ticks=593 hits=0 | PGF asked=6 eligible=0 leaned=[] declined=[]
+SAME  A1 37:10
+   OFF SOLVED a43e32edf06d work=97 ticks=184 hits=0
+   ON  SOLVED a43e32edf06d work=97 ticks=184 hits=0
+SAME  A1 38:0
+   OFF SOLVED 6e65124d4f56 work=30 ticks=54 hits=0
+   ON  SOLVED 6e65124d4f56 work=30 ticks=54 hits=0
+SAME  A1 38:1
+   OFF SOLVED 1a06bf88591b work=136 ticks=318 hits=0
+   ON  SOLVED 1a06bf88591b work=136 ticks=318 hits=0 | PGF asked=2 eligible=0 leaned=[] declined=[]
+MOVED A1 38:2
+   OFF refused ced4eb40568d work=642 ticks=None hits=0
+   ON  SOLVED 3aaff030ee8b work=581 ticks=694 hits=0 | PGF asked=8 eligible=6 leaned=[(1, 29), (2, 18), (3, 17), (2, 17), (3, 17)] declined=[(1, 'the lean dies on the fork')]
+SAME  P1 38:0
+   OFF SOLVED 6e65124d4f56 work=30 ticks=54 hits=0
+   ON  SOLVED 6e65124d4f56 work=30 ticks=54 hits=0
+SAME  P1 38:1
+   OFF SOLVED 1a06bf88591b work=136 ticks=318 hits=0
+   ON  SOLVED 1a06bf88591b work=136 ticks=318 hits=0 | PGF asked=2 eligible=0 leaned=[] declined=[]
+MOVED P1 38:2
+   OFF refused ced4eb40568d work=642 ticks=None hits=0
+   ON  SOLVED 3aaff030ee8b work=581 ticks=694 hits=0 | PGF asked=8 eligible=6 leaned=[(1, 29), (2, 18), (3, 17), (2, 17), (3, 17)] declined=[(1, 'the lean dies on the fork')]
+MOVED P1 39:0
+   OFF refused ced4eb40568d work=642 ticks=None hits=0
+   ON  SOLVED 3aaff030ee8b work=581 ticks=694 hits=0 | PGF asked=8 eligible=6 leaned=[(1, 29), (2, 18), (3, 17), (2, 17), (3, 17)] declined=[(1, 'the lean dies on the fork')]
+TOTAL 38 requests; moved 3; hook asked in 8 ON solves; leaned in 3

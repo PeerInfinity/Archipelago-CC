@@ -1,0 +1,188 @@
+# p4g fresh-page game witness (seedling_bot_ap_p4g, headless logic-only) of A1 38:2's ON plan at the page's budget (694 t, model 0 hits); tools/p4g-block.mjs
+# box lock: TAKEN by entry38-step2 p4g witness (scratch) (browser, pid 7754) — head ba3643e0d, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+slots [0,1,3,2] -> [0,1,2,3] equips [{"t":0,"slot":0},{"t":298,"slot":3},{"t":333,"slot":0},{"t":451,"slot":3},{"t":491,"slot":0},{"t":496,"slot":3},{"t":536,"slot":3},{"t":582,"slot":0}] ticks 694
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+status {"level":61,"x":216,"y":104,"finished":true,"error":"","tick":694,"hits":0}
+block-diff ticks 1 581..581 model block at those 48,96 game 
+compared 694 of 694 first player diff null first block diff {"game":{"t":581,"level":63,"x":87.09089729240085,"y":104.6508025600389,"blocks":"","hits":0},"model":{"t":581,"level":63,"x":87.09089729240085,"y":104.6508025600389,"blocks":"48,96"}}
+t420 game p(120.44,115.09) block 96,96 | model p(120.44,115.09) block 96,96
+t421 game p(120.44,113.99) block 96,96 | model p(120.44,113.99) block 96,96
+t422 game p(120.44,113.14) block 96,96 | model p(120.44,113.14) block 96,96
+t423 game p(120.44,111.74) block 96,96 | model p(120.44,111.74) block 96,96
+t424 game p(120.44,110.59) block 96,96 | model p(120.44,110.59) block 96,96
+t425 game p(120.44,109.69) block 96,96 | model p(120.44,109.69) block 96,96
+t426 game p(120.44,108.24) block 96,96 | model p(120.44,108.24) block 96,96
+t427 game p(120.44,107.04) block 96,96 | model p(120.44,107.04) block 96,96
+t428 game p(120.44,106.09) block 96,96 | model p(120.44,106.09) block 96,96
+t429 game p(120.44,104.59) block 96,96 | model p(120.44,104.59) block 96,96
+t430 game p(120.44,103.34) block 96,96 | model p(120.44,103.34) block 96,96
+t431 game p(120.44,102.34) block 96,96 | model p(120.44,102.34) block 96,96
+t432 game p(120.44,102.39) block 96,96 | model p(120.44,102.39) block 96,96
+t433 game p(121.24,102.39) block 96,96 | model p(121.24,102.39) block 96,96
+t434 game p(121.79,102.39) block 96,96 | model p(121.79,102.39) block 96,96
+t435 game p(121.29,103.19) block 96,96 | model p(121.29,103.19) block 96,96
+t436 game p(120.12,103.77) block 96,96 | model p(120.12,103.77) block 96,96
+t437 game p(119.18,104.25) block 96,96 | model p(119.18,104.25) block 96,96
+t438 game p(118.46,104.61) block 96,96 | model p(118.46,104.61) block 96,96
+t439 game p(118.76,104.86) block 96,96 | model p(118.76,104.86) block 96,96
+t440 game p(119.67,104.95) block 96,96 | model p(119.67,104.95) block 96,96
+t441 game p(120.33,105.02) block 96,96 | model p(120.33,105.02) block 96,96
+t442 game p(120.74,104.22) block 96,96 | model p(120.74,104.22) block 96,96
+t443 game p(121.04,103.64) block 96,96 | model p(121.04,103.64) block 96,96
+t444 game p(120.42,103.29) block 96,96 | model p(120.42,103.29) block 96,96
+t445 game p(120.02,103.06) block 96,96 | model p(120.02,103.06) block 96,96
+t446 game p(119.84,102.95) block 96,96 | model p(119.84,102.95) block 96,96
+t447 game p(119.84,103.75) block 96,96 | model p(119.84,103.75) block 96,96
+t448 game p(119.84,104.30) block 96,96 | model p(119.84,104.30) block 96,96
+t449 game p(119.84,104.60) block 96,96 | model p(119.84,104.60) block 96,96
+t450 game p(119.84,104.65) block 96,96 | model p(119.84,104.65) block 96,96
+t451 game p(119.84,104.65) block 96,96 | model p(119.84,104.65) block 96,96
+t452 game p(119.04,104.65) block 96,96 | model p(119.04,104.65) block 96,96
+t453 game p(118.49,104.65) block 96,96 | model p(118.49,104.65) block 96,96
+t454 game p(118.19,104.65) block 96,96 | model p(118.19,104.65) block 96,96
+t455 game p(118.14,104.65) block 96,96 | model p(118.14,104.65) block 96,96
+t456 game p(118.14,104.65) block 96,96 | model p(118.14,104.65) block 96,96
+t457 game p(118.14,104.65) block 96,96 | model p(118.14,104.65) block 96,96
+t458 game p(118.14,104.65) block 96,96 | model p(118.14,104.65) block 96,96
+t459 game p(118.14,104.65) block 95.5,96 | model p(118.14,104.65) block 95.5,96
+t460 game p(118.14,104.65) block 95,96 | model p(118.14,104.65) block 95,96
+t461 game p(118.14,104.65) block 94.5,96 | model p(118.14,104.65) block 94.5,96
+t462 game p(118.14,104.65) block 94,96 | model p(118.14,104.65) block 94,96
+t463 game p(117.34,104.65) block 93.5,96 | model p(117.34,104.65) block 93.5,96
+t464 game p(115.99,104.65) block 93,96 | model p(115.99,104.65) block 93,96
+t465 game p(114.89,104.65) block 92.5,96 | model p(114.89,104.65) block 92.5,96
+t466 game p(114.04,104.65) block 92,96 | model p(114.04,104.65) block 92,96
+t467 game p(112.64,104.65) block 91.5,96 | model p(112.64,104.65) block 91.5,96
+t468 game p(111.49,104.65) block 91,96 | model p(111.49,104.65) block 91,96
+t469 game p(110.59,104.65) block 90.5,96 | model p(110.59,104.65) block 90.5,96
+t470 game p(109.14,104.65) block 90,96 | model p(109.14,104.65) block 90,96
+t471 game p(107.94,104.65) block 89.5,96 | model p(107.94,104.65) block 89.5,96
+t472 game p(107.94,104.65) block 89,96 | model p(107.94,104.65) block 89,96
+t473 game p(106.94,104.65) block 88.5,96 | model p(106.94,104.65) block 88.5,96
+t474 game p(106.94,104.65) block 88,96 | model p(106.94,104.65) block 88,96
+t475 game p(105.94,104.65) block 87.5,96 | model p(105.94,104.65) block 87.5,96
+t476 game p(105.94,104.65) block 87,96 | model p(105.94,104.65) block 87,96
+t477 game p(104.64,104.65) block 86.5,96 | model p(104.64,104.65) block 86.5,96
+t478 game p(104.64,104.65) block 86,96 | model p(104.64,104.65) block 86,96
+t479 game p(103.84,104.65) block 85.5,96 | model p(103.84,104.65) block 85.5,96
+t480 game p(103.29,104.65) block 85,96 | model p(103.29,104.65) block 85,96
+t481 game p(102.99,104.65) block 84.5,96 | model p(102.99,104.65) block 84.5,96
+t482 game p(102.94,104.65) block 84,96 | model p(102.94,104.65) block 84,96
+t483 game p(102.94,104.65) block 83.5,96 | model p(102.94,104.65) block 83.5,96
+t484 game p(102.94,104.65) block 83,96 | model p(102.94,104.65) block 83,96
+t485 game p(102.94,104.65) block 82.5,96 | model p(102.94,104.65) block 82.5,96
+t486 game p(102.94,104.65) block 82,96 | model p(102.94,104.65) block 82,96
+t487 game p(102.94,104.65) block 81.5,96 | model p(102.94,104.65) block 81.5,96
+t488 game p(102.94,104.65) block 81,96 | model p(102.94,104.65) block 81,96
+t489 game p(102.94,104.65) block 80.5,96 | model p(102.94,104.65) block 80.5,96
+t490 game p(102.94,104.65) block 80,96 | model p(102.94,104.65) block 80,96
+t491 game p(102.94,104.65) block 80,96 | model p(102.94,104.65) block 80,96
+t492 game p(103.74,104.65) block 80,96 | model p(103.74,104.65) block 80,96
+t493 game p(104.29,104.65) block 80,96 | model p(104.29,104.65) block 80,96
+t494 game p(104.59,104.65) block 80,96 | model p(104.59,104.65) block 80,96
+t495 game p(104.64,104.65) block 80,96 | model p(104.64,104.65) block 80,96
+t496 game p(104.64,104.65) block 80,96 | model p(104.64,104.65) block 80,96
+t497 game p(103.84,104.65) block 80,96 | model p(103.84,104.65) block 80,96
+t498 game p(103.29,104.65) block 80,96 | model p(103.29,104.65) block 80,96
+t499 game p(102.99,104.65) block 80,96 | model p(102.99,104.65) block 80,96
+t500 game p(102.94,104.65) block 80,96 | model p(102.94,104.65) block 80,96
+t501 game p(102.94,104.65) block 80,96 | model p(102.94,104.65) block 80,96
+t502 game p(102.94,104.65) block 80,96 | model p(102.94,104.65) block 80,96
+t503 game p(102.94,104.65) block 80,96 | model p(102.94,104.65) block 80,96
+t504 game p(102.94,104.65) block 79.5,96 | model p(102.94,104.65) block 79.5,96
+t505 game p(102.94,104.65) block 79,96 | model p(102.94,104.65) block 79,96
+t506 game p(102.94,104.65) block 78.5,96 | model p(102.94,104.65) block 78.5,96
+t507 game p(102.94,104.65) block 78,96 | model p(102.94,104.65) block 78,96
+t508 game p(102.14,104.65) block 77.5,96 | model p(102.14,104.65) block 77.5,96
+t509 game p(100.79,104.65) block 77,96 | model p(100.79,104.65) block 77,96
+t510 game p(99.69,104.65) block 76.5,96 | model p(99.69,104.65) block 76.5,96
+t511 game p(98.84,104.65) block 76,96 | model p(98.84,104.65) block 76,96
+t512 game p(97.44,104.65) block 75.5,96 | model p(97.44,104.65) block 75.5,96
+t513 game p(96.29,104.65) block 75,96 | model p(96.29,104.65) block 75,96
+t514 game p(95.39,104.65) block 74.5,96 | model p(95.39,104.65) block 74.5,96
+t515 game p(93.94,104.65) block 74,96 | model p(93.94,104.65) block 74,96
+t516 game p(92.74,104.65) block 73.5,96 | model p(92.74,104.65) block 73.5,96
+t517 game p(91.79,104.65) block 73,96 | model p(91.79,104.65) block 73,96
+t518 game p(90.79,104.65) block 72.5,96 | model p(90.79,104.65) block 72.5,96
+t519 game p(90.79,104.65) block 72,96 | model p(90.79,104.65) block 72,96
+t520 game p(89.79,104.65) block 71.5,96 | model p(89.79,104.65) block 71.5,96
+t521 game p(89.79,104.65) block 71,96 | model p(89.79,104.65) block 71,96
+t522 game p(88.79,104.65) block 70.5,96 | model p(88.79,104.65) block 70.5,96
+t523 game p(88.79,104.65) block 70,96 | model p(88.79,104.65) block 70,96
+t524 game p(87.99,104.65) block 69.5,96 | model p(87.99,104.65) block 69.5,96
+t525 game p(87.44,104.65) block 69,96 | model p(87.44,104.65) block 69,96
+t526 game p(87.14,104.65) block 68.5,96 | model p(87.14,104.65) block 68.5,96
+t527 game p(87.09,104.65) block 68,96 | model p(87.09,104.65) block 68,96
+t528 game p(87.09,104.65) block 67.5,96 | model p(87.09,104.65) block 67.5,96
+t529 game p(87.09,104.65) block 67,96 | model p(87.09,104.65) block 67,96
+t530 game p(87.09,104.65) block 66.5,96 | model p(87.09,104.65) block 66.5,96
+t531 game p(87.09,104.65) block 66,96 | model p(87.09,104.65) block 66,96
+t532 game p(87.09,104.65) block 65.5,96 | model p(87.09,104.65) block 65.5,96
+t533 game p(87.09,104.65) block 65,96 | model p(87.09,104.65) block 65,96
+t534 game p(87.09,104.65) block 64.5,96 | model p(87.09,104.65) block 64.5,96
+t535 game p(87.09,104.65) block 64,96 | model p(87.09,104.65) block 64,96
+t536 game p(87.09,104.65) block 64,96 | model p(87.09,104.65) block 64,96
+t537 game p(87.09,104.65) block 64,96 | model p(87.09,104.65) block 64,96
+t538 game p(87.09,104.65) block 64,96 | model p(87.09,104.65) block 64,96
+t539 game p(87.09,104.65) block 63.5,96 | model p(87.09,104.65) block 63.5,96
+t540 game p(87.09,104.65) block 63,96 | model p(87.09,104.65) block 63,96
+t541 game p(87.09,104.65) block 62.5,96 | model p(87.09,104.65) block 62.5,96
+t542 game p(87.09,104.65) block 62,96 | model p(87.09,104.65) block 62,96
+t543 game p(87.09,104.65) block 61.5,96 | model p(87.09,104.65) block 61.5,96
+t544 game p(87.09,104.65) block 61,96 | model p(87.09,104.65) block 61,96
+t545 game p(87.09,104.65) block 60.5,96 | model p(87.09,104.65) block 60.5,96
+t546 game p(87.09,104.65) block 60,96 | model p(87.09,104.65) block 60,96
+t547 game p(87.09,104.65) block 59.5,96 | model p(87.09,104.65) block 59.5,96
+t548 game p(87.09,104.65) block 59,96 | model p(87.09,104.65) block 59,96
+t549 game p(87.09,104.65) block 58.5,96 | model p(87.09,104.65) block 58.5,96
+t550 game p(87.09,104.65) block 58,96 | model p(87.09,104.65) block 58,96
+t551 game p(87.09,104.65) block 57.5,96 | model p(87.09,104.65) block 57.5,96
+t552 game p(87.09,104.65) block 57,96 | model p(87.09,104.65) block 57,96
+t553 game p(87.09,104.65) block 56.5,96 | model p(87.09,104.65) block 56.5,96
+t554 game p(87.09,104.65) block 56,96 | model p(87.09,104.65) block 56,96
+t555 game p(87.09,104.65) block 55.5,96 | model p(87.09,104.65) block 55.5,96
+t556 game p(87.09,104.65) block 55,96 | model p(87.09,104.65) block 55,96
+t557 game p(87.09,104.65) block 54.5,96 | model p(87.09,104.65) block 54.5,96
+t558 game p(87.09,104.65) block 54,96 | model p(87.09,104.65) block 54,96
+t559 game p(87.09,104.65) block 53.5,96 | model p(87.09,104.65) block 53.5,96
+t560 game p(87.09,104.65) block 53,96 | model p(87.09,104.65) block 53,96
+t561 game p(87.09,104.65) block 52.5,96 | model p(87.09,104.65) block 52.5,96
+t562 game p(87.09,104.65) block 52,96 | model p(87.09,104.65) block 52,96
+t563 game p(87.09,104.65) block 51.5,96 | model p(87.09,104.65) block 51.5,96
+t564 game p(87.09,104.65) block 51,96 | model p(87.09,104.65) block 51,96
+t565 game p(87.09,104.65) block 50.5,96 | model p(87.09,104.65) block 50.5,96
+t566 game p(87.09,104.65) block 50,96 | model p(87.09,104.65) block 50,96
+t567 game p(87.09,104.65) block 49.5,96 | model p(87.09,104.65) block 49.5,96
+t568 game p(87.09,104.65) block 49,96 | model p(87.09,104.65) block 49,96
+t569 game p(87.09,104.65) block 48.5,96 | model p(87.09,104.65) block 48.5,96
+t570 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t571 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t572 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t573 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t574 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t575 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t576 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t577 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t578 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t579 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t580 game p(87.09,104.65) block 48,96 | model p(87.09,104.65) block 48,96
+t581 game p(87.09,104.65) block  | model p(87.09,104.65) block 48,96
+t582 game p(87.09,104.65) block  | model p(87.09,104.65) block 
+t583 game p(86.29,104.65) block  | model p(86.29,104.65) block 
+t584 game p(84.94,104.65) block  | model p(84.94,104.65) block 
+t585 game p(83.84,104.65) block  | model p(83.84,104.65) block 
+t586 game p(82.99,104.65) block  | model p(82.99,104.65) block 
+t587 game p(81.59,104.65) block  | model p(81.59,104.65) block 
+t588 game p(80.44,104.65) block  | model p(80.44,104.65) block 
+t589 game p(79.54,104.65) block  | model p(79.54,104.65) block 
+t590 game p(78.09,104.65) block  | model p(78.09,104.65) block 
+t591 game p(76.89,104.65) block  | model p(76.89,104.65) block 
+t592 game p(75.94,104.65) block  | model p(75.94,104.65) block 
+t593 game p(74.44,104.65) block  | model p(74.44,104.65) block 
+t594 game p(73.99,104.65) block  | model p(73.99,104.65) block 
+t595 game p(72.99,104.65) block  | model p(72.99,104.65) block 
+t596 game p(72.24,104.65) block  | model p(72.24,104.65) block 
+t597 game p(71.74,104.65) block  | model p(71.74,104.65) block 
+t598 game p(71.49,104.65) block  | model p(71.49,104.65) block 
+t599 game p(71.49,104.65) block  | model p(71.49,104.65) block 
+t600 game p(71.49,105.45) block  | model p(71.49,105.45) block 
