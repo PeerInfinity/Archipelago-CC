@@ -143,8 +143,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 162,
-            "count": 214,
+            "browser": 163,
+            "count": 215,
             "id": "probe"
         },
         {
@@ -259,13 +259,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 544,
-        "browser": 233,
+        "blockStyle": 545,
+        "browser": 234,
         "cited": 297,
-        "files": 566,
+        "files": 567,
         "lineStyle": 22,
-        "withDocblock": 566,
-        "withFlags": 483
+        "withDocblock": 567,
+        "withFlags": 484
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -20333,6 +20333,56 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-wandkill — ⛓ SEEDLING FIDELITY WANDKILL (wave 71): THE PLAIN WAND'S KILL, ON THE GAME, TICK BY SAMPLED TICK, AGAINST THE MODEL WITH `wandShotKill` ON (and `wandShotEnemyBodies` beside it, which it requires).",
             "path": "scripts/procgen/probe-seedling-wandkill.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "near"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-wandkillblast.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-wandkillblast — ⛓ SEEDLING FIDELITY WANDKILLBLAST (wave 73): THE WAND KILL'S EXPLOSION, ITS TWO UNWITNESSED HALVES, ON THE GAME, TICK BY SAMPLED TICK, AGAINST THE MODEL.",
+            "path": "scripts/procgen/probe-seedling-wandkillblast.mjs"
         },
         {
             "argvHelpers": [
