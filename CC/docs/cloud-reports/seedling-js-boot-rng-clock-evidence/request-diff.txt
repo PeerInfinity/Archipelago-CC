@@ -1,0 +1,133 @@
+## L22 a0: wasm diagW2#45
+  BEFORE (base JS) diagJ1#70: 13 differing field(s)
+    .passes: JS <absent> | wasm [{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": ...
+    .staging.persistence: JS 24 rows (-8 vs wasm) | wasm 32 rows
+    .staging.rng.fp: JS 987286273 | wasm <absent>
+    .staging.rng.seed: JS 0 | wasm 1920394485
+    .staging.rng.split: JS false | wasm true
+    .staging.seam.beam: JS <absent> | wasm false
+    .staging.seam.cutscene: JS <absent> | wasm [false, false, false, false]
+    .staging.seam.hits_max: JS <absent> | wasm 3
+    .staging.seam.items.hitsMax: JS 3 | wasm <absent>
+    .staging.seam.menu_state: JS <absent> | wasm 0
+    .staging.seam.rock_set: JS <absent> | wasm false
+    .staging.seam.secondary: JS <absent> | wasm 0
+    .staging.seam.time: JS 4800 | wasm 15919
+  NOW (this slice) new-J1#67: 11 differing field(s)
+    .passes: JS <absent> | wasm [{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": ...
+    .staging.persistence: JS 24 rows (-8 vs wasm) | wasm 32 rows
+    .staging.rng.seed: JS 1251847133 | wasm 1920394485
+    .staging.seam.beam: JS <absent> | wasm false
+    .staging.seam.cutscene: JS <absent> | wasm [false, false, false, false]
+    .staging.seam.hits_max: JS <absent> | wasm 3
+    .staging.seam.items.hitsMax: JS 3 | wasm <absent>
+    .staging.seam.menu_state: JS <absent> | wasm 0
+    .staging.seam.rock_set: JS <absent> | wasm false
+    .staging.seam.secondary: JS <absent> | wasm 0
+    .staging.seam.time: JS 16315 | wasm 15919
+## L40 item 1 a0: wasm diagW2#93
+  BEFORE (base JS) tipJ1#125: 13 differing field(s)
+    .passes: JS <absent> | wasm [{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": ...
+    .staging.persistence: JS 48 rows (-17 vs wasm) | wasm 65 rows
+    .staging.rng.fp: JS 987286273 | wasm <absent>
+    .staging.rng.seed: JS 0 | wasm 2132250561
+    .staging.rng.split: JS false | wasm true
+    .staging.seam.beam: JS <absent> | wasm false
+    .staging.seam.cutscene: JS <absent> | wasm [false, false, false, false]
+    .staging.seam.hits_max: JS <absent> | wasm 3
+    .staging.seam.items.hitsMax: JS 3 | wasm <absent>
+    .staging.seam.menu_state: JS <absent> | wasm 0
+    .staging.seam.rock_set: JS <absent> | wasm false
+    .staging.seam.secondary: JS <absent> | wasm 0
+    .staging.seam.time: JS 4800 | wasm 33953
+  NOW (this slice) new-J1#133: 11 differing field(s)
+    .passes: JS <absent> | wasm [{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": ...
+    .staging.persistence: JS 49 rows (-16 vs wasm) | wasm 65 rows
+    .staging.rng.seed: JS 933028330 | wasm 2132250561
+    .staging.seam.beam: JS <absent> | wasm false
+    .staging.seam.cutscene: JS <absent> | wasm [false, false, false, false]
+    .staging.seam.hits_max: JS <absent> | wasm 3
+    .staging.seam.items.hitsMax: JS 3 | wasm <absent>
+    .staging.seam.menu_state: JS <absent> | wasm 0
+    .staging.seam.rock_set: JS <absent> | wasm false
+    .staging.seam.secondary: JS <absent> | wasm 0
+    .staging.seam.time: JS 33784 | wasm 33953
+## L40 item 2 continuation: wasm diagW2#95
+  BEFORE (base JS) tipJ1#127: 18 differing field(s)
+    .live.digest: (differs)
+    .live.row.x: (differs)
+    .live.row.y: (differs)
+    .passes: JS <absent> | wasm [{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": ...
+    .perTick: JS len 1018 | wasm len 1106
+    .staging.persistence: JS 48 rows (-17 vs wasm) | wasm 65 rows
+    .staging.rng.fp: JS 987286273 | wasm <absent>
+    .staging.rng.seed: JS 0 | wasm 2132250561
+    .staging.rng.split: JS false | wasm true
+    .staging.save.seal_parts: JS len 10 | wasm len 11
+    .staging.seam.beam: JS <absent> | wasm false
+    .staging.seam.cutscene: JS <absent> | wasm [false, false, false, false]
+    .staging.seam.hits_max: JS <absent> | wasm 3
+    .staging.seam.items.hitsMax: JS 3 | wasm <absent>
+    .staging.seam.menu_state: JS <absent> | wasm 0
+    .staging.seam.rock_set: JS <absent> | wasm false
+    .staging.seam.secondary: JS <absent> | wasm 0
+    .staging.seam.time: JS 4800 | wasm 33953
+  NOW (this slice) new-J1#135: 17 differing field(s)
+    .live.digest: (differs)
+    .live.row.x: (differs)
+    .live.row.y: (differs)
+    .passes: JS <absent> | wasm [{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": ...
+    .perTick: JS len 1254 | wasm len 1106
+    .staging.deliveries: JS [{"t": 1254, "change": {"kind": "seal", "slot": 10, "identity": 10}}] | wasm <absent>
+    .staging.persistence: JS 49 rows (-16 vs wasm) | wasm 65 rows
+    .staging.rng.seed: JS 933028330 | wasm 2132250561
+    .staging.save.seal_parts: JS len 10 | wasm len 11
+    .staging.seam.beam: JS <absent> | wasm false
+    .staging.seam.cutscene: JS <absent> | wasm [false, false, false, false]
+    .staging.seam.hits_max: JS <absent> | wasm 3
+    .staging.seam.items.hitsMax: JS 3 | wasm <absent>
+    .staging.seam.menu_state: JS <absent> | wasm 0
+    .staging.seam.rock_set: JS <absent> | wasm false
+    .staging.seam.secondary: JS <absent> | wasm 0
+    .staging.seam.time: JS 33784 | wasm 33953
+## L40 item 2 fresh: wasm diagW2#96
+  BEFORE (base JS): (no base JS request at this goal)
+  NOW (this slice) new-J1#136: 11 differing field(s)
+    .passes: JS <absent> | wasm [{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": ...
+    .staging.persistence: JS 50 rows (-17 vs wasm) | wasm 67 rows
+    .staging.rng.seed: JS 466514165 | wasm 2136466333
+    .staging.seam.beam: JS <absent> | wasm false
+    .staging.seam.cutscene: JS <absent> | wasm [false, false, false, false]
+    .staging.seam.hits_max: JS <absent> | wasm 3
+    .staging.seam.items.hitsMax: JS 3 | wasm <absent>
+    .staging.seam.menu_state: JS <absent> | wasm 0
+    .staging.seam.rock_set: JS <absent> | wasm false
+    .staging.seam.secondary: JS <absent> | wasm 0
+    .staging.seam.time: JS 35059 | wasm 35080
+## L57 exit: wasm W1#118
+  BEFORE (base JS) J1#163: 13 differing field(s)
+    .passes: JS <absent> | wasm [{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": ...
+    .staging.persistence: JS 54 rows (-21 vs wasm) | wasm 75 rows
+    .staging.rng.fp: JS 987286273 | wasm <absent>
+    .staging.rng.seed: JS 0 | wasm 980896863
+    .staging.rng.split: JS false | wasm true
+    .staging.seam.beam: JS <absent> | wasm false
+    .staging.seam.cutscene: JS <absent> | wasm [false, false, false, false]
+    .staging.seam.hits_max: JS <absent> | wasm 3
+    .staging.seam.items.hitsMax: JS 3 | wasm <absent>
+    .staging.seam.menu_state: JS <absent> | wasm 0
+    .staging.seam.rock_set: JS <absent> | wasm false
+    .staging.seam.secondary: JS <absent> | wasm 0
+    .staging.seam.time: JS 4800 | wasm 43275
+  NOW (this slice) new-J1#167: 11 differing field(s)
+    .passes: JS <absent> | wasm [{"pass": "dashless", "dashMode": "none", "stop": "all"}, {"pass": "full", "dashMode": ...
+    .staging.persistence: JS 54 rows (-21 vs wasm) | wasm 75 rows
+    .staging.rng.seed: JS 1205695219 | wasm 980896863
+    .staging.seam.beam: JS <absent> | wasm false
+    .staging.seam.cutscene: JS <absent> | wasm [false, false, false, false]
+    .staging.seam.hits_max: JS <absent> | wasm 3
+    .staging.seam.items.hitsMax: JS 3 | wasm <absent>
+    .staging.seam.menu_state: JS <absent> | wasm 0
+    .staging.seam.rock_set: JS <absent> | wasm false
+    .staging.seam.secondary: JS <absent> | wasm 0
+    .staging.seam.time: JS 43741 | wasm 43275
