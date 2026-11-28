@@ -25,14 +25,16 @@
  *   · `twoStep`: (1) each floor group laid out ALONE (the same relaxation over its own internal edges), (2) the floor groups
  *     placed as RIGID BLOCKS (the floor group's box plus a pad) by the same relaxation over the block graph: one block edge
  *     per pair of linked floor groups, preferring the direction the links between them prefer (their exits' directions,
- *     summed), length only where no link has one. That pass ends with 0 overlapping blocks (its separation pass), so
- *     no node lies inside another floor group's block.
+ *     summed), length only where no link has one; ⛓ region-graph-floor-stacking: that relaxation then sets only each
+ *     block's LEFT-RIGHT order, and `stackByFloor` puts the blocks in horizontal FLOOR BANDS, the highest floor on top
+ *     (`floorBands`, from the floor numbering; none, or fewer than 2 numbered floors: the relaxation's placement as is).
+ *     Either way 0 overlapping blocks, so no node lies inside another floor group's block.
  *   · `twoStepBoxes`: `twoStep`, plus a faint labelled box around each floor group of 2+ drawn nodes
  *     (`floorBoxLayer.js`, a DOM overlay: not a Cytoscape element).
  * ⛓ region-graph-floors: the floor groups are FLOORS (`floors.js`). In both two-step values, a block edge that carries a
  * VERTICAL link (an edge with `vertical`: a stair or a pit between the two groups) is a FLOOR link: it prefers the sum
  * of its vertical links' directions (where the stairs are in their level) and rests at `floorGap` px instead of the
- * spacing. Every other block edge, and every edge inside a floor group, is as before. The box label is the floor's.
+ * spacing; when the blocks are stacked by floor, that orders them within a band and `floorGap` is the gap between bands. Every other block edge, and every edge inside a floor group, is as before. The box label is the floor's.
  * ⛔ A grouping only acts when some drawn edge joins two DIFFERENT floor groups (an edge to a node with no floor group does
  * not count). When none does (every component of the graph is inside one floor group, give or take the Menu node: alttp,
  * whose generic layout graph makes every exit a `join`, so its groups ARE its components; a single-group maze) every
@@ -146,7 +148,7 @@ export const SOFT_GROUPING_TUNING = Object.freeze({ pull: 0.12, push: 0.6, reach
 export function groupedDirectionLayout(nodes, edges, {
     grouping = FLOOR_GROUPING_SCHEMA.default, groupStrength = FLOOR_GROUP_STRENGTH_SCHEMA.default,
     strength = DIRECTION_STRENGTH_SCHEMA.default, spacing = DIRECTION_SPACING_SCHEMA.default, tuning = {},
-    floorGap = FLOOR_GAP_SCHEMA.default,
+    floorGap = FLOOR_GAP_SCHEMA.default, floorBands = null,
 } = {}) {
     const opts = { strength, spacing, tuning };
     const mode = FLOOR_GROUPING_SCHEMA.enum.includes(grouping) ? grouping : 'none';
@@ -159,10 +161,10 @@ export function groupedDirectionLayout(nodes, edges, {
         const out = directionLayout(nodes, edges, { ...opts, floorGroupPull: { strength: groupStrength, ...SOFT_GROUPING_TUNING } });
         return { ...out, stats: { ...out.stats, grouping: { mode, inert: false, crossEdges: cross } }, blocks: null };
     }
-    return twoStepLayout(nodes, edges, opts, mode, cross, normaliseFloorGap(floorGap));
+    return twoStepLayout(nodes, edges, opts, mode, cross, normaliseFloorGap(floorGap), floorBands);
 }
 
-function twoStepLayout(nodes, edges, opts, mode, cross, floorGap) {
+function twoStepLayout(nodes, edges, opts, mode, cross, floorGap, floorBands) {
     const pad = blockPad(opts.spacing);
     const floorGroups = floorGroupsOf(nodes);
     const keyOf = new Map(nodes.map((n) => [String(n.id), keyOfNode(n)]));
@@ -222,11 +224,14 @@ function twoStepLayout(nodes, edges, opts, mode, cross, floorGap) {
         return { id: k, source: p.a, target: p.b, pref };
     });
     const placed = directionLayout(blockNodes, blockEdges, opts);
+    // ⛓ region-graph-floor-stacking: the blocks stacked by floor (the relaxation above sets only their left-right order).
+    const stacked = stackByFloor(floorGroups, local, placed.positions, floorBands, floorGap, Math.max(0, Number(opts.spacing) || 0));
+    const centres = stacked ? stacked.centres : placed.positions;
     const positions = new Map();
     const blocks = [];
     for (const d of floorGroups) {
         const L = local.get(d.key);
-        const c = placed.positions.get(d.key);
+        const c = centres.get(d.key);
         for (const id of d.members) {
             const p = L.positions.get(id);
             positions.set(id, { x: round(c.x + p.x - L.cx), y: round(c.y + p.y - L.cy) });
@@ -241,12 +246,106 @@ function twoStepLayout(nodes, edges, opts, mode, cross, floorGap) {
             nodes: nodes.length, edges: edges.length, preferred: edges.filter((e) => e.pref).length,
             components: placed.stats.components, iterations: iterations + placed.stats.iterations,
             separationPasses: placed.stats.separationPasses, separationScales: placed.stats.separationScales,
-            grouping: { mode, inert: false, crossEdges: cross, blocks: blocks.length, blockEdges: blockEdges.length, pad, floorLinks, floorGap },
+            grouping: { mode, inert: false, crossEdges: cross, blocks: blocks.length, blockEdges: blockEdges.length, pad, floorLinks, floorGap, bands: stacked ? stacked.bands : null },
         },
     };
 }
 
 const round = (x) => Math.round(x * 100) / 100;
+
+/* ── stacking by floor (region-graph-floor-stacking) ──────────────────────────────────────────────────────────── */
+
+/** The band sentinel of an unreached group ("Floor ?"): below every floor. */
+export const UNREACHED_BAND = 'unreached';
+
+/**
+ * A floor numbering (`floorSolver.js` `solveFloors`) → `{ bandOf: Map<floorGroup, number | UNREACHED_BAND>, rangeOf:
+ * Map<floorGroup, [lo, hi]> }`. A picked group: its floor. A RANGED group ("Floor −3 to −1 A"): the range's midpoint,
+ * rounded UP (−3 … −2 → −2). An unreached group ("Floor ? A"): `UNREACHED_BAND`. `rangeOf` is what the order check
+ * holds each group to: a picked floor `[f, f]`, a range its `[lo, hi]` (an unreached group has none).
+ */
+export function floorBandsOf(numbering) {
+    const bandOf = new Map(); const rangeOf = new Map();
+    for (const [g, f] of numbering?.floorOf ?? []) { bandOf.set(g, f); rangeOf.set(g, [f, f]); }
+    for (const [g, [lo, hi]] of numbering?.ranged ?? []) { bandOf.set(g, Math.ceil((lo + hi) / 2) || 0); rangeOf.set(g, [lo, hi]); }
+    for (const g of numbering?.unreached ?? []) if (!bandOf.has(g)) bandOf.set(g, UNREACHED_BAND);
+    return { bandOf, rangeOf };
+}
+
+/**
+ * ⛓ region-graph-floor-stacking. Place the blocks (`floorGroups` with their `local` boxes) in horizontal FLOOR BANDS:
+ * the highest floor on top, each band as tall as its tallest block, the blocks centred on it; two used floors are
+ * `floorGap` apart plus one more `floorGap` per empty floor between them; the unreached groups' band at the bottom.
+ * A block with no floor group (the Menu node) sits in floor 0's band. Within a band the blocks keep the relaxation's
+ * left-right order (`relaxed` centres; ties by key), packed with at least `spacing` between them (each left edge =
+ * max(its relaxed left edge, the previous right edge + spacing)), and the band shifted so the blocks' mean x is the
+ * relaxed mean x. → `{ centres: Map<key, {x, y}>, bands: [{band, blocks, y1, y2}] }`, or null — today's placement —
+ * when there is no numbering or the blocks span fewer than 2 numbered floors (a world without stairs).
+ * ⚖ The user, session 84c8ab35, 2026-11-28T03:55:11.570Z: "Floor order wins" — strict bands; a stair's east / west
+ * side only sets the block's order in its band.
+ */
+function stackByFloor(floorGroups, local, relaxed, floorBands, floorGap, spacing) {
+    const bandOf = floorBands?.bandOf;
+    if (!(bandOf instanceof Map)) return null;
+    const of = (d) => (d.floorGroup == null ? 0 : bandOf.has(d.floorGroup) ? bandOf.get(d.floorGroup) : 0);
+    const numbered = new Set(floorGroups.filter((d) => d.floorGroup != null && typeof bandOf.get(d.floorGroup) === 'number').map((d) => bandOf.get(d.floorGroup)));
+    if (numbered.size < 2) return null;
+    const by = new Map();
+    for (const d of floorGroups) {
+        const b = of(d);
+        if (!by.has(b)) by.set(b, []);
+        by.get(b).push(d);
+    }
+    const floors = [...by.keys()].filter((b) => b !== UNREACHED_BAND).sort((a, b) => b - a);
+    const order = by.has(UNREACHED_BAND) ? [...floors, UNREACHED_BAND] : floors;
+    const centres = new Map();
+    const bands = [];
+    let top = 0; let prev = null;
+    for (const band of order) {
+        if (prev !== null) {
+            const skipped = band === UNREACHED_BAND ? 0 : Math.max(0, prev - band - 1);
+            top += floorGap * (1 + skipped);
+        }
+        const ds = by.get(band).slice().sort((a, b) => (relaxed.get(a.key).x - relaxed.get(b.key).x) || cmp(a.key, b.key));
+        const H = Math.max(...ds.map((d) => local.get(d.key).h));
+        let right = -Infinity; let sumRelaxed = 0; let sumPacked = 0;
+        const xs = ds.map((d) => {
+            const w = local.get(d.key).w;
+            const left = Math.max(relaxed.get(d.key).x - w / 2, right + spacing);
+            right = left + w;
+            sumRelaxed += relaxed.get(d.key).x; sumPacked += left + w / 2;
+            return left + w / 2;
+        });
+        const shift = (sumRelaxed - sumPacked) / ds.length;
+        ds.forEach((d, i) => centres.set(d.key, { x: xs[i] + shift, y: top + H / 2 }));
+        bands.push({ band, blocks: ds.length, y1: top, y2: top + H });
+        top += H;
+        prev = band;
+    }
+    return { centres, bands };
+}
+
+/**
+ * ⛓ region-graph-floor-stacking: the FLOOR ORDER of `blocks` (`[{floorGroup, y1, y2}]`, screen y grows downward)
+ * against `rangeOf` (`floorBandsOf`): each pair of blocks whose floors are strictly ordered (one's range wholly above
+ * the other's) must sit wholly above it on the screen (its bottom ≤ the other's top). A pair whose ranges overlap (a
+ * range group and a floor inside it), an unreached group and a block with no floor group are not held to it.
+ * → `{ pairs, violations }`.
+ */
+export function floorOrderCheck(blocks, rangeOf) {
+    const rs = blocks.filter((b) => b.floorGroup != null && rangeOf?.has(b.floorGroup)).map((b) => ({ b, r: rangeOf.get(b.floorGroup) }));
+    let pairs = 0; let violations = 0;
+    for (let i = 0; i < rs.length; i += 1) {
+        for (let j = i + 1; j < rs.length; j += 1) {
+            let hi = null; let lo = null;
+            if (rs[i].r[0] > rs[j].r[1]) { hi = rs[i].b; lo = rs[j].b; } else if (rs[j].r[0] > rs[i].r[1]) { hi = rs[j].b; lo = rs[i].b; }
+            if (!hi) continue;
+            pairs += 1;
+            if (!(hi.y2 <= lo.y1 + 1e-6)) violations += 1;
+        }
+    }
+    return { pairs, violations };
+}
 
 /* ── measures ─────────────────────────────────────────────────────────────────────────────────────────────────── */
 

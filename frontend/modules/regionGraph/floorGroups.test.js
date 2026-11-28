@@ -271,7 +271,9 @@ describe('⛓ 5. determinism, per value', () => {
                 }))],
             ];
             for (const [ns, es] of orders) {
-                const out = G.groupedDirectionLayout(ns, es, { ...settings, grouping: v, groupStrength: 0.5 });
+                // ⛓ region-graph-floor-stacking: the two-step values stack by floor, as the panel passes it.
+                const floorBands = (v === 'twoStep' || v === 'twoStepBoxes') ? G.floorBandsOf(floors.numbering) : null;
+                const out = G.groupedDirectionLayout(ns, es, { ...settings, grouping: v, groupStrength: 0.5, floorBands });
                 expect(digest(out.positions), v).toBe(da);
             }
         }

@@ -14,7 +14,7 @@ import {
 } from './directionLayout.js';
 import {
   FLOOR_GROUPING_KEY, FLOOR_GROUP_STRENGTH_KEY, FLOOR_GROUPING_SCHEMA, FLOOR_GROUPING_LABELS,
-  FLOOR_GROUP_STRENGTH_SCHEMA, normaliseGroupingSettings, groupedDirectionLayout, floorGroupReader, floorGroupsOf,
+  FLOOR_GROUP_STRENGTH_SCHEMA, normaliseGroupingSettings, groupedDirectionLayout, floorGroupReader, floorGroupsOf, floorBandsOf, floorOrderCheck,
   mixingCount, blockCheck, blockPad, groupingDrawsBoxes,
 } from './floorGroups.js';
 import {
@@ -545,7 +545,7 @@ export class LayoutControlsManager {
    * the layoutstop handler, as after any layout).
    */
   buildDirectionLayout(settings = this.ui.directionSettings ?? normaliseDirectionSettings(),
-    grouping = this.ui.groupingSettings ?? normaliseGroupingSettings(), { floorLinks = true } = {}) {
+    grouping = this.ui.groupingSettings ?? normaliseGroupingSettings(), { floorLinks = true, floorStacking = true } = {}) {
     const t0 = nowMs();
     const { nodes, edges, prefs, counts, model, sidecars } = this.directionLayoutInputs(settings);
     // ⛓ region-graph-floors: in the two-step values, an edge carrying a stair / pit between two groups is a FLOOR
@@ -559,7 +559,10 @@ export class LayoutControlsManager {
       return v ? { ...e, pref: prefs.get(e.id), vertical: v } : { ...e, pref: prefs.get(e.id) };
     });
     // ⛓ region-graph-dungeon-groups: `none` is the very same `directionLayout` call as before (groupedDirectionLayout).
-    const { positions, stats, blocks } = groupedDirectionLayout(nodes, withPrefs, { ...settings, ...grouping });
+    // ⛓ region-graph-floor-stacking: the two-step values stack the blocks by floor. `floorStacking: false` (the shots'
+    // and the pins' "before" only) places them where the stairs' directions put them, as region-graph-floors built it.
+    const bands = floors && floorLinks && floorStacking ? floorBandsOf(floors.numbering) : null;
+    const { positions, stats, blocks } = groupedDirectionLayout(nodes, withPrefs, { ...settings, ...grouping, floorBands: bands });
     const t2 = nowMs();
     const errors = angleErrors(edges, prefs, positions);
     const floorGroups = floorGroupsOf(nodes);
@@ -576,6 +579,8 @@ export class LayoutControlsManager {
       blockOverlaps: check ? check.blockOverlaps : null, intruders: check ? check.intruders : null,
       counts: counts ? { ...counts, twoOnOneSide: counts.twoOnOneSide.length, twoOnOneSideLevels: counts.twoOnOneSideLevels.length } : null,
       floors: floors ? floorReport(floors, nodes, edges, prefs, positions, floorLinks) : null,
+      // ⛓ region-graph-floor-stacking: every pair of blocks on strictly ordered floors, and how many sit the wrong way up.
+      floorOrder: floors && check ? { ...floorOrderCheck(check.blocks, floorBandsOf(floors.numbering).rangeOf), stacked: !!stats.grouping?.bands } : null,
       stats,
     };
     this.ui.lastDirectionLayout = report;
