@@ -2,7 +2,7 @@
  * Region Graph floor numbers from the CONSTRAINT SOLVE (region-graph-floor-solver): screenshots and the solve's cost
  * in the browser.
  *
- * Desktop (1600 × 1000, `layout=desktop`), seedling_playthrough, merged + map look, Dungeon grouping = Two-step +
+ * Desktop (1600 × 1000, `layout=desktop`), seedling_playthrough, merged + map look, Floor grouping = Two-step +
  * boxes, Direction-aware defaults (strength 0.7, spacing 40, border doors, floor gap 160). The layout is the same in
  * both shots (only the numbers changed); "before" relabels the boxes with region-graph-floors' BFS numbering, run
  * in-page from the base commit's own `floors.js` (`git show <base>:…`, its `floorNumbers` / `floorLabels`):
@@ -108,7 +108,7 @@ const run = (page, { before = false } = {}) => page.evaluate(async ([uiSrc, oldS
     const ui = new Function(`return ${uiSrc}`)();
     window.__rgUi = ui;
     const D = await import('/frontend/modules/regionGraph/directionLayout.js');
-    const G = await import('/frontend/modules/regionGraph/dungeonGroups.js');
+    const G = await import('/frontend/modules/regionGraph/floorGroups.js');
     ui.directionSettings = D.normaliseDirectionSettings({ strength: 0.7, spacing: 40, exits: 'border' });
     ui.groupingSettings = { ...G.normaliseGroupingSettings({ grouping: 'twoStepBoxes', groupStrength: 0.5 }), floorGap: 160 };
     const report = ui.layoutControlsManager.runDirectionLayout({ animate: false });
@@ -117,14 +117,14 @@ const run = (page, { before = false } = {}) => page.evaluate(async ([uiSrc, oldS
         const old = new Function(oldSrc)();
         const model = ui.mapLook.regionMapModel().model;
         const labels = old.floorLabels(old.floorNumbers(model));
-        for (const box of ui.dungeonBoxes?.boxes ?? []) {
+        for (const box of ui.floorBoxes?.boxes ?? []) {
             box.label = labels.get(box.root) ?? box.label;
             if (box.el) { box.el.textContent = box.label; box.el.title = `${box.label} (${box.root})`; }
         }
     }
     ui.cy.fit(30);
-    ui.dungeonBoxes?.sync?.();
-    const shown = [...document.querySelectorAll('.region-graph-panel-container .rg-dungeon-box')].filter((x) => x.style.display === 'block');
+    ui.floorBoxes?.sync?.();
+    const shown = [...document.querySelectorAll('.region-graph-panel-container .rg-floor-box')].filter((x) => x.style.display === 'block');
     return { floors: report.floors, totalMs: report.totalMs, nodes: report.nodes, labels: shown.map((x) => [x.textContent, x.dataset.root]) };
 }, [UI_SRC, OLD_SRC, before]);
 
@@ -137,7 +137,7 @@ const zoom = (page) => page.evaluate((uiSrc) => {
     const nodes = ui.cy.nodes().filter((n) => !n.hasClass('player') && !n.hasClass('location-node')
         && want.has(model.groupOf.get(n.data('groupKey') ?? n.data('regionName') ?? n.id())));
     ui.cy.fit(nodes, 60);
-    ui.dungeonBoxes?.sync?.();
+    ui.floorBoxes?.sync?.();
     return nodes.length;
 }, UI_SRC);
 

@@ -48,7 +48,7 @@ describe('⛓ 1. the model', () => {
         expect(sol.connections.length).toBe(3);
         const amb = FS.floorAmbiguities(sol);
         expect(amb.stairs.map((c) => [c.a, c.b, c.delta, c.range, c.mustStretch, c.stretched])).toEqual([['b2', 's3', 2, [2, 2], true, true]]);
-        expect(obj(FS.floorLabels(sol))).toEqual({ A: 'Floor −1', B: 'Floor −2', S: 'Ground floor' });
+        expect(obj(FS.floorLabels(sol))).toEqual({ A: 'Floor −1A', B: 'Floor −2A', S: 'Floor 0A' });
     });
 
     it('a doorway that MUST change floor (beside a pit) and one that must NOT (its far side is pinned by stairs)', () => {
@@ -77,11 +77,11 @@ describe('⛓ 1. the model', () => {
         expect([...sol.floorOf.keys()].sort()).toEqual(['A', 'S']);
         expect(sol.interval.has('W')).toBe(false);
         const labels = FS.floorLabels(sol);
-        expect([labels.get('W'), labels.get('X')]).toEqual(['Floor ?', 'Floor ?']);
+        expect([labels.get('W'), labels.get('X')]).toEqual(['Floor ? A', 'Floor ? B']); // unreached: lettered too, by id
         // A doorway that need not change floor: the pick keeps it level; its range is the bound.
         expect(conn(sol, 'a', 's')).toMatchObject({ range: [-1, 1], delta: 0 });
-        expect(labels.get('A')).toBe('Ground floor · 2');
-        expect(labels.get('S')).toBe('Ground floor · 1');
+        expect(labels.get('A')).toBe('Floor 0B');
+        expect(labels.get('S')).toBe('Floor 0A');
         // No start at all: every group unreached.
         expect(FS.solveFloors({ ...m, layout: { ...m.layout, start: null } }).unreached).toEqual(['A', 'S', 'W', 'X']);
     });
@@ -109,8 +109,8 @@ describe('⛓ 2. contradictions: the drop rule', () => {
         expect(obj(sol.ranged)).toEqual({ A: [-1, 1], Q: [-2, 2], S: [0, 0] });
         expect(obj(sol.floorOf)).toEqual({ P: 0 }); // the same pick in every alternative: shown
         const labels = FS.floorLabels(sol);
-        // S's range is one floor, so it reads as that floor, and shares "Ground floor" with P (· k by discovery order).
-        expect(obj(labels)).toEqual({ A: 'Floor −1 to +1', P: 'Ground floor · 2', Q: 'Floor −2 to +2', S: 'Ground floor · 1' });
+        // S's range is one floor, so it reads as that floor, and shares "Floor 0" with P (letters by discovery order).
+        expect(obj(labels)).toEqual({ A: 'Floor −1 to +1 A', P: 'Floor 0B', Q: 'Floor −2 to +2 A', S: 'Floor 0A' });
     });
     it('independent loops each lose a connection: every combination is an alternative, every cycle listed', () => {
         const m2 = model({
@@ -336,9 +336,41 @@ describe('⛓ 5. determinism, the budget, the labels', () => {
         }
         expect(FS.solveFloors(m, { budget: 200 }).floorOf).toEqual(cut.floorOf); // a count, not a clock
     });
-    it('the names: Ground floor, Floor +n / −n (U+2212), a range, Floor ?', () => {
-        expect([0, 1, -1, -12, null].map(FS.floorName)).toEqual(['Ground floor', 'Floor +1', 'Floor −1', 'Floor −12', 'Floor ?']);
+    it('the names: Floor 0, Floor +n / −n (U+2212), a range, Floor ?', () => {
+        expect([0, 1, -1, -12, null].map(FS.floorName)).toEqual(['Floor 0', 'Floor +1', 'Floor −1', 'Floor −12', 'Floor ?']);
         expect([[-3, -1], [0, 2], [-1, 1], [2, 2], [null, 1]].map(([a, b]) => FS.floorRangeName(a, b)))
             .toEqual(['Floor −3 to −1', 'Floor 0 to +2', 'Floor −1 to +1', 'Floor +2', 'Floor ?']);
+    });
+    // ⛓ region-graph-floor-rename-letters (⚖ 2026-11-28T03:38:16.825Z "Floor 0A, Floor −1B": every group a letter).
+    it('the letters: A … Z, then AA, AB, … AZ, BA, … ZZ, AAA (spreadsheet columns); a non-index throws', () => {
+        const L = FS.floorLetter;
+        expect([0, 1, 25, 26, 27, 51, 52, 701, 702, 18277, 18278].map(L))
+            .toEqual(['A', 'B', 'Z', 'AA', 'AB', 'AZ', 'BA', 'ZZ', 'AAA', 'ZZZ', 'AAAA']);
+        const seq = Array.from({ length: 800 }, (_, k) => L(k));
+        expect(new Set(seq).size).toBe(800); // no two indices share a letter
+        expect(seq.every((s) => /^[A-Z]+$/.test(s))).toBe(true);
+        for (const k of [-1, 1.5, null, NaN]) expect(() => L(k)).toThrow(RangeError);
+    });
+    it('every label form: a single floor glues its letter; a range and "?" take it after a space', () => {
+        expect(FS.withFloorLetter('Floor 0', 0)).toBe('Floor 0A');
+        expect(FS.withFloorLetter('Floor +1', 0)).toBe('Floor +1A');
+        expect(FS.withFloorLetter('Floor −1', 1)).toBe('Floor −1B');
+        expect(FS.withFloorLetter('Floor −12', 26)).toBe('Floor −12AA');
+        expect(FS.withFloorLetter('Floor −3 to −1', 0)).toBe('Floor −3 to −1 A');
+        expect(FS.withFloorLetter('Floor 0 to +2', 2)).toBe('Floor 0 to +2 C');
+        expect(FS.withFloorLetter('Floor ?', 0)).toBe('Floor ? A');
+    });
+    it('28 groups on one floor run A … Z, AA, AB in BFS discovery order (nearest the start first)', () => {
+        const others = Array.from({ length: 27 }, (_, i) => `G${String(i).padStart(2, '0')}`);
+        const groups = { S: ['s'] };
+        for (const g of others) groups[g] = [g.toLowerCase()];
+        // a doorway chain S — g00 — g01 — …: each level with the last, so every group is Floor 0, discovered in turn.
+        const links = others.map((g, i) => [i === 0 ? 's' : others[i - 1].toLowerCase(), g.toLowerCase(), 'warp']);
+        const labels = FS.floorLabels(FS.solveFloors(model({ start: 's', groups, links })));
+        expect(labels.get('S')).toBe('Floor 0A');
+        expect(labels.get('G00')).toBe('Floor 0B');
+        expect(labels.get('G24')).toBe('Floor 0Z');
+        expect(labels.get('G25')).toBe('Floor 0AA');
+        expect(labels.get('G26')).toBe('Floor 0AB');
     });
 });

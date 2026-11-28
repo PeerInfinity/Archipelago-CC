@@ -122,32 +122,34 @@ Only worlds whose regions carry door positions (generated and Seedling worlds, m
 
 Changing a setting while the Direction-aware layout is the one shown re-runs it straight away; otherwise the new value is used the next time you run it. The settings are `moduleSettings.regionGraph.directionStrength`, `directionSpacing` and `directionExits`. Like every layout, it moves the nodes of the view you are in only (each **Draw as** choice keeps its own positions), and opening or closing a group in **Collapsible** keeps the positions as they are.
 
-#### Dungeon grouping
+#### Floor grouping
 
-**Dungeon grouping** (in the same section) keeps each dungeon's levels together, apart from the other dungeons. A dungeon is one of the Region Map's groups: levels you walk between by their edges belong together, and a doorway, staircase or teleporter into another group does not join the two. In **Separate** and **Nested**, a level's sub-regions belong to that level's dungeon. Nodes the Region Map does not place (the Menu) belong to no dungeon.
+**Floor grouping** (in the same section) keeps each floor group's levels together, apart from the other floor groups. A floor group is one of the Region Map's groups: levels you walk between by their edges belong together, and a doorway, staircase, pit or teleporter into another group does not join the two (so levels behind a doorway are always a floor group, and a block, of their own). In **Separate** and **Nested**, a level's sub-regions belong to that level's floor group. Nodes the Region Map does not place (the Menu) belong to no floor group.
 
 | Value | What you see |
 |---|---|
-| **Off (as before)** (the default) | The Direction-aware layout exactly as above. Nodes from different dungeons can sit side by side. |
-| **Soft pull together** | One layout, with each node also pulled towards its own dungeon and pushed away from nearby nodes of other dungeons. Dungeons mostly read as clusters, but some exit directions bend to make room. **Dungeon pull** (0 – 1, default 0.5) sets how strongly; 0 is the same as Off. |
-| **Two-step layout** | Each dungeon is laid out on its own first, then the dungeons are placed as solid blocks, with a gap, each pulled towards the dungeons it links to and to the side its doors point to. Blocks never overlap, so no node lands inside another dungeon's area. Two dungeons joined by stairs or a pit are **floors**: see below. |
-| **Two-step + boxes** | The same arrangement, plus a faint dashed box round each dungeon of two or more nodes, labelled with its **floor** (below). The box is only a drawing: it cannot be clicked, picked or pathed to, and it is not saved with the positions. It stays until another layout runs or the graph is redrawn. |
+| **Off (as before)** (the default) | The Direction-aware layout exactly as above. Nodes from different floor groups can sit side by side. |
+| **Soft pull together** | One layout, with each node also pulled towards its own floor group and pushed away from nearby nodes of other floor groups. Floor groups mostly read as clusters, but some exit directions bend to make room. **Floor pull** (0 – 1, default 0.5) sets how strongly; 0 is the same as Off. |
+| **Two-step layout** | Each floor group is laid out on its own first, then the floor groups are placed as solid blocks, with a gap, each pulled towards the floor groups it links to and to the side its doors point to. Blocks never overlap, so no node lands inside another floor group's area. Two floor groups joined by stairs or a pit are on different **floors**: see below. |
+| **Two-step + boxes** | The same arrangement, plus a faint dashed box round each floor group of two or more nodes, labelled with its **floor** and letter (below). The box is only a drawing: it cannot be clicked, picked or pathed to, and it is not saved with the positions. It stays until another layout runs or the graph is redrawn. |
 
-In a world with no dungeons that link to each other (for example A Link to the Past, or a single maze), every value gives the same arrangement as **Off**. The settings are `moduleSettings.regionGraph.dungeonGrouping` (`none`, `soft`, `twoStep`, `twoStepBoxes`), `moduleSettings.regionGraph.dungeonGroupStrength` and `moduleSettings.regionGraph.floorGap` (below); a change re-runs the layout when it is the one shown, like the other Direction-aware settings.
+In a world with no floor groups that link to each other (for example A Link to the Past, or a single maze), every value gives the same arrangement as **Off**. The settings are `moduleSettings.regionGraph.floorGrouping` (`none`, `soft`, `twoStep`, `twoStepBoxes`), `moduleSettings.regionGraph.floorGroupStrength` and `moduleSettings.regionGraph.floorGap` (below); a change re-runs the layout when it is the one shown, like the other Direction-aware settings.
+
+This setting was called **Dungeon grouping** (`dungeonGrouping`, `dungeonGroupStrength`, "Dungeon pull") until 2026-11-28; the older reports under `CC/docs/region-graph/` use those names. A value saved under the old names is not carried over: it reads as the default.
 
 #### Floors
 
-Because a staircase or a pit never joins two levels into one dungeon, every dungeon is really a **floor**, and the two two-step values lay them out as floors:
+Because a staircase or a pit never joins two levels into one floor group, the two two-step values lay the floor groups out as floors:
 
-- **Walking links stay as they were.** Inside a floor, levels you walk between by their edges are laid out exactly as before: side by side, in the direction of the door.
-- **Stairs and pits are longer, but keep a direction.** Two floors joined by stairs or a pit are placed further apart, by the **Floor gap** (in Controls, under Dungeon pull; 0 – 600 px, default 160), in the direction where the stairs are in their level: stairs in the east of a level put the floor they lead to further east. Stairs in the middle tenth of their level (both ways) give no direction, only the distance. Several staircases between the same two floors are added together. A bigger gap moves the floors further apart in the same directions; 0 puts them as close as two linked dungeons with no stairs.
-- **Each box is labelled by its floor.** The floor holding the start region is the **Ground floor**. Stairs up and down change the floor by one, and so does a pit (down). A doorway or teleporter **may** change the floor by one, or not: the floor numbers are worked out so that every link between dungeons agrees, choosing, when there is a choice:
-  1. as few extra floors on staircases as possible (a staircase spans more than one floor only when the links between dungeons cannot agree otherwise);
+- **Walking links stay as they were.** Inside a floor group, levels you walk between by their edges are laid out exactly as before: side by side, in the direction of the door.
+- **Stairs and pits are longer, but keep a direction.** Two floor groups joined by stairs or a pit are placed further apart, by the **Floor gap** (in Controls, under Floor pull; 0 – 600 px, default 160), in the direction where the stairs are in their level: stairs in the east of a level put the floor they lead to further east. Stairs in the middle tenth of their level (both ways) give no direction, only the distance. Several staircases between the same two floor groups are added together. A bigger gap moves the floors further apart in the same directions; 0 puts them as close as two linked floor groups with no stairs.
+- **Each box is labelled by its floor and a letter.** The floor holding the start region is **Floor 0**. Stairs up and down change the floor by one, and so does a pit (down). A doorway or teleporter **may** change the floor by one, or not: the floor numbers are worked out so that every link between floor groups agrees, choosing, when there is a choice:
+  1. as few extra floors on staircases as possible (a staircase spans more than one floor only when the links between floor groups cannot agree otherwise);
   2. then as few doorways that change floor as possible;
   3. then as few floors in all as possible.
-  When several dungeons are on the same floor they are numbered in the order they are reached from the start: **Floor −1 · 1**, **Floor −1 · 2**, …. The dungeon's first level (its old label) is kept on the box for tools that read it.
-- **When the links cannot agree**, for example pits leading round in a loop back to the start with no way up, as few links as possible are set aside. A dungeon whose floor then depends on which ones are set aside shows the **range** of floors it could be: **Floor −3 to −1**.
-- **Floor ?** marks a dungeon that no link from the start reaches at all.
+  Every floor group then gets a **letter**, in the order the groups on that floor are reached from the start (A is the nearest): **Floor 0A**, **Floor 0B**, **Floor +1A**, **Floor −1A**, **Floor −1B**, …; after Z come AA, AB, …. A floor group gets a letter even when it is the only one on its floor. The floor group's first level (its old label) is kept on the box (hover it) for tools that read it.
+- **When the links cannot agree**, for example pits leading round in a loop back to the start with no way up, as few links as possible are set aside. A floor group whose floor then depends on which ones are set aside shows the **range** of floors it could be, with its letter after a space: **Floor −3 to −1 A**.
+- **Floor ? A** marks a floor group that no link from the start reaches at all (lettered in the order of their first level's name).
 
 Floors come from the world's own exits, never from hand-made labels, so they follow entrance randomization or any other change to how the levels connect. Off and Soft pull together are unchanged by floors. The Region Map does not use floors.
 

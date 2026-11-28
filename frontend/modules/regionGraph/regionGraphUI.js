@@ -20,7 +20,7 @@ import { CLICK_ACTIONS_KEY, loadRegionGraphClickActions, saveRegionGraphClickAct
 import { applyPendingCentre } from './regionGraphCentreAction.js';
 import { SUB_REGION_VIEW_KEY, normaliseSubRegionView, GROUP_STYLES } from './subRegionGroups.js';
 import { GroupBadgeLayer } from './groupBadgeLayer.js';
-import { DungeonBoxLayer } from './dungeonBoxLayer.js';
+import { FloorBoxLayer } from './floorBoxLayer.js';
 import { NODE_LOOK_KEY, normaliseNodeLook, syncNodeLookControl } from './nodeLook.js';
 import { MapLookLayer } from './mapLookLayer.js';
 
@@ -56,8 +56,8 @@ export class RegionGraphUI {
     this.overlayManager = new NodeOverlayManager(this);
     // ⛓ subRegionView = collapsible (region-graph-groups-c): the + / − badges over the group nodes (DOM, not cy).
     this.groupBadges = new GroupBadgeLayer(this);
-    // ⛓ Direction-aware, Dungeon grouping = twoStepBoxes (region-graph-dungeon-groups): the boxes (DOM, not cy).
-    this.dungeonBoxes = new DungeonBoxLayer(this);
+    // ⛓ Direction-aware, Floor grouping = twoStepBoxes (region-graph-dungeon-groups): the boxes (DOM, not cy).
+    this.floorBoxes = new FloorBoxLayer(this);
     // ⛓ nodeLook = map (region-graph-map-look): each node draws as its Region Map cell, under Cytoscape's canvas.
     this.mapLook = new MapLookLayer(this);
 
@@ -1346,7 +1346,7 @@ export class RegionGraphUI {
       this.unsubscribeSettingsChanged();
     }
     this.groupBadges?.destroy();
-    this.dungeonBoxes?.destroy();
+    this.floorBoxes?.destroy();
     this.mapLook?.dispose();
     if (this.cy) {
       this.cy.destroy();

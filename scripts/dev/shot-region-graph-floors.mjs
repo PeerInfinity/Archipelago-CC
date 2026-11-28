@@ -1,5 +1,5 @@
 /**
- * Region Graph, Direction-aware layout, two-step Dungeon grouping as FLOORS: screenshots and measurements
+ * Region Graph, Direction-aware layout, two-step Floor grouping as FLOORS: screenshots and measurements
  * (region-graph-floors).
  *
  * Desktop (1600 × 1000, `layout=desktop`), Direction-aware at its defaults (strength 0.7, spacing 40, border doors):
@@ -15,7 +15,7 @@
  *
  * Measurements (JSON): seedling_playthrough merged + map and separate, seedling_atlas merged + map: "before" (twoStep,
  * floor links off) and twoStep at floor gaps 0 / 80 / 160 / 320: the FLAT-link angle error (mean / p90; inside a
- * dungeon and between two), the VERTICAL-link angle error (mean / p90), the mean flat and vertical link lengths,
+ * floor group and between two), the VERTICAL-link angle error (mean / p90), the mean flat and vertical link lengths,
  * overlaps, block overlaps, nodes in another's block, the layout's own block (`report.totalMs`) and the longest task.
  * Every wait on a layout is the panel's own settled signal (`rg-layoutsettled`, layoutRun.js).
  *
@@ -109,7 +109,7 @@ const runDirection = (page, settings, grouping = {}, { before = false } = {}) =>
     // eslint-disable-next-line no-new-func
     const ui = new Function(`return ${uiSrc}`)();
     const D = await import('/frontend/modules/regionGraph/directionLayout.js');
-    const G = await import('/frontend/modules/regionGraph/dungeonGroups.js');
+    const G = await import('/frontend/modules/regionGraph/floorGroups.js');
     const F = await import('/frontend/modules/regionGraph/floors.js');
     ui.directionSettings = D.normaliseDirectionSettings({ ...ui.directionSettings, ...s });
     const merged = { ...ui.groupingSettings, ...g };
@@ -127,10 +127,10 @@ const runDirection = (page, settings, grouping = {}, { before = false } = {}) =>
     const wall = performance.now() - t0;
     await new Promise((r) => setTimeout(r, 300));
     obs?.disconnect();
-    if (b) for (const box of ui.dungeonBoxes?.boxes ?? []) box.label = box.root ?? String(box.dungeon);
+    if (b) for (const box of ui.floorBoxes?.boxes ?? []) box.label = box.root ?? String(box.floorGroup);
     ui.cy.fit(30);
-    ui.dungeonBoxes?.sync?.();
-    const shownEls = [...document.querySelectorAll('.region-graph-panel-container .rg-dungeon-box')].filter((x) => x.style.display === 'block');
+    ui.floorBoxes?.sync?.();
+    const shownEls = [...document.querySelectorAll('.region-graph-panel-container .rg-floor-box')].filter((x) => x.style.display === 'block');
     return { ...report, wallMs: wall, longestTaskMs: tasks.length ? Math.max(...tasks) : null, boxesShown: shownEls.length,
         labels: shownEls.map((x) => [x.textContent, x.dataset.root]) };
 }, [UI_SRC, settings, grouping, before]);
@@ -246,7 +246,7 @@ try {
             const lcm = ui.layoutControlsManager;
             const inp = lcm.directionLayoutInputs();
             const fl = lcm.floorsOf(inp.model, inp.sidecars, inp.nodes, inp.edges);
-            const boxes = ui.dungeonBoxes.report().filter((b) => b.box);
+            const boxes = ui.floorBoxes.report().filter((b) => b.box);
             const of = new Map();
             for (const b of boxes) for (const id of b.members) of.set(id, b);
             let best = null;
@@ -264,7 +264,7 @@ try {
             const err = Math.acos(Math.max(-1, Math.min(1, (dx * best.v.pref.dx + dy * best.v.pref.dy) / r))) * 180 / Math.PI;
             const eles = ui.cy.collection([...best.a.members, ...best.c.members].map((id) => ui.cy.getElementById(id)));
             ui.cy.fit(eles, 70);
-            ui.dungeonBoxes.sync();
+            ui.floorBoxes.sync();
             const exits = fl.exits.filter((x) => (x.fromKey === best.e.source || x.fromKey === best.e.target) && (x.toKey === best.e.source || x.toKey === best.e.target))
                 .map((x) => ({ from: x.from, to: x.to, kind: x.kind, exit: x.exitName, u: x.u, v: x.v, dx: x.dx, dy: x.dy }));
             return { edge: [best.e.source, best.e.target], floors: [best.a.label, best.c.label], roots: [best.a.root, best.c.root],
@@ -277,7 +277,7 @@ try {
             const panel = document.querySelector('.region-graph-panel-container');
             if (panel.querySelector('#controlsContent')?.style.display === 'none') panel.querySelector('#controlsHeader')?.click();
             const d = panel.querySelector('details.rg-direction-layout');
-            if (d) { d.open = true; panel.querySelector('#dungeonGrouping').value = 'twoStepBoxes'; panel.querySelector('#floorGap').scrollIntoView({ block: 'center' }); }
+            if (d) { d.open = true; panel.querySelector('#floorGrouping').value = 'twoStepBoxes'; panel.querySelector('#floorGap').scrollIntoView({ block: 'center' }); }
         });
         await page.screenshot({ path: join(OUT, 'seedling-floor-controls.png'), clip: await graphClip(page) });
         await page.evaluate(() => document.querySelector('.region-graph-panel-container #controlsHeader')?.click());

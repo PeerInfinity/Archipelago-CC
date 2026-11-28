@@ -1,5 +1,5 @@
 /**
- * ⛓ FLOORS FOR THE TWO-STEP DUNGEON GROUPING (region-graph-floors). The Region Map's groups (`dungeonGroups.js`) are
+ * ⛓ FLOORS FOR THE TWO-STEP FLOOR GROUPING (region-graph-floors). The Region Map's groups (`floorGroups.js`) are
  * FLOORS: R1 joins only `join` links, so stairs and pits always lead from one group to another. This file turns that
  * into a floor layout for the Region Graph's `twoStep` / `twoStepBoxes` values:
  *   · a VERTICAL link (a stair or a pit) gets a direction from where its tile sits in its level (option (a)), and the
@@ -32,9 +32,10 @@
  *
  * ── 3. FLOOR NUMBERS AND LABELS ─────────────────────────────────────────────────────────────────────────────────
  * ⛓ region-graph-floor-solver: a CONSTRAINT SOLVE over every link between groups (stairs, pits AND doorways /
- * teleporters), not a BFS: `floorSolver.js` (`solveFloors`, `floorLabels`). The labels: "Ground floor", "Floor +1",
- * "Floor −1", a range "Floor −3 to −1" where a contradiction leaves no consistent pick, "Floor ?" for a group no link
- * from the start reaches; " · k" for groups sharing a label. The group's root level id stays in the box's tooltip.
+ * teleporters), not a BFS: `floorSolver.js` (`solveFloors`, `floorLabels`). The labels (⛓ region-graph-floor-rename-letters):
+ * "Floor 0A", "Floor +1A", "Floor −1B" — the floor, then a letter per group on it (A nearest the start); a range
+ * "Floor −3 to −1 A" where a contradiction leaves no consistent pick; "Floor ? A" for a group no link from the start
+ * reaches. The group's root level id stays in the box's tooltip.
  *
  * ⛔ DETERMINISTIC: sorted ids everywhere; no clock, no `Math.random`. ⛔ PURE: no DOM, no Cytoscape, no substrate.
  */

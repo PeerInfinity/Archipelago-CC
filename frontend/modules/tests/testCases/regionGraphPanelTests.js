@@ -10,7 +10,7 @@ import { SUB_REGION_VIEW_KEY, multiMemberGroups, isRegionGroupNode, groupNodeId 
 import { regionOfCell } from '../../regionView/regionViewModel.js';
 import { NODE_LOOK_KEY } from '../../regionGraph/nodeLook.js';
 import { layoutRunOf } from '../../regionGraph/layoutRun.js';
-import { DUNGEON_GROUPING_KEY, DUNGEON_GROUPING_SCHEMA } from '../../regionGraph/dungeonGroups.js';
+import { FLOOR_GROUPING_KEY, FLOOR_GROUPING_SCHEMA } from '../../regionGraph/floorGroups.js';
 
 const PANEL_ID = 'regionGraphPanel';
 const MAX_WAIT_TIME = 10000;
@@ -836,51 +836,54 @@ export async function testRegionGraphSubRegionMerged(testController) {
       + `and finished with ${dir?.overlaps} overlaps, ${drawnOverlaps} between the drawn boxes (${dirMs} ms)`,
       !!dir && dir.nodes === laid.length && dir.overlaps === 0 && drawnOverlaps === 0);
 
-    // ⛓ region-graph-dungeon-groups: Dungeon grouping = Two-step + boxes (session-only, through the setting), run once
-    // more at once; it reads the boxes drawn (one per dungeon of 2+ drawn nodes, in the DOM overlay, never a cy
-    // element) and 0 overlaps (nodes, blocks, a node in another dungeon's block); then the setting goes back to its
+    // ⛓ region-graph-dungeon-groups: Floor grouping = Two-step + boxes (session-only, through the setting), run once
+    // more at once; it reads the boxes drawn (one per floor group of 2+ drawn nodes, in the DOM overlay, never a cy
+    // element) and 0 overlaps (nodes, blocks, a node in another floor group's block); then the setting goes back to its
     // default and the boxes go with the restore. The preset is put back BEFORE each write, so the write does not
     // re-run the (animated) layout by itself.
     ui.currentLayoutPreset = layoutBefore;
     const t6 = performance.now();
-    await ctx.setSetting(DUNGEON_GROUPING_KEY, 'twoStepBoxes');
+    await ctx.setSetting(FLOOR_GROUPING_KEY, 'twoStepBoxes');
     const groupingOn = await testController.pollForCondition(() => ui.groupingSettings?.grouping === 'twoStepBoxes',
-      'the panel read Dungeon grouping = twoStepBoxes', 5000, 20);
+      'the panel read Floor grouping = twoStepBoxes', 5000, 20);
     const elementsBefore = graphCy().elements().length;
     const dir2 = lcm.runDirectionLayout({ animate: false });
-    const boxEls = [...document.querySelectorAll('.region-graph-panel-container .rg-dungeon-box')]
+    const boxEls = [...document.querySelectorAll('.region-graph-panel-container .rg-floor-box')]
       .filter((b) => b.style.display === 'block');
-    const wantBoxes = (dir2?.dungeonSizes ?? []).filter((n) => n >= 2).length;
+    const wantBoxes = (dir2?.floorGroupSizes ?? []).filter((n) => n >= 2).length;
     const groupMs = Math.round(performance.now() - t6);
-    testController.reportCondition(`Dungeon grouping = twoStepBoxes: ${dir2?.dungeons} dungeons (sizes ${JSON.stringify(dir2?.dungeonSizes)}), `
+    testController.reportCondition(`Floor grouping = twoStepBoxes: ${dir2?.floorGroups} floor groups (sizes ${JSON.stringify(dir2?.floorGroupSizes)}), `
       + `${boxEls.length} boxes drawn (want ${wantBoxes}, labels ${boxEls.map((b) => b.textContent).join(', ')}), `
-      + `${dir2?.overlaps} node overlaps, ${dir2?.blockOverlaps} block overlaps, ${dir2?.intruders} nodes in another dungeon's block, `
+      + `${dir2?.overlaps} node overlaps, ${dir2?.blockOverlaps} block overlaps, ${dir2?.intruders} nodes in another floor group's block, `
       + `the element set ${graphCy().elements().length} (was ${elementsBefore}) (${groupMs} ms)`,
       groupingOn && !!dir2 && wantBoxes >= 1 && boxEls.length === wantBoxes && dir2.boxes === wantBoxes
       && dir2.overlaps === 0 && dir2.blockOverlaps === 0 && dir2.intruders === 0 && graphCy().elements().length === elementsBefore);
-    // ⛓ region-graph-floors: the box is labelled by its FLOOR ("Ground floor", "Floor −1 · 2"), the group's root level
+    // ⛓ region-graph-floors: the box is labelled by its FLOOR ("Floor 0A", "Floor −1B"), the group's root level
     // id kept on the box (`data-root`). ⛓ region-graph-floor-solver: the numbers come from the constraint solve over
     // EVERY link, doorways included, so the doorway-entered box (the BFS numbering's "Floor ?") now reads a floor the
     // solve picked: no box reads "Floor ?", every group is picked, none ranged or unreached, no contradiction.
-    const floorRe = /^(Ground floor|Floor [+\u2212]\d+|Floor [0+\u2212]\d* to [0+\u2212]\d*|Floor \?)( \u00b7 \d+)?$/;
+    // ⛓ region-graph-floor-rename-letters: every box carries a LETTER ("Floor 0A", "Floor −1B"; a range "Floor −3 to −1 A"),
+    // and no two boxes share a label (the letter tells apart the groups of one floor).
+    const floorRe = /^Floor (0|[+\u2212]\d+)[A-Z]+$|^Floor [0+\u2212]\d* to [0+\u2212]\d* [A-Z]+$/;
     const floorLabels = boxEls.map((b) => [b.textContent, b.dataset.root]);
-    testController.reportCondition(`the boxes are labelled by floor: ${JSON.stringify(floorLabels)}; `
+    const distinctLabels = new Set(boxEls.map((b) => b.textContent)).size;
+    testController.reportCondition(`the boxes are labelled by floor and letter: ${JSON.stringify(floorLabels)} (${distinctLabels} distinct); `
       + `${dir2?.floors?.numbered} floor(s) picked, ${dir2?.floors?.ranged} ranged, ${dir2?.floors?.unreached} unreached, `
       + `${dir2?.floors?.counts?.vertical} vertical link(s), ${dir2?.floors?.contradictions} contradiction(s), `
       + `solve ${dir2?.floors?.solveMs?.toFixed?.(2)} ms`,
       boxEls.length >= 1 && boxEls.every((b) => floorRe.test(b.textContent) && !/^Floor \?/.test(b.textContent)
-        && !!b.dataset.root && b.dataset.root !== b.textContent)
+        && !!b.dataset.root && b.dataset.root !== b.textContent) && distinctLabels === boxEls.length
       && dir2?.floors?.numbered >= 1 && dir2?.floors?.ranged === 0 && dir2?.floors?.unreached === 0
       && dir2?.floors?.contradictions === 0);
     ui.currentLayoutPreset = layoutBefore;
-    await ctx.setSetting(DUNGEON_GROUPING_KEY, DUNGEON_GROUPING_SCHEMA.default);
-    const groupingOff = await testController.pollForCondition(() => ui.groupingSettings?.grouping === DUNGEON_GROUPING_SCHEMA.default,
-      'the panel read Dungeon grouping = its default again', 5000, 20);
-    ui.dungeonBoxes?.clear?.();
-    const boxesLeft = document.querySelectorAll('.region-graph-panel-container .rg-dungeon-box').length;
-    testController.reportCondition(`Dungeon grouping restored to "${ui.groupingSettings?.grouping}", ${boxesLeft} boxes left`,
+    await ctx.setSetting(FLOOR_GROUPING_KEY, FLOOR_GROUPING_SCHEMA.default);
+    const groupingOff = await testController.pollForCondition(() => ui.groupingSettings?.grouping === FLOOR_GROUPING_SCHEMA.default,
+      'the panel read Floor grouping = its default again', 5000, 20);
+    ui.floorBoxes?.clear?.();
+    const boxesLeft = document.querySelectorAll('.region-graph-panel-container .rg-floor-box').length;
+    testController.reportCondition(`Floor grouping restored to "${ui.groupingSettings?.grouping}", ${boxesLeft} boxes left`,
       groupingOff && boxesLeft === 0);
-    testController.log(`[dungeonGroups] seedling_atlas merged map: dungeons=${dir2?.dungeons} boxes=${dir2?.boxes} `
+    testController.log(`[floorGroups] seedling_atlas merged map: floorGroups=${dir2?.floorGroups} boxes=${dir2?.boxes} `
       + `mixed=${dir2?.mixing?.mixed}/${dir2?.mixing?.eligible} meanErr=${dir2?.meanAngleError?.toFixed?.(1)} totalMs=${dir2?.totalMs?.toFixed?.(1)} stepMs=${groupMs}`);
     // The layout moved the nodes and fit the view: put both back, so the steps after this one see the graph as before.
     graphCy().nodes().forEach((n) => { const p = posBefore.get(n.id()); if (p && !n.locked()) n.position(p); });
@@ -1446,7 +1449,7 @@ registerTest({
   category: 'Region Graph',
   testFunction: testRegionGraphSubRegionMerged,
   enabled: false, // runs where a roster enrols it (the substrates config)
-  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; then (region-graph-map-look) nodeLook = map (session-only) paints every node with a Region Map cell as that cell with no rebuild, and a pointer click on a location square runs the location click on it, once; then (region-graph-groups-c) subRegionView = collapsible draws every group closed with a + badge, a + press opens one group into its box and a − press closes it, neither running a click action, and a body tap runs it, and the stored nodeLook = map takes no effect there; (region-graph-direction-layout) in merged + map the Direction-aware layout runs once and ends with 0 overlaps between the drawn boxes, and the layout preset and the merged view\'s saved positions are restored; (region-graph-dungeon-groups) Dungeon grouping = twoStepBoxes draws one box per dungeon of 2+ (an overlay, no element added) with 0 node / block overlaps, (region-graph-floors) each box labelled by its floor (numbered from the group of the start region, the ground floor) with its root level kept on the box, and the setting goes back to its default; the settings are restored (nodeLook graph) and every region is its own node again'
+  description: 'region-graph-groups-b: on seedling_atlas (2 groups), subRegionView = merged (session-only) draws one node per display group of 2+ in place of its members, no self-loop; a tap on a group node runs the region click on regionOfCell(key, members), once; then (region-graph-map-look) nodeLook = map (session-only) paints every node with a Region Map cell as that cell with no rebuild, and a pointer click on a location square runs the location click on it, once; then (region-graph-groups-c) subRegionView = collapsible draws every group closed with a + badge, a + press opens one group into its box and a − press closes it, neither running a click action, and a body tap runs it, and the stored nodeLook = map takes no effect there; (region-graph-direction-layout) in merged + map the Direction-aware layout runs once and ends with 0 overlaps between the drawn boxes, and the layout preset and the merged view\'s saved positions are restored; (region-graph-dungeon-groups) Floor grouping = twoStepBoxes draws one box per floor group of 2+ (an overlay, no element added) with 0 node / block overlaps, (region-graph-floors) each box labelled by its floor (numbered from the group of the start region, Floor 0) and (region-graph-floor-rename-letters) a letter, "Floor 0A" / "Floor −1B", no two boxes alike, with its root level kept on the box, and the setting goes back to its default; the settings are restored (nodeLook graph) and every region is its own node again'
 });
 
 registerTest({
