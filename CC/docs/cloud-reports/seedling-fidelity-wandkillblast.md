@@ -6,7 +6,7 @@ Session `seedling-fidelity-wandkillblast` (planner `seedling-fidelity-planning-2
 | | |
 |---|---|
 | start (base) | `048733514ab725f77d6c711d71e184d4f78e789d` — the W71 harvest tip (`fidelity-harvest/wandkill-w71`) |
-| head | this report's commit (the last); the last CODE head is named in § Gates |
+| head | this report's commit (the last); the last CODE head is **`719e15b2`** (the census/surface/reference re-derivation, the last commit to touch a filtered path) |
 | harness branch | `claude/wand-kill-explosion-witnesses-ia29vq` (local `seedling-fidelity-wandkillblast`) |
 | verdict | **PASS** — (b) NO GAP, with no code change: the game takes the Explosion's player hit exactly as wave 71's derived arm does, and M1 now turns 5 rows red. (c) GAP, closed by one key, `wandKillBlastBodies` (default OFF, byte-identical OFF). It is witnessed for six classes/states and a blast kill (no chain); everything unwitnessed stays refused by name |
 
@@ -172,8 +172,21 @@ wand-body keys; beside all twelve queued keys): **3/3 green, n > 300, 0 movers**
 
   **No seed and no field moved.**
 - **Every committed tape OFF vs ON**: 0 movers in all three arms (the slow file). No moved field to name.
-- **The fast ON sweep** — SWEEP_FAST_PLACEHOLDER
-- **The slow/train ON sweep** — SWEEP_SLOW_PLACEHOLDER
+- **The fast ON sweep** (`SEEDLING_WAND_KILL_BLAST_BODIES=1` + `SEEDLING_WAND_SHOT_KILL=1` +
+  `SEEDLING_WAND_SHOT_ENEMY_BODIES=1` + `SEEDLING_WAND_SHOT_TRAP_BODIES=1`; the 444 fast test files that name a D3
+  subject word, case-insensitive; 11877 tests: 11871 passed, 5 failed, 1 skipped). The movers:
+
+  | file:row | class |
+  |---|---|
+  | `fidelityWandKill.test.js` "a SECOND body inside the disc is refused by name (a neighbour staged 8 px W of L16's sandtrap@48,32)" | **OFF-contract of THIS key** (game-witnessed: a SandTrap neighbour takes `Enemy.hit(4, p, 1)`, `second-sandtrap`) |
+  | `contactFidelity.test.js` "the shipped defaults: all three ON" | OFF-contract (the env flips defaults; wave 71's mover) |
+  | `fidelityWandEnemyBodies.test.js` "ON: a hit that KILLS refuses by name" | OFF-contract of `wandShotKill` (wave 71's mover) |
+  | `fidelityWandTrapBodies.test.js` "…a residue class still refuses by name (L59: turret)" | OFF-contract (wave 68's / 71's mover) |
+  | `standingValues.test.js` "a gate that sleeps past the deadline is KILLED" | not this slice — red at the base in this container too (measured in a base worktree) |
+
+- **The slow/train ON sweep** (the same four keys ON; the 48 subject `.slow.`/`.train.` files, one at a time, each
+  under its tier's config): **48/48 files green, 231 rows** (31 `.train.`, 17 `.slow.`). **0 movers.** The first pass
+  stopped at the background limit after 29 files; the other 19 ran as a second pass.
 - **The hit gate (hitless → hit)**: no committed tape moves in any arm, and no acceptance seed moves, so **no tape or
   route takes a hit ON that it doesn't take OFF**. The only player hits this wave adds are the two (b) witnesses'
   (`blast-above`/`-below`, staged stances). They are `wandShotKill`'s arm, unchanged here, and now witnessed. ⚠ For the
@@ -188,7 +201,20 @@ wand-body keys; beside all twelve queued keys): **3/3 green, n > 300, 0 movers**
 
 ### Gates
 
-GATES_PLACEHOLDER
+| gate | result |
+|---|---|
+| bounded vitest BEFORE (`--maxWorkers=3`) | 57 files, **1677 green** at the base (54 files at the first draft commit, 1571 + `boxLock`'s import-door row red on the new probe; plus `arrowTrap`, `fidelityBombBlast`, `spinner` and `contactFidelityHook` measured in a base worktree) |
+| bounded vitest AFTER (58 files: `contactFidelity*`, `levelRun*`, `levelWorld*`, `oneSpelling`, `fidelityWand*` incl. the new file, the 34 key-order pin files, the readers of `applyPlayerHit` / `applyExplosion` / `pendingBlasts`, `r8Acceptance`, `tapeEnvelope`, `solverDeadline`, `decisionTrace`, `lintGateLabels`, `seedlingConstantsCensus`, `seedlingSolverSurface`, `boxLock`, `boxLockCommit`) | **58 files, 1734 passed** = 1677 + 56 new rows + 1 (`contactFidelityHook`'s per-key row) |
+| `ci-producer-checks.mjs --jobs=3` | 100 run, **0 red**, 1 skipped, 0 known-red |
+| `check-procgen-docs.mjs` | ALL CHECKS PASSED |
+| `generate-procgen-reference.mjs --check` | ALL 7 MODULES AND 5 REGIONS MATCH (after the regen: the instruments list takes the new probe) |
+| `census-seedling-constants.mjs` `--check` (8 new + 2 vanished, all cosmetic/structural green drift) → `--write` → `--profile-rows` (138 rows) → `--write` → `--check` | PASS, 0 new, 0 moved |
+| `census-seedling-solver-surface.mjs --write` / `--check` | GREEN, 375 rows (unchanged: the new getter has no solver reader; counts and lines moved) |
+| `solve-seedling-{r8-battery,r8-d2-chain,r8-l18,r8-tail,r9-l3,r9-campaign}.mjs --check` | all six rc 0 |
+| CI at the last CODE head **`719e15b2`** (`ci-vitest-summary.mjs`) | run 46091167758: shards 1–3 and the slow Vitest job all **success**; suite (unfiltered) **30887 passed, 0 skipped, 0 failed**; slow battery **491 passed, 0 failed** |
+| train tier | **not dispatched** (this session can't): ⛳ planner, `unittests_frontend.yml -f train_only=true` at `719e15b2` |
+
+The probe's own run: `probe-seedling-wandkillblast.mjs` → **ALL CHECKS PASSED** (13 shapes × 3 checks).
 
 ## What the brief got wrong (measured)
 
