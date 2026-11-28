@@ -2013,6 +2013,12 @@
             "_comment": "CONTENT THEME MAZE LOOK (the user 2026-11-15: 'Can we set up a Feature Check in the Tutorials panel to load the scenario for me to see what this maze example currently looks like?'). The walk row of feature check content-theme-maze-look: meta_trial then the plain control concept_trial, each loaded, its first room's location and exit taken in the Text Adventure panel (read off its links), the Maze Room on the region that exit names (fog unticked), then the APWorld Editor's Map tab holding that document. Manual batch feature-checks."
         },
         {
+            "id": "feature-check-mystery-local-play",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "MYSTERY LOCAL PLAY (the user 2026-11-27: 'a tutorial, or maybe just a feature check, that plays through a mystery game preset locally, without an Archipelago server'). The walk row of feature check mystery-local-play: the committed mystery_custom_house_fire world loaded as a preset, Mystery Game opened (the real page, the submodule modules/mystery-clue-game, which starts on the app's offline state), then the page's own careful reader asked for by mystery:autoSolve and waited for until it says done; every question it solved is a check in the app and Victory is held. No server. Manual batch feature-checks."
+        },
+        {
             "id": "tutorial-walk-guided-tour",
             "enabled": true,
             "category": "Tutorial walks",
@@ -2614,6 +2620,12 @@
             "_comment": "The mystery SUBSTRATE: a case as one region of a generated world. Loads the committed mystery_street_test preset (scripts/test/generate-mystery-street-test-preset.mjs: the long case's office beside a maze street, by the top-down driver) with the stand-in page: the panel frames the region's case, mystery:state carries the world's lock and inOffice, a question solved in the street is not checked, the same question is checked in the office, and leaving says so again. Names are read off the loaded world. Category unclaimed by testBatches.js, so batch fast (on push)."
         },
         {
+            "id": "mystery-real-page-lock",
+            "enabled": true,
+            "category": "Mystery Bridge",
+            "_comment": "The page's side of the lock, in the real page (the submodule modules/mystery-clue-game at the module's default address), with no server (the page starts on the host's offline state): on the committed mystery_street_test world the page says it is locked (body.ap-locked, the line #ap-lock shown) while the player is in the street, not in the office, and again after leaving. Reads the page's own mark; clicks nothing. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
             "id": "mystery-playback-bot-plays-the-case",
             "enabled": true,
             "category": "Playback Bot",
@@ -2624,6 +2636,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "The mystery substrate's loopSupport: the same mystery_street_test world with the loop_costs block generateLoopCosts writes for it. Loop mode comes on, the office reads as a coarse region whose Bot is the walkTo solver, and the Playback Bot plays the world to the end through the Loops queue."
+        },
+        {
+            "id": "mystery-spiral-office-played",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "The mystery entry as a shuffled-spiral content source (zoneCount / extractZoneRules, mysterySubstrateLibrary.js): a world of three maze rooms and one office is built in the page from the committed mystery_custom_house_fire world, the case's papers standing on its own questions with the source's rules, and the Playback Bot plays it to the end. The installed case is cleared again."
         },
         {
             "id": "document-library-idb",

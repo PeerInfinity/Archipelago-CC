@@ -30,18 +30,11 @@
  * near the centre says little). A tile within `STAIR_CENTRE_TOLERANCE` of the centre on both axes (|u|, |v| ≤ 0.05:
  * the middle tenth of the level) gives NO direction: length only. So does a missing tile or extent.
  *
- * ── 3. FLOOR NUMBERS (`floorNumbers`) ────────────────────────────────────────────────────────────────────────────
- * Over the GROUP graph of vertical links, BFS from the start region's group (floor 0, the ground floor): crossing a
- * `down` link from → to gives to = from − 1, an `up` link to = from + 1 (crossed backwards, the opposite). Groups and
- * links in sorted id order; the FIRST assignment wins. A link that reaches an already-numbered group at a DIFFERENT
- * number is a CONFLICT (reported with both paths). A group no vertical path from the start reaches (warp-only, the
- * Menu, disconnected) has no number: "Floor ?".
- *
- * ── 4. LABELS (`floorLabels`) ────────────────────────────────────────────────────────────────────────────────────
- * "Ground floor", "Floor +1", "Floor −1", … and "Floor ?". When 2+ groups share a number, each gets " · k", k = its
- * place in BFS discovery order on that floor (1 = the first reached, the one nearest the start by links). The
- * unnumbered groups all read "Floor ?" (no suffix: discovery order from the start says nothing about them). The labels belong to the model (every group, boxed or not), so a group's label is
- * the same in every view. The group's root level id stays in the box's tooltip.
+ * ── 3. FLOOR NUMBERS AND LABELS ─────────────────────────────────────────────────────────────────────────────────
+ * ⛓ region-graph-floor-solver: a CONSTRAINT SOLVE over every link between groups (stairs, pits AND doorways /
+ * teleporters), not a BFS: `floorSolver.js` (`solveFloors`, `floorLabels`). The labels: "Ground floor", "Floor +1",
+ * "Floor −1", a range "Floor −3 to −1" where a contradiction leaves no consistent pick, "Floor ?" for a group no link
+ * from the start reaches; " · k" for groups sharing a label. The group's root level id stays in the box's tooltip.
  *
  * ⛔ DETERMINISTIC: sorted ids everywhere; no clock, no `Math.random`. ⛔ PURE: no DOM, no Cytoscape, no substrate.
  */
@@ -166,94 +159,4 @@ export function verticalEdges(nodes, edges, exits) {
     return out;
 }
 
-/* ── 3. floor numbers ─────────────────────────────────────────────────────────────────────────────────────────── */
-
-/**
- * The floor number of every group of `model` → `{ start, floorOf: Map<group, n>, order: Map<group, bfs index>,
- * unreached: [group], conflicts: [{group, floor, other, path, otherPath}], conflictGroups }`. A path is
- * `[{group, via?: {from, to, kind}}]` from the start group.
- */
-export function floorNumbers(model) {
-    const groupOf = model?.groupOf instanceof Map ? model.groupOf : new Map();
-    const groups = [...new Set(model?.layout?.groups?.map((g) => g.id) ?? groupOf.values())].sort(cmp);
-    const start = model?.layout?.start != null ? groupOf.get(model.layout.start) ?? null : null;
-    // The vertical group graph: each link both ways, its delta seen from the side it leaves.
-    const adj = new Map(groups.map((g) => [g, []]));
-    const seen = new Set();
-    for (const l of model?.layout?.graph?.links ?? []) {
-        const kind = l.kind ?? 'join';
-        if (!VERTICAL.has(kind)) continue;
-        const ga = groupOf.get(l.from); const gb = groupOf.get(l.to);
-        if (ga == null || gb == null || ga === gb) continue;
-        const k = `${l.from}\u0000${l.to}\u0000${kind}`;
-        if (seen.has(k)) continue;
-        seen.add(k);
-        const d = kind === 'down' ? -1 : 1;
-        const via = { from: l.from, to: l.to, kind };
-        adj.get(ga)?.push({ to: gb, delta: d, via });
-        adj.get(gb)?.push({ to: ga, delta: -d, via });
-    }
-    for (const list of adj.values()) {
-        list.sort((x, y) => cmp(x.to, y.to) || cmp(x.via.from, y.via.from) || cmp(x.via.to, y.via.to) || cmp(x.via.kind, y.via.kind));
-    }
-    const floorOf = new Map();
-    const order = new Map();
-    const parent = new Map();
-    const conflicts = [];
-    const pathOf = (g) => {
-        const out = [];
-        for (let c = g; c != null; c = parent.get(c)?.from ?? null) out.unshift({ group: c, ...(parent.has(c) ? { via: parent.get(c).via } : {}) });
-        return out;
-    };
-    if (start != null) {
-        floorOf.set(start, 0);
-        order.set(start, 0);
-        const queue = [start];
-        while (queue.length) {
-            const g = queue.shift();
-            for (const { to, delta, via } of adj.get(g) ?? []) {
-                const want = floorOf.get(g) + delta;
-                if (!floorOf.has(to)) {
-                    floorOf.set(to, want);
-                    order.set(to, order.size);
-                    parent.set(to, { from: g, via });
-                    queue.push(to);
-                } else if (floorOf.get(to) !== want && !conflicts.some((c) => c.via === via)) {
-                    conflicts.push({ group: to, floor: floorOf.get(to), other: want, via, path: pathOf(to), otherPath: [...pathOf(g), { group: to, via }] });
-                }
-            }
-        }
-    }
-    const unreached = groups.filter((g) => !floorOf.has(g));
-    return { start, floorOf, order, unreached, conflicts, conflictGroups: new Set(conflicts.map((c) => c.group)).size };
-}
-
-/* ── 4. labels ────────────────────────────────────────────────────────────────────────────────────────────────── */
-
-/** A floor number's name: 0 "Ground floor", +n "Floor +n", −n "Floor −n" (U+2212), none "Floor ?". */
-export function floorName(n) {
-    if (!Number.isInteger(n)) return 'Floor ?';
-    if (n === 0) return 'Ground floor';
-    return n > 0 ? `Floor +${n}` : `Floor −${-n}`;
-}
-
-/**
- * Every group's label → `Map<group, label>`: its floor's name, plus " · k" when 2+ groups share that floor (k by BFS
- * discovery order); every unnumbered group "Floor ?".
- */
-export function floorLabels(numbering) {
-    const { floorOf, order, unreached } = numbering;
-    const byFloor = new Map();
-    for (const [g, n] of floorOf) {
-        if (!byFloor.has(n)) byFloor.set(n, []);
-        byFloor.get(n).push(g);
-    }
-    const out = new Map();
-    for (const [n, gs] of byFloor) {
-        gs.sort((a, b) => order.get(a) - order.get(b));
-        gs.forEach((g, i) => out.set(g, gs.length > 1 ? `${floorName(n)} · ${i + 1}` : floorName(n)));
-    }
-    // The unnumbered share "Floor ?": discovery order from the start means nothing for a group it never reached.
-    for (const g of unreached) out.set(g, floorName(null));
-    return out;
-}
+/* ── 3–4. floor numbers and labels: `floorSolver.js` (region-graph-floor-solver replaced the BFS numbering). ──── */

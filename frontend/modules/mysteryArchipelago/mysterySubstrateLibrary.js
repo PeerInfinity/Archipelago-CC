@@ -25,6 +25,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REQUIRED_ENVELOPE_FIELD, envelopeExitNames, nameMapValues } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
+import { GOAL_ITEM } from '../procgenCore/goalItem.js';
 
 export const MYSTERY_SUBSTRATE_ID = 'mystery';
 export const MYSTERY_PANEL_COMPONENT_TYPE = 'mysteryPanel';
@@ -59,6 +60,10 @@ export const MYSTERY_SUBSTRATE_REFUSALS = Object.freeze({
     NOT_A_QUESTION: 'mystery-location-is-not-a-question-of-the-case',
     QUESTION_MISSING: 'mystery-question-of-the-case-has-no-location',
     BAD_PAYLOAD: 'mystery-payload-malformed',
+    BAD_CASE_WORLD: 'mystery-case-world-malformed',
+    NO_CASE_WORLD: 'mystery-no-case-world-installed',
+    NO_SUCH_ZONE: 'mystery-has-one-case',
+    TOO_MANY_ITEMS: 'mystery-more-items-than-spare-questions',
 });
 
 /** A refusal: an Error whose `reason` is one of the names above. */
@@ -92,6 +97,59 @@ export function mysteryConfigFromSource(rulesJson, playerId = '1') {
 }
 
 /**
+ * The same, with the case as a filled region (`caseWorld`), for a layout that places the office
+ * whole: `{caseDoc, caseWorld}`, or `{}` when the source has no case or no placement to keep.
+ */
+export function mysteryPlacedConfigFromSource(rulesJson, playerId = '1') {
+    const { caseDoc } = mysteryConfigFromSource(rulesJson, playerId);
+    const caseWorld = caseDoc ? caseWorldOfSource(rulesJson, playerId, caseDoc) : null;
+    return caseWorld ? { caseDoc, caseWorld } : {};
+}
+
+/**
+ * The case as a FILLED region, for the layouts that place the office whole (the shuffled spiral):
+ * each question's location with the source's own access rule and the item the source's fill put on
+ * it, and the class of each of those items. Read off the source region whose locations are the
+ * case's; null when the source has no such region, or one of its locations holds no item (a bare
+ * export: nothing was placed, so there is no placement to keep).
+ * `{locations: [{name, access_rule, item}], items: {<item name>: {classification}}}`
+ */
+export function caseWorldOfSource(rulesJson, playerId, caseDoc) {
+    if (caseDocError(caseDoc)) return null;
+    const p = String(playerId);
+    const wanted = Object.keys(caseDoc.locations).sort().join('\u0000');
+    const region = Object.values(rulesJson?.regions?.[p] ?? {})
+        .find((r) => (r?.locations ?? []).map((l) => l?.name).sort().join('\u0000') === wanted);
+    if (!region || region.locations.some((l) => typeof l?.item?.name !== 'string')) return null;
+    const items = {};
+    for (const l of region.locations) {
+        const classification = rulesJson?.items?.[p]?.[l.item.name]?.classification;
+        items[l.item.name] = { classification: typeof classification === 'string' ? classification : (l.item.advancement ? 'progression' : 'filler') };
+    }
+    return {
+        locations: region.locations.map((l) => ({
+            name: l.name,
+            ...(l.access_rule !== undefined ? { access_rule: JSON.parse(JSON.stringify(l.access_rule)) } : {}),
+            item: l.item.name,
+        })),
+        items,
+    };
+}
+
+/** The filled case, checked against its document: the refusal's detail, or null when it is well formed. */
+export function caseWorldError(caseWorld, caseDoc) {
+    if (!isObject(caseWorld) || !Array.isArray(caseWorld.locations) || !isObject(caseWorld.items)) return 'not {locations, items}';
+    const names = caseWorld.locations.map((l) => l?.name);
+    if (names.slice().sort().join('\u0000') !== Object.keys(caseDoc?.locations ?? {}).sort().join('\u0000')) {
+        return 'its locations are not the case\'s questions';
+    }
+    for (const l of caseWorld.locations) {
+        if (typeof l.item !== 'string' || !isObject(caseWorld.items[l.item])) return `location "${l.name}" holds no known item`;
+    }
+    return null;
+}
+
+/**
  * Which regions of a source world ARE its case, for the top-down driver's `substrateByRegion`:
  * each region whose location names are exactly the case's. `{}` for a source with no case.
  * Found by the data, so a caller never names a region.
@@ -110,8 +168,8 @@ export function mysteryRegionsOfSource(rulesJson, playerId = '1') {
 
 // --- the installed config (module state, as every zone source's is) ---------------------------
 /** ⛓ every key `applyPipelineConfig` reads (the registry's `pipelineConfigKeys`). */
-export const MYSTERY_PIPELINE_CONFIG_KEYS = Object.freeze(['caseDoc', 'lock']);
-let installed = { caseDoc: null, lock: DEFAULT_MYSTERY_LOCK };
+export const MYSTERY_PIPELINE_CONFIG_KEYS = Object.freeze(['caseDoc', 'caseWorld', 'lock']);
+let installed = { caseDoc: null, caseWorld: null, lock: DEFAULT_MYSTERY_LOCK };
 
 function applyPipelineConfig(cfg = {}) {
     const caseDoc = cfg?.caseDoc ?? null;
@@ -121,13 +179,21 @@ function applyPipelineConfig(cfg = {}) {
     }
     const lock = cfg?.lock ?? DEFAULT_MYSTERY_LOCK;
     if (!LOCK_VALUES.includes(lock)) throw refuse(MYSTERY_SUBSTRATE_REFUSALS.BAD_LOCK, String(lock));
-    installed = { caseDoc: caseDoc === null ? null : JSON.parse(JSON.stringify(caseDoc)), lock };
+    const caseWorld = cfg?.caseWorld ?? null;
+    if (caseWorld !== null) {
+        if (caseDoc === null) throw refuse(MYSTERY_SUBSTRATE_REFUSALS.BAD_CASE_WORLD, 'a filled case with no case document');
+        const error = caseWorldError(caseWorld, caseDoc);
+        if (error) throw refuse(MYSTERY_SUBSTRATE_REFUSALS.BAD_CASE_WORLD, error);
+    }
+    const copy = (v) => (v === null ? null : JSON.parse(JSON.stringify(v)));
+    installed = { caseDoc: copy(caseDoc), caseWorld: copy(caseWorld), lock };
 }
 
 /** What a document records of the installed config: the whole of it (the case block is small). */
 function recordablePipelineConfig() {
     return {
         ...(installed.caseDoc ? { caseDoc: JSON.parse(JSON.stringify(installed.caseDoc)) } : {}),
+        ...(installed.caseWorld ? { caseWorld: JSON.parse(JSON.stringify(installed.caseWorld)) } : {}),
         lock: installed.lock,
     };
 }
@@ -154,20 +220,86 @@ export function mysteryZoneForSpecs(config, zoneSpecs) {
     }
     return {
         locations: specs.map((s) => ({ id: s.id, item: s.item ?? null, position: null })),
-        payload: {
-            story: caseDoc.story,
-            ...(typeof caseDoc.version === 'string' ? { version: caseDoc.version } : {}),
-            case: typeof caseDoc.case === 'string' && caseDoc.case ? caseDoc.case : `cases/${caseDoc.story}`,
-            ...(caseDoc.goal !== undefined ? { goal: caseDoc.goal } : {}),
-            ...(caseDoc.answers !== undefined ? { answers: caseDoc.answers } : {}),
-            lock: config.lock ?? DEFAULT_MYSTERY_LOCK,
-            // question id → AP location name. The value is the source's own name, which top-down
-            // keeps as the compiled name, so the engine's reconciliation leaves it as it is.
-            ap_locations: Object.fromEntries(specs.map((s) => [caseDoc.locations[s.id], s.id])),
-            // AP item name → paper id: which of the world's items are this case's papers.
-            papers: { ...caseDoc.items },
-        },
+        payload: payloadOf(config, specs.map((s) => s.id)),
     };
+}
+
+/** The region's payload for the case of `config`, its questions under the location names given. */
+function payloadOf(config, locationNames) {
+    const { caseDoc } = config;
+    return {
+        story: caseDoc.story,
+        ...(typeof caseDoc.version === 'string' ? { version: caseDoc.version } : {}),
+        case: typeof caseDoc.case === 'string' && caseDoc.case ? caseDoc.case : `cases/${caseDoc.story}`,
+        ...(caseDoc.goal !== undefined ? { goal: caseDoc.goal } : {}),
+        ...(caseDoc.answers !== undefined ? { answers: caseDoc.answers } : {}),
+        lock: config.lock ?? DEFAULT_MYSTERY_LOCK,
+        // question id → AP location name. The value is the source's own name, which the driver
+        // keeps as the compiled name, so the engine's reconciliation leaves it as it is.
+        ap_locations: Object.fromEntries(locationNames.map((name) => [caseDoc.locations[name], name])),
+        // AP item name → paper id: which of the world's items are this case's papers.
+        papers: { ...caseDoc.items },
+    };
+}
+
+// --- the office placed whole (the shuffled spiral's content-source channel) --------------------
+const isFiller = (caseWorld, itemName) => caseWorld.items[itemName]?.classification === 'filler';
+/** The case's own filler item (what a spare question gives), or null when it has none. */
+export function mysteryFillerItem(config) {
+    const world = config?.caseWorld;
+    return world ? (world.locations.map((l) => l.item).find((item) => isFiller(world, item)) ?? null) : null;
+}
+/** How many of the world's items the office can hold: its spare questions (the ones that give its filler). */
+export function mysterySpareQuestions(config) {
+    const world = config?.caseWorld;
+    return world ? world.locations.filter((l) => isFiller(world, l.item)).length : 0;
+}
+
+/**
+ * The office as ONE self-contained region (⚖ Robert 2026-11-27: papers stay inside the office).
+ * Every question keeps the source's access rule and the item the source's fill gave it, so the
+ * case's papers stand on its own questions in an order its rules allow, and nothing outside the
+ * office matters to it. The world's dealt items (`ctx.itemsToPlace`) take the spare questions, in
+ * the case's order. The goal: dealt here it stands where the case's own goal stood; when the
+ * engine places the goal elsewhere (`ctx.goalOwned`) the case's own becomes its filler.
+ */
+export function mysteryZoneRules(config, zoneIdx, ctx = {}) {
+    if (!config?.caseDoc || !config.caseWorld) throw refuse(MYSTERY_SUBSTRATE_REFUSALS.NO_CASE_WORLD, `region ${ctx.region_id}`);
+    if (zoneIdx !== 0) throw refuse(MYSTERY_SUBSTRATE_REFUSALS.NO_SUCH_ZONE, `zone ${zoneIdx}`);
+    const world = config.caseWorld;
+    const filler = mysteryFillerItem(config);
+    const dealt = [...(ctx.itemsToPlace ?? [])];
+    const goalDealt = dealt.includes(GOAL_ITEM);
+    const others = dealt.filter((item) => item !== GOAL_ITEM);
+    const goalAt = world.locations.findIndex((l) => l.item === GOAL_ITEM);
+    // The goal dealt to an office with no goal of its own takes a spare question like any item.
+    if (goalDealt && goalAt < 0) others.push(GOAL_ITEM);
+    const spare = world.locations.map((l, i) => (isFiller(world, l.item) ? i : -1)).filter((i) => i >= 0);
+    if (others.length > spare.length) {
+        throw refuse(MYSTERY_SUBSTRATE_REFUSALS.TOO_MANY_ITEMS, `${others.length} dealt, ${spare.length} spare in region ${ctx.region_id}`);
+    }
+    const itemAt = world.locations.map((l) => l.item);
+    others.forEach((item, k) => { itemAt[spare[k]] = item; });
+    if (goalAt >= 0 && !goalDealt && ctx.goalOwned && filler) itemAt[goalAt] = filler;
+    return {
+        locations: world.locations.map((l, i) => ({
+            id: l.name,
+            global_name: l.name,
+            item: itemAt[i],
+            position: null,
+            ...(l.access_rule !== undefined ? { access_rule: JSON.parse(JSON.stringify(l.access_rule)) } : {}),
+        })),
+        payload: payloadOf(config, world.locations.map((l) => l.name)),
+    };
+}
+
+/** The item-library rows of the installed case's own items (papers, its filler, its goal). */
+function libraryItemsOf(config) {
+    const out = {};
+    for (const [name, row] of Object.entries(config?.caseWorld?.items ?? {})) {
+        out[name] = { classification: row.classification, ...(name === GOAL_ITEM ? { is_victory: true } : {}) };
+    }
+    return out;
 }
 
 /**
@@ -288,6 +420,15 @@ export const substrateRegistryEntry = Object.freeze({
     // any region that is not the case is refused.
     ownContentOnly: true,
     generateZoneForSpecs: (zoneSpecs) => mysteryZoneForSpecs(installed, zoneSpecs),
+
+    // The shuffled spiral: the installed case placed whole, as one content cell (`mysteryZoneRules`). These read
+    // the installed config, so with no filled case installed the entry brings no zone, no item and no goal.
+    get zoneCount() { return installed.caseWorld ? 1 : 0; },
+    extractZoneRules: (zoneIdx, ctx) => mysteryZoneRules(installed, zoneIdx, ctx),
+    spiralItemCapacity: () => mysterySpareQuestions(installed),
+    get fillerItem() { return mysteryFillerItem(installed) ?? undefined; },
+    get libraryItems() { return libraryItemsOf(installed); },
+    get victoryItem() { return installed.caseWorld?.items?.[GOAL_ITEM] ? GOAL_ITEM : undefined; },
     applyPipelineConfig,
     pipelineConfigKeys: MYSTERY_PIPELINE_CONFIG_KEYS,
     recordablePipelineConfig,
