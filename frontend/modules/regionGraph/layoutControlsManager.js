@@ -567,6 +567,7 @@ export class LayoutControlsManager {
     const errors = angleErrors(edges, prefs, positions);
     const floorGroups = floorGroupsOf(nodes);
     const check = blocks ? blockCheck(nodes, positions, blockPad(settings.spacing)) : null;
+    const floorNums = floors && check ? floorBandsOf(floors.numbering) : null;
     const report = {
       settings: { ...settings }, grouping: { ...grouping }, view: this.ui.subRegionView ?? null, nodeLook: this.ui.nodeLook ?? null,
       nodes: nodes.length, edges: edges.length, preferredEdges: prefs.size,
@@ -580,7 +581,10 @@ export class LayoutControlsManager {
       counts: counts ? { ...counts, twoOnOneSide: counts.twoOnOneSide.length, twoOnOneSideLevels: counts.twoOnOneSideLevels.length } : null,
       floors: floors ? floorReport(floors, nodes, edges, prefs, positions, floorLinks) : null,
       // ⛓ region-graph-floor-stacking: every pair of blocks on strictly ordered floors, and how many sit the wrong way up.
-      floorOrder: floors && check ? { ...floorOrderCheck(check.blocks, floorBandsOf(floors.numbering).rangeOf), stacked: !!stats.grouping?.bands } : null,
+      floorOrder: floorNums ? { ...floorOrderCheck(check.blocks, floorNums.rangeOf), stacked: !!stats.grouping?.bands } : null,
+      // The distinct numbered floors the blocks stand on (a pick, or a range's band): stacking needs 2+.
+      floorBlockFloors: floorNums ? [...new Set(check.blocks.filter((b) => b.floorGroup != null)
+        .map((b) => floorNums.bandOf.get(b.floorGroup)).filter((f) => typeof f === 'number'))].sort((a, b) => a - b) : null,
       stats,
     };
     this.ui.lastDirectionLayout = report;
