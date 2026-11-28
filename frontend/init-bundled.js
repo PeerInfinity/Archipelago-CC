@@ -194,6 +194,7 @@ import './modules/tests/testCases/seedlingAtlasMazeTests.js';
 import './modules/tests/testCases/seedlingJsRuntimeTests.js';
 import './modules/tests/testCases/taswBlockModeTests.js';
 import './modules/tests/testCases/actionNodesTests.js';
+import './modules/tests/testCases/actionNodesMysteryTests.js';
 import './modules/tests/testCases/apworldEditorTests.js';
 import './modules/tests/testCases/substrateRegistryPanelTests.js';
 import './modules/tests/testCases/procgenPipelineTests.js';
