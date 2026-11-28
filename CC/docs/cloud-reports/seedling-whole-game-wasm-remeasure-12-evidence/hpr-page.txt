@@ -1,0 +1,2 @@
+HPR-PAGE A1-env {"search":"?seedlingSolverEnv=SEEDLING_PRESS_KILL_START_WAIT%3D1%3BSEEDLING_PRESS_KILL_REFU","HPR":true,"switchOn":true,"asks":true,"expiryAction":"retry"}
+HPR-PAGE none {"search":"","HPR":false,"switchOn":false,"asks":false,"expiryAction":"provisional"}

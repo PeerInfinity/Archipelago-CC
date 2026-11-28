@@ -1,0 +1,4 @@
+{'solved': 200}
+5:7 'Level 017 - Chest' wasm-continue-exit-16 ans=4ef7e74de551 [('dashless', 1, 0), ('full', 1, 0)]
+24:3 'Level 089 - Feather' wasm-exit-57 ans=ea358a138d43 [('dashless', 1, 0), ('full', 1, 0)]
+26:7 'Level 040 - Boss Key 2' wasm-exit-39 ans=5bb7994e268e [('dashless', 0, 0), ('full', 1, 0)]

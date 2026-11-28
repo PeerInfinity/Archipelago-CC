@@ -1,0 +1,20 @@
+COUNTS 18:11 env PKSW=1 PKRB=1 DSS=1 LHM=- PKH=1 OAC=1 PSB=- HSB=1 enabled PKSW=true PKRB=true DSS=true LHM=true PKH=true OAC=true PSB=false HSB=true RSB=true HPR=true KPS=true PKH_MU=true AXE=true WSTB=true WSEB=true BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=true kind=null work=642 answer=a52db2c93b64 ms=5517 ticks=3345 hits=0 deaths=0 []
+  live   ok=true kind=null work=642 answer=a52db2c93b64 solverEnv=SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WAND_SHOT_ENEMY_BODIES=1;SEEDLING_WAND_SHOT_TRAP_BODIES=1
+  PRESS_KILL_START_WAIT_COUNTS.rows=[]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":0,"refused":0}
+  DASH_STAND_SIGHT.counts={"asks":0}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":0,"moves":[],"declined":[]}
+  OPP_AIM_CHASERS_COUNTS={"asked":0,"withheld":0}
+  HIT_AVOID_STAND_BOMBS_COUNTS={"tried":0,"replaced":0}
+  PRESS_KILL_STRIKE_BOMBS_COUNTS=undefined
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":34745,"asked":0,"tripped":0}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":22000,"forecastReplays":142,"spinRowsSkipped":0}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
+  REFUSAL_STAND_BOMBS_COUNTS={"refusals":0,"noLobber":0,"tried":0,"replaced":0}
+  KILLLOCK_PINNED_SPEAR_COUNTS={"asked":0,"noSpear":0,"rows":[]}
+  PRESS_KILL_HOLD_MODEL_UNDO_COUNTS={"undone":0}
+  AXE_TIMING_SWORD_SWAP_COUNTS={"asked":0,"certified":0,"refused":0,"landings":[]}

@@ -1,0 +1,21 @@
+COUNTS 19:2 env PKSW=- PKRB=- DSS=- LHM=- PKH=- OAC=- PSB=- HSB=- enabled PKSW=false PKRB=false DSS=false LHM=true PKH=false OAC=false PSB=false HSB=false RSB=false HPR=false KPS=false PKH_MU=false AXE=false WSTB=false WSEB=false BOS=true GSW=true PM=true SPL=true KTA=true KTEB=false HF=false
+  result ok=false kind=refusal work=896 answer=8ef0debe2bb9 ms=63710
+  live   ok=true kind=null work=1715 answer=85c7dc2a524c solverEnv=SEEDLING_AXE_TIMING_SWORD_SWAP=1;SEEDLING_DASH_STAND_SIGHT=1;SEEDLING_HIT_AVOID_STAND_BOMBS=1;SEEDLING_HIT_PLAN_RETRY=1;SEEDLING_KILLLOCK_PINNED_SPEAR=1;SEEDLING_OPP_AIM_CHASERS=1;SEEDLING_PRESS_KILL_HOLD=1;SEEDLING_PRESS_KILL_HOLD_MODEL_UNDO=1;SEEDLING_PRESS_KILL_REFUGE_BOMBS=1;SEEDLING_PRESS_KILL_START_WAIT=1;SEEDLING_REFUSAL_STAND_BOMBS=1;SEEDLING_WAND_SHOT_ENEMY_BODIES=1;SEEDLING_WAND_SHOT_TRAP_BODIES=1
+  message=solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (741.44,685.29) in level 40. There is no step out. the HAMMER-PHASE rung first saw this corner at t652, and from t654 NO PHASE admits a step: no hold of 1..44 tick(s) at any walk-offset -1..0 (0 tried) walks the approach clear for one more hammer period (45 ticks) (HAMMER_PHASE_RUNG). The plain fallback (`OPP_PRESS_FALLBACK`) rewound to the kill's first tick (t0) and redid the kill with `OPPORTUNISTIC_STRIKE` off; it did not kill (HAMME
+  PRESS_KILL_START_WAIT_COUNTS.rows=[]
+  PRESS_KILL_REFUGE_BOMBS_COUNTS={"asked":0,"refused":0}
+  DASH_STAND_SIGHT.counts={"asks":0}
+  LATCHED_HOLD_MOVE_COUNTS={"asked":0,"moves":[],"declined":[]}
+  OPP_AIM_CHASERS_COUNTS={"asked":0,"withheld":0}
+  HIT_AVOID_STAND_BOMBS_COUNTS={"tried":0,"replaced":0}
+  PRESS_KILL_STRIKE_BOMBS_COUNTS=undefined
+  PRESS_KILL_HOLD_COUNTS.rows=[]
+  BRIDGE_OPEN_STRAY_COUNTS.waived=[]
+  GOAL_START_WAIT_COUNTS.tries=[]
+  PREVIEW_METER_COUNTS={"states":916848,"asked":840,"tripped":0}
+  STRIKE_PREVIEW_LEAN_COUNTS={"forecastTicksSkipped":380800,"forecastReplays":678,"spinRowsSkipped":368000}
+  KEYLOCK_TURRET_ARRIVAL_COUNTS.asked=[]
+  REFUSAL_STAND_BOMBS_COUNTS={"refusals":0,"noLobber":0,"tried":0,"replaced":0}
+  KILLLOCK_PINNED_SPEAR_COUNTS={"asked":0,"noSpear":0,"rows":[]}
+  PRESS_KILL_HOLD_MODEL_UNDO_COUNTS={"undone":0}
+  AXE_TIMING_SWORD_SWAP_COUNTS={"asked":0,"certified":0,"refused":0,"landings":[]}
